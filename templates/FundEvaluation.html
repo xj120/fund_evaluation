@@ -22,38 +22,41 @@
 </div>
 <div id="Scroll"></div>
 <div class="dateSelect">
-    <script>
-        function renderTime(elem, type, value, range, fn) {
-            layui.laydate.render({
-                elem: elem, //绑定元素
-                type: type, //时间类别
-                value: value, //默认值
-                range: range, //是否开启时间范围
-                done: fn, //选择时间触发的回调函数
-                trigger: 'click',
-                theme: '#1890ff', //主题色
-            });
-        }
-    </script>
     <div class="layui-form-item" id="dataSelect">
         <label class="layui-form-label">日期范围：</label>
         <div class="layui-inline">
             <div class="layui-inline" id="timer">
                 <div class="layui-input-inline">
-                    <input type="text" name="sTime" id="sTime" class="layui-input" placeholder="选择日期"
+                    <input type="text" name="sTime" id="sTime" class="layui-input" placeholder="开始日期"
                            readonly>
                 </div>
                 <div class="layui-form-mid">-</div>
                 <div class="layui-input-inline">
-                    <input type="text" name="eTime" id="eTime" class="layui-input" placeholder="选择日期"
+                    <input type="text" name="eTime" id="eTime" class="layui-input" placeholder="结束日期"
                            readonly>
                 </div>
-                <script>
-                    renderTime("#timer", "date", "", ["#sTime", '#eTime']); //TODO
-                </script>
             </div>
         </div>
     </div>
+    <script>
+        function renderTime(elem, value, range) {
+            layui.laydate.render({
+                elem: elem, //绑定元素
+                value: value, //默认值
+                range: range, //是否开启时间范围
+                done: function (value, date, endDate) {
+                    console.log(value); //得到日期生成的值，如：2022-08-18 - 2022-09-01
+                    console.log(date); //得到日期时间对象：{year: 2022, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+                    console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+                }, //选择时间触发的回调函数
+                trigger: 'click',
+                theme: '#5b5b5b', //主题色
+            });
+        }
+    </script>
+    <script>
+        renderTime("#timer", "", ["#sTime", '#eTime']);
+    </script>
 </div>
 <div class="LineGraphPane" id="lines"></div>
 <script type="text/javascript">
@@ -178,6 +181,40 @@
         }
     });
 </script>
-<div id="DataTablePane">放表格的区域</div>
+<div id="DataTablePane">
+    <table id="datatable" lay-filter="test"></table>
+    <script>
+        layui.use('table', function(){
+            const table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#datatable'
+                ,title: '数据表格'
+                ,height: 410
+                ,page: true //开启分页
+                ,data: [
+                    {
+
+                    },
+                    {
+
+                    },
+                    {
+
+                    }
+                ]
+                ,cols: [[ //表头
+                    {field: 'v_id', title: '大V名字', width:120, fixed: 'left'}
+                    ,{field: 'group_id', title: '组合名字', width:120}
+                    ,{field: 'gains', title: '涨幅(%)', width:150, sort: true}
+                    ,{field: 'max_retracement', title: '最大回撤(%)', width:150, sort: true}
+                    ,{field: 'sharp_ratio', title: '夏普率(%)', width:150, sort: true}
+                    ,{field: 'annualized_volatility', title: '年化波动率(%)', width:150, sort: true}
+                    ,{field: 'fans_num', title: '粉丝数(人)', width:160, sort: true}
+                ]]
+            });
+        });
+    </script>
+</div>
 </body>
 </html>
