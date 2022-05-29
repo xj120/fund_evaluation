@@ -78,8 +78,8 @@ li a:hover:not(.active) {
 
 .dateSelect{
     position: absolute;
-    width: 80%;
-    height: 80%;
+    width: 40%;
+    height: 1%;
     top: 14%;
-    right: -530px;
+    right: 100px;
 }

@@ -21,6 +21,7 @@
     </div>
 </div>
 <div id="Scroll"></div>
+<div class="LineGraphPane" id="lines"></div>
 <div class="dateSelect">
     <div class="layui-form-item" id="dataSelect">
         <label class="layui-form-label">日期范围：</label>
@@ -38,197 +39,12 @@
             </div>
         </div>
     </div>
-    <script>
-        function renderTime(elem, value, range) {
-            layui.laydate.render({
-                elem: elem, //绑定元素
-                value: value, //默认值
-                range: range, //是否开启时间范围
-                done: function (value, date, endDate) {
-                    console.log(value); //得到日期生成的值，如：2022-08-18 - 2022-09-01
-                    console.log(date); //得到日期时间对象：{year: 2022, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
-                    console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
-                }, //选择时间触发的回调函数
-                trigger: 'click',
-                theme: '#5b5b5b', //主题色
-            });
-        }
-    </script>
-    <script>
-        renderTime("#timer", "", ["#sTime", '#eTime']);
-    </script>
+    <script src="../static/js/DateSelect.js"></script>
 </div>
-<div class="LineGraphPane" id="lines"></div>
-<script type="text/javascript">
-    const myChart = echarts.init(document.getElementById("lines"));
-    myChart.setOption({
-        title: {
-            text: '收益曲线',
-            textAlign: 'center',
-            textStyle: {
-                fontSize: 20
-            },
-            subtext: '点击图例添加/移除组合',
-            subtextStyle: {
-                fontSize: 12,
-                color: '#5b5b5b',
-            },
-            left: 100,
-            top: -3
-        },
-        tooltip: {
-            //触发方式 - 坐标轴
-            trigger: 'axis'
-        },
-        grid: {
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            },
-            right: 30
-        },
-        legend: {
-            x: 'left',
-            padding: [0, 0, 0, 185],
-            width: 700,
-            itemWidth: 16
-        },
-        xAxis: {
-            data: [],
-            type: 'category',
-            boundaryGap: false,
-        },
-        yAxis: {
-            name: '涨幅',
-            type: 'value',
-            nameTextStyle: {
-                padding: [0, 0, -225, -150],
-                fontSize: 14,
-                color: '#000000'
-            },
-        },
-        dataZoom: [
-            {
-                type: 'slider',
-                start: 10,
-                end: 60,
-                bottom: 0,
-            },
-            {
-                type: 'inside',
-                start: 10,
-                end: 60,
-                bottom: 0,
-            },
-        ],
-        series: [
-            {
-                name: '邮件营销',
-                type: 'line',
-                data: []
-            },
-            {
-                name: '联盟广告',
-                type: 'line',
-                data: []
-            },
-            {
-                name: '视频广告',
-                type: 'line',
-                data: []
-            },
-            {
-                name: '直接访问',
-                type: 'line',
-                data: []
-            },
-            {
-                name: '搜索引擎',
-                type: 'line',
-                data: []
-            },
-        ]
-    });
-    myChart.showLoading();
-    const names = [];
-    const series1 = [];
-    const series2 = [];
-    $.ajax({  //TODO
-        type: 'get',
-        url: '../static/danjuan3.json',
-        dataType: "json",
-        success: function (result) {
-            $.each(result.items, function (index, item) {
-                names.push(item.date);
-                series1.push(item.percentage);
-            });
-            myChart.hideLoading();
-            myChart.setOption({
-                xAxis: {
-                    data: names
-                },
-                series: [
-                    {
-                        data: series1
-                    },
-                    {
-                        data: series1
-                    }
-                ]
-            })
-        },
-        error: function () {
-            alert("图表请求数据失败！");
-            myChart.hideLoading();
-        }
-    });
-</script>
+<script type="text/javascript" src="../static/js/myChart.js"></script>
 <div id="DataTablePane">
     <table id="datatable" lay-filter="test"></table>
-    <script>
-        layui.use('table', function () {
-            const table = layui.table;
-            //第一个实例
-            table.render({
-                elem: '#datatable'
-                , title: '数据表格'
-                , height: 410
-                , toolbar: true
-                , page: true //开启分页
-                , data: [
-                    { //TODO
-                        'v_id': 10,
-                        'group_id': 20,
-                        'gains': 1,
-                        'max_retracement': 2,
-                        'sharp_ratio': 3,
-                        'annualized_volatility': 4,
-                        'fans_num': 100
-                    },
-                    {
-                        'v_id': 666,
-                        'group_id': 777,
-                        'gains': 888,
-                        'max_retracement': 999,
-                        'sharp_ratio': 7,
-                        'annualized_volatility': 5,
-                        'fans_num': 1300
-                    }
-                ]
-                , cols: [[ //表头
-                    {field: 'v_id', title: '大V名字', width: 130, fixed: 'left'}
-                    , {field: 'group_id', title: '组合名字', width: 130}
-                    , {field: 'gains', title: '涨幅(%)', width: 160, sort: true}
-                    , {field: 'max_retracement', title: '最大回撤(%)', width: 160, sort: true}
-                    , {field: 'sharp_ratio', title: '夏普率(%)', width: 160, sort: true}
-                    , {field: 'annualized_volatility', title: '年化波动率(%)', width: 160, sort: true}
-                    , {field: 'fans_num', title: '粉丝数(人)', width: 170, sort: true}
-                ]]
-            });
-        });
-    </script>
+    <script src="../static/js/DataTable.js"></script>
 </div>
 </body>
 </html>
