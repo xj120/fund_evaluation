@@ -1,6 +1,8 @@
 import requests
 import json
 import time
+import fund
+import record
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
@@ -12,15 +14,19 @@ dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 def formatTime(second):
     time_array = time.localtime(second)
     format_date = time.strftime("%Y-%m-%d", time_array)
-    print(format_date)
+    return format_date
 
 def getFundInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     response = requests.get(url=url, headers=qm_header)
     content = response.text
+
     obj = json.loads(content)
+
     # 编号
-    number = obj.get('poCode')
+    # number = obj.get('poCode')
+    # URL
+    sourse_url = 'https://qieman.com/portfolios/'+number
     # 名字
     name = obj.get('poName')
     # 粉丝数量
@@ -38,11 +44,23 @@ def getFundInfo_qieman(number):
     # 夏普比率
     sharpe = obj.get('sharpe')
 
+    return fund.fund(number=number,name=name,url=sourse_url,found_date=found_date,
+                     max_drawdown=max_drawdown,volatility=volatility,sharpe_rate=sharpe,
+                     rate_per_ann=rate_per_ann,income_since_found=income_since_found,followers=followers)
+
 def getHistoryRecord_qieman(number):
     url = "https://qieman.com/pmdj/v1/pomodels/"+number+"/nav-history"
     response = requests.get(url=url, headers=qm_header)
     content = response.text
-    obj = json.loads(content)
+    items = json.loads(content)
+    records = []
+    for item in items:
+        nav = item.get('nav')
+        daily_rd = item.get('dailyReturn') * 100
+        date = formatTime(item.get('navDate'))
+        records.append(record.record(number=number,net_assert_value=nav,daily_rise_drop=daily_rd,date=date))
+    return records
+
 
 def getFundInfo_danjuan(number):
     url = "http://danjuanapp.com/djapi/plan/"+number
@@ -54,7 +72,9 @@ def getFundInfo_danjuan(number):
     obj = obj.get('data')
 
     # 编号
-    number = obj.get('plan_code')
+    # number = obj.get('plan_code')
+    # URL
+    sourse_url = 'https://danjuanapp.com/strategy/'+number+'?channel=1300100141'
     # 名字
     name = obj.get('plan_name')
     # 累计收益
@@ -79,21 +99,29 @@ def getFundInfo_danjuan(number):
     # 夏普比率
     sharpe = obj.get('sharpe')
 
+    return fund.fund(number=number,name=name,url=sourse_url,found_date=found_date,
+                     max_drawdown=max_drawdown,volatility=volatility,sharpe_rate=sharpe,
+                     rate_per_ann=rate_per_ann,income_since_found=income_since_found)
+
 def getHistoryRecord_danjuan(number):
-    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size=5000&page=1"
+    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size=30000&page=1"
 
     response = requests.get(url=url, headers=dj_header)
     content = response.text
 
     obj = json.loads(content)
     obj = obj.get('data')
-    list = obj.get('items')
+    items = obj.get('items')
 
     records = []
 
-    for item in list:
+    for item in items:
         nav = item.get('nav')
         daily_rd = item.get('percentage')
+        date = item.get('date')
+        records.append(record.record(number=number,net_assert_value=nav,daily_rise_drop=daily_rd,date=date))
+
+    return records
 
 
 
@@ -101,10 +129,12 @@ def getHistoryRecord_danjuan(number):
 
 
 
+
+# 2022/5/28
 # 1653721631613
 # 1653721631605
 # 1653727893093
 # 1653730656663 7D079C8A719AD10D16316A36483A31E3
-
+# 2022/5/29
 # 1653795439623 C12B49A01D606EF1052A1F019DD11286
 # 1653795567864 E58836E5F71CC894F3A63372CA6A5D2D
