@@ -7,12 +7,13 @@ import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '1653795439623C12B49A01D606EF1052A1F019DD11286'
+    'x-sign': '165389994073772A072AC9C8DB93EBE4AC030E83FFA64'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
 def formatTime(second):
+    second /= 1000
     time_array = time.localtime(second)
     format_date = time.strftime("%Y-%m-%d", time_array)
     return format_date
@@ -68,7 +69,10 @@ def getHistoryRecord_qieman(number):
         records = []
         for item in items:
             nav = item.get('nav')
-            daily_rd = item.get('dailyReturn') * 100
+            if item.get('dailyReturn') is not None:
+                daily_rd = item.get('dailyReturn') * 100
+            else:
+                daily_rd = None
             date = formatTime(item.get('navDate'))
             records.append(record.record(number=number, net_assert_value=nav, daily_rise_drop=daily_rd, date=date))
         return records
@@ -169,9 +173,9 @@ def getHistoryRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    f = getFundInfo_danjuan('CSI1065')
+    f = getFundInfo_qieman('ZH039471')
     persistentstorage.addFund(f)
-    r = getHistoryRecord_danjuan('CSI1065')
+    r = getHistoryRecord_qieman('ZH039471')
     persistentstorage.addHistoryRecord(r)
 
 
@@ -187,3 +191,5 @@ if __name__ == '__main__':
 # 2022/5/29
 # 1653795439623 C12B49A01D606EF1052A1F019DD11286
 # 1653795567864 E58836E5F71CC894F3A63372CA6A5D2D
+# 2022/5/30
+# 1653899940737 72A072AC9C8DB93EBE4AC030E83FFA64
