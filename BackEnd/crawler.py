@@ -12,6 +12,30 @@ qm_header = {
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
+def getFundInfo(url):
+    if len(url) != 38 and len(url) != 58:
+        return None
+
+    if len(url) == 38:
+        number = url[30:38]
+        return getFundInfo_qieman(number)
+    elif len(url) == 58:
+        number = url[32:39]
+        return getFundInfo_danjuan(number)
+
+
+def getHistoryRecord(url):
+    if len(url) != 38 and len(url) != 58:
+        return None
+
+    if len(url) == 38:
+        number = url[30:38]
+        return getHistoryRecord_qieman(number)
+    elif len(url) == 58:
+        number = url[32:39]
+        return getHistoryRecord_danjuan(number)
+
+
 def formatTime(second):
     second /= 1000
     time_array = time.localtime(second)
@@ -173,10 +197,11 @@ def getHistoryRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    f = getFundInfo_qieman('ZH039471')
-    persistentstorage.addFund(f)
-    r = getHistoryRecord_qieman('ZH039471')
-    persistentstorage.addHistoryRecord(r)
+    f2 = getFundInfo('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
+    persistentstorage.addFund(f2)
+    r2 = getHistoryRecord('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
+    persistentstorage.addHistoryRecord(r2)
+
 
 
 

@@ -9,6 +9,7 @@ def linkDatabase():
     else:
         db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                              charset='utf8')
+        # print(type(db).__name__)
         return db
 
 
@@ -28,11 +29,13 @@ def addFund(fund):
 
         cursor.close()
         db.close()
+        return True
     except Exception as e:
         print(e)
         db.rollback()
         cursor.close()
         db.close()
+        return False
 
 
 def addHistoryRecord(records):
@@ -50,9 +53,60 @@ def addHistoryRecord(records):
 
         cursor.close()
         db.close()
+        return True
     except Exception as e:
         print(e)
         db.rollback()
         cursor.close()
         db.close()
+        return False
+
+
+def updateFund(fund):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        update fund
+        set max_drawdown = %s, volatility = %s, sharpe_rate = %s, rate_per_ann = %s, income_since_found = %s, followers = %s
+        where number = %s
+        '''
+        param = (fund.max_drawdown, fund.volatility, fund.sharpe_rate,
+                 fund.rate_per_ann, fund.income_since_found, fund.followers, fund.number)
+        cursor.execute(sql, param)
+        db.commit()
+
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
+def getLastDate(number):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        select date
+        from history_record
+        where number = %s
+        order by history_record.date desc LIMIT 0,1
+        '''%('\"'+number+'\"')
+        cursor.execute(sql)
+        db.commit()
+        record = cursor.fetchone()
+        cursor.close()
+        db.close()
+        return record[0]
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return None
 
