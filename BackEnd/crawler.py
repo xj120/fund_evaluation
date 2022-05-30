@@ -19,114 +19,153 @@ def formatTime(second):
 
 def getFundInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
-    response = requests.get(url=url, headers=qm_header)
-    response.raise_for_status()
-    content = response.text
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
 
-    obj = json.loads(content)
+        obj = json.loads(content)
 
-    # 编号
-    # number = obj.get('poCode')
-    # URL
-    sourse_url = 'https://qieman.com/portfolios/'+number
-    # 名字
-    name = obj.get('poName')
-    # 粉丝数量
-    followers = obj.get('followCount')
-    # 成立日
-    found_date = obj.get('establishedOn')
-    # 年化收益率
-    rate_per_ann = obj.get('annualCompoundedReturn')
-    # 累计收益
-    income_since_found = obj.get('fromSetupReturn')
-    # 最大回撤
-    max_drawdown = obj.get('maxDrawdown')
-    # 年化波动率
-    volatility = obj.get('volatility')
-    # 夏普比率
-    sharpe = obj.get('sharpe')
+        # 编号
+        # number = obj.get('poCode')
+        # URL
+        sourse_url = 'https://qieman.com/portfolios/' + number
+        # 名字
+        name = obj.get('poName')
+        # 粉丝数量
+        followers = obj.get('followCount')
+        # 成立日
+        found_date = obj.get('establishedOn')
+        # 年化收益率
+        rate_per_ann = obj.get('annualCompoundedReturn')
+        # 累计收益
+        income_since_found = obj.get('fromSetupReturn')
+        # 最大回撤
+        max_drawdown = obj.get('maxDrawdown')
+        # 年化波动率
+        volatility = obj.get('volatility')
+        # 夏普比率
+        sharpe = obj.get('sharpe')
 
-    return fund.fund(number=number,name=name,url=sourse_url,found_date=found_date,
-                     max_drawdown=max_drawdown,volatility=volatility,sharpe_rate=sharpe,
-                     rate_per_ann=rate_per_ann,income_since_found=income_since_found,followers=followers)
+        return fund.fund(number=number, name=name, url=sourse_url, found_date=found_date,
+                         max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
+                         rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:',response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
 
 def getHistoryRecord_qieman(number):
     url = "https://qieman.com/pmdj/v1/pomodels/"+number+"/nav-history"
-    response = requests.get(url=url, headers=qm_header)
-    response.raise_for_status()
-    content = response.text
-    items = json.loads(content)
-    records = []
-    for item in items:
-        nav = item.get('nav')
-        daily_rd = item.get('dailyReturn') * 100
-        date = formatTime(item.get('navDate'))
-        records.append(record.record(number=number,net_assert_value=nav,daily_rise_drop=daily_rd,date=date))
-    return records
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        records = []
+        for item in items:
+            nav = item.get('nav')
+            daily_rd = item.get('dailyReturn') * 100
+            date = formatTime(item.get('navDate'))
+            records.append(record.record(number=number, net_assert_value=nav, daily_rise_drop=daily_rd, date=date))
+        return records
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:',response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
 
 
 def getFundInfo_danjuan(number):
     url = "http://danjuanapp.com/djapi/plan/"+number
 
-    response = requests.get(url=url, headers=dj_header)
-    response.raise_for_status()
-    content = response.text
+    try:
+        response = requests.get(url=url, headers=dj_header)
+        response.raise_for_status()
+        content = response.text
 
-    obj = json.loads(content)
-    obj = obj.get('data')
+        obj = json.loads(content)
+        obj = obj.get('data')
 
-    # 编号
-    # number = obj.get('plan_code')
-    # URL
-    sourse_url = 'https://danjuanapp.com/strategy/'+number+'?channel=1300100141'
-    # 名字
-    name = obj.get('plan_name')
-    # 累计收益
-    income_since_found = obj.get('yield')
-    # 成立以来年化率
-    rate_per_ann = obj.get('yield_middle')
-    # 成立日
-    found_date = obj.get('found_date')
+        # 编号
+        # number = obj.get('plan_code')
+        # URL
+        sourse_url = 'https://danjuanapp.com/strategy/' + number + '?channel=1300100141'
+        # 名字
+        name = obj.get('plan_name')
+        # 累计收益
+        income_since_found = obj.get('yield')
+        # 成立以来年化率
+        rate_per_ann = obj.get('yield_middle')
+        # 成立日
+        found_date = obj.get('found_date')
 
-    url = "https://danjuanapp.com/djapi/plan/nav/indicator?plan_code="+number
+        url = "https://danjuanapp.com/djapi/plan/nav/indicator?plan_code=" + number
 
-    response = requests.get(url=url, headers=dj_header)
-    content = response.text
+        response = requests.get(url=url, headers=dj_header)
+        content = response.text
 
-    obj = json.loads(content)
-    obj = obj.get('data')
+        obj = json.loads(content)
+        obj = obj.get('data')
 
-    # 最大回撤
-    max_drawdown = obj.get('max_drawdown')
-    # 年化波动率
-    volatility = obj.get('volatility')
-    # 夏普比率
-    sharpe = obj.get('sharpe')
+        # 最大回撤
+        max_drawdown = obj.get('max_drawdown')
+        # 年化波动率
+        volatility = obj.get('volatility')
+        # 夏普比率
+        sharpe = obj.get('sharpe')
 
-    return fund.fund(number=number,name=name,url=sourse_url,found_date=found_date,
-                     max_drawdown=max_drawdown,volatility=volatility,sharpe_rate=sharpe,
-                     rate_per_ann=rate_per_ann,income_since_found=income_since_found)
+        return fund.fund(number=number, name=name, url=sourse_url, found_date=found_date,
+                         max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
+                         rate_per_ann=rate_per_ann, income_since_found=income_since_found)
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:',response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
+
 
 def getHistoryRecord_danjuan(number):
     url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size=30000&page=1"
 
-    response = requests.get(url=url, headers=dj_header)
-    response.raise_for_status()
-    content = response.text
+    try:
+        response = requests.get(url=url, headers=dj_header)
+        response.raise_for_status()
+        content = response.text
 
-    obj = json.loads(content)
-    obj = obj.get('data')
-    items = obj.get('items')
+        obj = json.loads(content)
+        obj = obj.get('data')
+        items = obj.get('items')
 
-    records = []
+        records = []
 
-    for item in items:
-        nav = item.get('nav')
-        daily_rd = item.get('percentage')
-        date = item.get('date')
-        records.append(record.record(number=number, net_assert_value=nav, daily_rise_drop=daily_rd, date=date))
+        for item in items:
+            nav = item.get('nav')
+            daily_rd = item.get('percentage')
+            date = item.get('date')
+            records.append(record.record(number=number, net_assert_value=nav, daily_rise_drop=daily_rd, date=date))
 
-    return records
+        return records
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:',response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
 
 
 if __name__ == '__main__':
