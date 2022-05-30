@@ -20,6 +20,7 @@ def formatTime(second):
 def getFundInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     response = requests.get(url=url, headers=qm_header)
+    response.raise_for_status()
     content = response.text
 
     obj = json.loads(content)
@@ -52,6 +53,7 @@ def getFundInfo_qieman(number):
 def getHistoryRecord_qieman(number):
     url = "https://qieman.com/pmdj/v1/pomodels/"+number+"/nav-history"
     response = requests.get(url=url, headers=qm_header)
+    response.raise_for_status()
     content = response.text
     items = json.loads(content)
     records = []
@@ -67,6 +69,7 @@ def getFundInfo_danjuan(number):
     url = "http://danjuanapp.com/djapi/plan/"+number
 
     response = requests.get(url=url, headers=dj_header)
+    response.raise_for_status()
     content = response.text
 
     obj = json.loads(content)
@@ -108,6 +111,7 @@ def getHistoryRecord_danjuan(number):
     url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size=30000&page=1"
 
     response = requests.get(url=url, headers=dj_header)
+    response.raise_for_status()
     content = response.text
 
     obj = json.loads(content)
