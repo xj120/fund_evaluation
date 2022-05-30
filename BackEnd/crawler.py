@@ -3,6 +3,7 @@ import json
 import time
 import fund
 import record
+import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
@@ -119,11 +120,16 @@ def getHistoryRecord_danjuan(number):
         nav = item.get('nav')
         daily_rd = item.get('percentage')
         date = item.get('date')
-        records.append(record.record(number=number,net_assert_value=nav,daily_rise_drop=daily_rd,date=date))
+        records.append(record.record(number=number, net_assert_value=nav, daily_rise_drop=daily_rd, date=date))
 
     return records
 
 
+if __name__ == '__main__':
+    f = getFundInfo_danjuan('CSI1065')
+    persistentstorage.addFund(f)
+    r = getHistoryRecord_danjuan('CSI1065')
+    persistentstorage.addHistoryRecord(r)
 
 
 
