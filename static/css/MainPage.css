@@ -1,0 +1,23 @@
+.main{
+    position: absolute;
+    height: 20%;
+    width: 40%;
+    top: 20%;
+    left: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+}
+
+.group_info{
+    position: absolute;
+    height: 20%;
+    width: 50%;
+    top: 50%;
+    left: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+}
