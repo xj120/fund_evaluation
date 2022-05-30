@@ -39,7 +39,7 @@ myChart.setOption({
         boundaryGap: false,
     },
     yAxis: {
-        name: '涨幅',
+        name: '涨幅(%)',
         type: 'value',
         nameTextStyle: {
             padding: [0, 0, -225, -150],
