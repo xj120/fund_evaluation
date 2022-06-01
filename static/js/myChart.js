@@ -23,7 +23,14 @@ myChart.setOption({
     },
     toolbox: {
         feature: {
-            saveAsImage: {}
+            saveAsImage: {},
+            dataView: { //数据视图
+                show: true
+            },
+            restore: {                             //配置项还原。
+                show: true,                         //是否显示该工具。
+                title: "还原",
+            },
         },
         right: 30
     },
@@ -68,11 +75,6 @@ myChart.setOption({
             data: []
         },
         {
-            name: '联盟广告',
-            type: 'line',
-            data: []
-        },
-        {
             name: '视频广告',
             type: 'line',
             data: []
@@ -90,12 +92,11 @@ myChart.setOption({
     ]
 });
 myChart.showLoading();
-const names = [];
-const series1 = [];
-const series2 = [];
-$.ajax({  //TODO
+let names = [];
+let series1 = [];
+$.ajax({
     type: 'get',
-    url: '../static/danjuan3.json',
+    url: '../static/data/danjuan3.json',
     dataType: "json",
     success: function (result) {
         $.each(result.items, function (index, item) {
