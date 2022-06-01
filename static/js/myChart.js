@@ -96,7 +96,7 @@ let names = [];
 let series1 = [];
 $.ajax({
     type: 'get',
-    url: '../static/data/danjuan3.json',
+    url: '../static/data/fundline.json',
     dataType: "json",
     success: function (result) {
         $.each(result.items, function (index, item) {
