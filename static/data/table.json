@@ -1,0 +1,25 @@
+{
+  "code": 0,
+  "msg": "",
+  "count": 2,
+  "data": [
+    {
+      "v_id": "10",
+      "group_id": "20",
+      "gains": "1",
+      "max_retracement": "2",
+      "sharp_ratio": "3",
+      "annualized_volatility": "4",
+      "fans_num": "100"
+    },
+    {
+      "v_id": "20",
+      "group_id": "35",
+      "gains": "66",
+      "max_retracement": "5",
+      "sharp_ratio": "64",
+      "annualized_volatility": "87",
+      "fans_num": "234"
+    }
+  ]
+}
