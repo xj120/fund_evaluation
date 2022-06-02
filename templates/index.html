@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./static/css/all.css">
+    <script src="https://kit.fontawesome.com/yourcode.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <style>
+
+       .upper{
+       height:60px;
+       background-color:#F5F5F5;
+       border-bottom:1px solid #fff;
+      box-shadow:0px 15px 10px -15px #000;
+       }
+
+       .URLrecorded{
+       height:60px;
+       width:200px;
+       line-height:60px;
+       margin-left:40px;
+       }
+
+       .main{
+       margin-left:60px;
+       margin-right:60px;
+       border-width:1px;
+       border-color:#F8F8F8;
+       border-style:solid;
+       }
+
+       .header{
+       height:60px;
+       }
+
+input{
+       height:40px;
+       width:120px;
+       background-color:#007BFF;
+       color:white;
+       border:none;
+       float:right;
+       margin-right:10px;
+       margin-top:10px;
+       }
+
+.textInput{
+background-color:white;
+color:black;
+height:30px;
+width:160px;
+float:none;
+margin-left:120px;
+
+}
+
+.buttonInput{
+background-color:white;
+color:black;
+float:left;
+margin-left:140px;
+}
+
+       .leftHead{
+       float:left;
+       width:100px;
+       height:60px;
+       text-align:center;
+       line-height:60px;
+       }
+
+       table{
+       width:100%;
+       }
+       tr
+       {
+       text-align:left;
+       }
+       th, td {
+  border-bottom: 1px solid #ddd;
+}
+       i{
+       margin-left:5px;
+       margin-right:5px;
+       }
+
+       a{
+       -webkit-user-select: none
+       }
+
+       .hide{
+       display:none;
+       }
+       .c1{
+       position:fixed;
+       top:0;
+       buttom:0;
+       left:0;
+       right:0;
+       z-index:2;
+       background:rgba(0,0,0,.5)
+       }
+       .c2{
+       background-color:#EEE9E9;
+
+       position:fixed;
+       width:400px;
+       height:300px;
+       top:50%;
+       left:50%;
+       z-index:3;
+       margin-top:-150px;
+       margin-left:-200px;
+       }
+
+       .text
+       {
+height:30px;
+width:160px;
+margin-left:160px;
+line-height:30px;
+       }
+    </style>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="upper">
+    <div class="URLrecorded">已记录URL</div>
+</div>
+<div class="main">
+<div class="header">
+    <div class="leftHead" >URL列表</div>
+<form name="createURL" >
+   <input type="button" onclick="show()" value="新建URL">
+</form>
+<form name="spiderALL">
+    <input type="button" value="爬取全部" href="/spidall/{{content}}">
+</div>
+</form>
+
+    <table class="URLtable">
+        <tr>
+            <th>URL <i class="fas fa-chevron-up"></i></th>
+            <th>数据最后时间</th>
+            <th>操作</th>
+        </tr>
+{% for i in content %}
+        <tr>
+            {% for j in i %}
+            <td>{{j}}</td>
+            {% endfor %}
+            <td> <i class="fas fa-download"></i><a href="/delete/{{i}}"><i class="fas fa-trash"></i></a><i class="fas fa-brush"><a href="/spide/{{i}}"></a></i></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div id="shade" class="c1 hide"></div>
+<div id="modal" class="c2 hide">
+    <p class="text">添加URL</p>
+    <form action="/add" method="post">
+        <input type="text" name="URL" class="textInput"><br>
+        <input type="submit"  value="确定" onclick="Hide()" class="buttonInput">
+    </form>
+    <input type="button" value="取消" onclick="Hide()" class="buttonInput">
+
+</div>
+
+<script>
+function show()
+{
+document.getElementById("shade").classList.remove('hide')
+document.getElementById("modal").classList.remove('hide')
+}
+function Hide()
+{
+document.getElementById("shade").classList.add("hide");
+document.getElementById("modal").classList.add("hide");
+}
+</script>
+</body>
+</html>
