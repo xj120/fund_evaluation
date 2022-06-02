@@ -4,6 +4,7 @@ import time
 import fund
 import record
 import persistentstorage
+from seleniumwire import webdriver
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
@@ -11,6 +12,11 @@ qm_header = {
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
+
+def getXsign():
+    driver = webdriver.Chrome()
+    driver.get('https://qieman.com')
+
 
 def getFundInfo(url):
     if len(url) != 38 and len(url) != 58:
@@ -218,3 +224,7 @@ if __name__ == '__main__':
 # 1653795567864 E58836E5F71CC894F3A63372CA6A5D2D
 # 2022/5/30
 # 1653899940737 72A072AC9C8DB93EBE4AC030E83FFA64
+# 2022/6/1
+# 1654098370411 91E9B60F728EB9BC3AAF27330D0BE38D
+# 2022/6/2
+# 1654134810875 4C1CA98C7E0D820B2D5F8CC1BAC7CFB7
