@@ -110,3 +110,32 @@ def getLastDate(number):
         db.close()
         return None
 
+
+def checkFund(number):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        select *
+        from history_record
+        where number = %s
+        '''%('\"'+number+'\"')
+        cursor.execute(sql)
+        db.commit()
+        data = cursor.fetchone()
+        if data is not None:
+            db.close()
+            return True
+        else:
+            db.close()
+            return False
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
+if __name__ == '__main__':
+    print(checkFund('CSI1027'))
