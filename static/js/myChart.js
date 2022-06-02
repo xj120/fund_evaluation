@@ -76,10 +76,14 @@ $.ajax({
     url: '../static/data/test.json',
     dataType: "json",
     success: function (result) {
+        let item;
         let series_list = [];
-
+        for (let i = 0; i < result.series.length; i++) {
+            item = result.series[i];
+            series_list.push(item);
+        }
         option.xAxis.data = result.dateTime;
-        option.series = result.series;
+        option.series = series_list;
         myChart.setOption(option);
         myChart.hideLoading();
     },
