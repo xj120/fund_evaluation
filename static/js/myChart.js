@@ -1,5 +1,5 @@
 const myChart = echarts.init(document.getElementById("lines"));
-myChart.setOption({
+let option = {
     title: {
         text: '收益曲线',
         textAlign: 'center',
@@ -68,55 +68,20 @@ myChart.setOption({
             bottom: 0,
         },
     ],
-    series: [
-        {
-            name: '邮件营销',
-            type: 'line',
-            data: []
-        },
-        {
-            name: '视频广告',
-            type: 'line',
-            data: []
-        },
-        {
-            name: '直接访问',
-            type: 'line',
-            data: []
-        },
-        {
-            name: '搜索引擎',
-            type: 'line',
-            data: []
-        },
-    ]
-});
+    series: []
+}
 myChart.showLoading();
-let names = [];
-let series1 = [];
 $.ajax({
     type: 'get',
-    url: '../static/data/fundline.json',
+    url: '../static/data/test.json',
     dataType: "json",
     success: function (result) {
-        $.each(result.items, function (index, item) {
-            names.push(item.date);
-            series1.push(item.percentage);
-        });
+        let series_list = [];
+
+        option.xAxis.data = result.dateTime;
+        option.series = result.series;
+        myChart.setOption(option);
         myChart.hideLoading();
-        myChart.setOption({
-            xAxis: {
-                data: names
-            },
-            series: [
-                {
-                    data: series1
-                },
-                {
-                    data: series1
-                }
-            ]
-        })
     },
     error: function () {
         alert("图表请求数据失败！");
