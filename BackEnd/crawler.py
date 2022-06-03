@@ -1,14 +1,15 @@
-import requests
 import json
 import time
+
+import requests
+from seleniumwire import webdriver
+
 import fund
 import record
-import persistentstorage
-from seleniumwire import webdriver
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '165389994073772A072AC9C8DB93EBE4AC030E83FFA64'
+    'x-sign': '165424501467009D30CFCCDB475FA9F196B651A85A6CE'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -203,10 +204,23 @@ def getHistoryRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    f2 = getFundInfo('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
-    persistentstorage.addFund(f2)
-    r2 = getHistoryRecord('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
-    persistentstorage.addHistoryRecord(r2)
+    danjuan = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+               'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+               'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+               'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+               'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+               'https://danjuanapp.com/strategy/CSI1065?channel=1300100141']
+
+    qieman = ['https://qieman.com/portfolios/ZH010246',
+              'https://qieman.com/portfolios/ZH006498',
+              'https://qieman.com/portfolios/ZH000193',
+              'https://qieman.com/portfolios/ZH001798',
+              'https://qieman.com/portfolios/ZH012926',
+              'https://qieman.com/portfolios/ZH009664',
+              'https://qieman.com/portfolios/ZH030684',
+              'https://qieman.com/portfolios/ZH017252',
+              'https://qieman.com/portfolios/ZH035411',
+              'https://qieman.com/portfolios/ZH043108']
 
 
 

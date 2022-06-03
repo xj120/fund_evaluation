@@ -172,6 +172,27 @@ def getTableJson():
         db.close()
         return False
 
+# TODO
+def getRecordJson():
+    record = {}
+    date_time = []
+    series = []
+    db = linkDatabase()
+    cursor = db.cursor()
+    sql = '''
+    select number, daily_rise_drop, date
+    from history_record
+    '''
+    try:
+        cursor.execute(sql)
+        db.commit()
+        records = cursor.fetchall()
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
 if __name__ == '__main__':
-    print(checkFund('CSI1027'))
     getTableJson()
