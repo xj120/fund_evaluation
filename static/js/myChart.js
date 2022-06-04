@@ -86,7 +86,7 @@ $.ajax({
                         name: '我是测试名字'//给一个基本不会有的数据就行
                     }
                 }
-                if (result.data[i].name === found.name) {//如果series数组中有data当前对象的学生名称，直接添加
+                if (result.data[i].name === found.name) {//如果series数组中有data当前对象的名称，直接添加
                     data1 = [0, 0];
                     data1[0] = result.data[i].time;
                     data1[1] = result.data[i].weight;
