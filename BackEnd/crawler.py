@@ -13,7 +13,7 @@ import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16543103125725E07D9390FE84C986CBFCEE8D5736823'
+    'x-sign': '16543576809253F8ABE46942E0CC167D8545A40B9AA93'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -287,8 +287,7 @@ if __name__ == '__main__':
             f = getFundInfo(url)
             persistentstorage.addFund(f)
 
-        r = getHistoryRecord(url, str(size))
-        persistentstorage.addHistoryRecord(r)
+        persistentstorage.updateRecord()
 
 
 # 2022/5/28

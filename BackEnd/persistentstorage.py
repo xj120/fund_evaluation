@@ -77,7 +77,7 @@ def updateRecord():
             if last_date is None:
                 span = 30000
             else:
-                last_date = time.strftime(last_date, '%Y-%m-%d')
+                # last_date = time.strftime(last_date, '%Y-%m-%d')
                 last_date = datetime.datetime(last_date[0], last_date[1], last_date[2])
                 now_date = time.localtime(time.time())
                 now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
