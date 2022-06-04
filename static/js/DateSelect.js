@@ -7,9 +7,25 @@ function renderTime(elem, value, range) {
             console.log(value); //得到日期生成的值，如：2022-08-18 - 2022-09-01
             console.log(date); //得到日期时间对象：{year: 2022, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
             console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+            $.ajax({
+                url: "/testAjax",
+                type: 'POST',
+                dataType: 'json',//表示返回的数据必须为json，否则：会走下面error对应的方法。
+                data: {
+                    value: value,
+                    date: date,
+                    endDate: endDate
+                },
+                success: function (data) {
+                },
+                error: function () {
+                    alert("数据发送失败！");
+                }
+            })
         }, //选择时间触发的回调函数
         trigger: 'click',
         theme: '#5b5b5b', //主题色
     });
 }
+
 renderTime("#timer", "", ["#sTime", '#eTime']);

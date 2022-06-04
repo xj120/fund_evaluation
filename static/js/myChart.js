@@ -42,8 +42,8 @@ let option = {
     },
     xAxis: {
         data: [],
-        type: 'category',
-        boundaryGap: false,
+        type: 'value',
+        boundaryGap: false
     },
     yAxis: {
         name: '涨幅(%)',
@@ -57,34 +57,60 @@ let option = {
     dataZoom: [
         {
             type: 'slider',
-            start: 10,
-            end: 60,
+            start: 0,
+            end: 100,
             bottom: 0,
         },
         {
             type: 'inside',
-            start: 10,
-            end: 60,
+            start: 0,
+            end: 100,
             bottom: 0,
         },
     ],
     series: []
 }
+let data1 = [0, 0];
 myChart.showLoading();
 $.ajax({
     type: 'get',
-    url: '../static/data/test.json',
+    url: '../static/data/line.json',
     dataType: "json",
     success: function (result) {
-        let item;
-        let series_list = [];
-        for (let i = 0; i < result.series.length; i++) {
-            item = result.series[i];
-            series_list.push(item);
+        if (result.data.length > 0) {
+            for (let i = 0; i < result.data.length; i++) {
+                //在数组中找到符合条件的第一个元素，返回该元素
+                let found = option.series.find(element => result.data[i].name === element.name);
+                if (typeof found == "undefined") {//此处为了避免下面if里面的found.name报未定义
+                    found = {
+                        name: '我是测试名字'//给一个基本不会有的数据就行
+                    }
+                }
+                if (result.data[i].name === found.name) {//如果series数组中有data当前对象的学生名称，直接添加
+                    data1 = [0, 0];
+                    data1[0] = result.data[i].time;
+                    data1[1] = result.data[i].weight;
+                    found.data.push(data1);
+                } else {//如果没有，就新push一个series元素,此处要注意series数据结构理解
+                    option.series.push(
+                        {
+                            name: result.data[i].name,
+                            type: 'line',
+                            data: []
+                        }
+                    )
+                    //重复上面if里面的内容
+                    data1 = [0, 0];
+                    let sFound = option.series.find(element => result.data[i].name === element.name);
+                    data1[0] = result.data[i].time;
+                    data1[1] = result.data[i].weight;
+                    sFound.data.push(data1);
+                }
+            }
+            myChart.setOption(option);
+        } else {
+            alert("数据不存在，无法生成图表！")
         }
-        option.xAxis.data = result.dateTime;
-        option.series = series_list;
-        myChart.setOption(option);
         myChart.hideLoading();
     },
     error: function () {
