@@ -2,6 +2,8 @@ import json
 import time
 
 import requests
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from seleniumwire import webdriver
 
 import fund
@@ -16,8 +18,26 @@ qm_header = {
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
 def getXsign():
-    driver = webdriver.Chrome()
-    driver.get('https://qieman.com')
+    try:
+        driver = webdriver.chrome()
+        driver.get('https://qieman.com')
+
+        for request in driver.requests:
+            if request.response:
+                print(
+                    request.url,
+                    request.response.status_code,
+                    request.response.headers['Content-Type']
+                )
+        # option = webdriver.ChromeOptions()
+        # option.add_experimental_option('w3c', False)
+        # caps = DesiredCapabilities.CHROME
+        # caps['loggingPrefs'] = {'performance': 'ALL'}
+        # driver = webdriver.Chrome(options=option, desired_capabilities=caps)
+        # driver.get('https://qieman.com')
+        # print(driver.get_log('performance'))
+    except Exception as e:
+        print(e)
 
 
 def getFundInfo(url):

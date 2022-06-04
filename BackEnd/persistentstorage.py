@@ -89,9 +89,16 @@ def updateFund(fund):
         return False
 
 
-def getLastDate(number):
+def getLastDate(url):
     db = linkDatabase()
     cursor = db.cursor()
+    if len(url) != 38 and len(url) != 58:
+        return None
+
+    if len(url) == 38:
+        number = url[30:38]
+    elif len(url) == 58:
+        number = url[32:39]
     try:
         sql = '''
         select date
