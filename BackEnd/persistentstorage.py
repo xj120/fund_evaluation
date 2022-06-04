@@ -181,19 +181,29 @@ def getTableJson():
 
 # TODO
 def getRecordJson():
-    record = {}
-    date_time = []
-    series = []
+    line = {}
+    data = []
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, daily_rise_drop, date
-    from history_record
+    select name, daily_rise_drop, date
+    from fund,history_record
+    where fund.number = history_record.number
     '''
     try:
         cursor.execute(sql)
         db.commit()
         records = cursor.fetchall()
+        for record in records:
+            r_dict = {"name":record[0], "daily_rise_drop":record[1], "date":str(record[2])}
+            data.append(r_dict)
+        line["data"] = data
+        with open(file='..\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
+            t = json.dumps(line, ensure_ascii=False)
+            f.write(t)
+        cursor.close()
+        db.close()
+        return True
     except Exception as e:
         print(e)
         db.rollback()
@@ -201,5 +211,7 @@ def getRecordJson():
         db.close()
         return False
 
+
 if __name__ == '__main__':
     getTableJson()
+    getRecordJson()

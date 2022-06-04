@@ -13,7 +13,7 @@ import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16537306566637D079C8A719AD10D16316A36483A31E3'
+    'x-sign': '16543103125725E07D9390FE84C986CBFCEE8D5736823'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -260,13 +260,14 @@ if __name__ == '__main__':
     # print(getXsign())
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
-    # 'https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-    urls = ['https://qieman.com/portfolios/ZH010246',
+
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+            'https://qieman.com/portfolios/ZH010246',
             'https://qieman.com/portfolios/ZH006498',
             'https://qieman.com/portfolios/ZH000193',
             'https://qieman.com/portfolios/ZH001798',
@@ -275,8 +276,7 @@ if __name__ == '__main__':
             'https://qieman.com/portfolios/ZH030684',
             'https://qieman.com/portfolios/ZH017252',
             'https://qieman.com/portfolios/ZH035411',
-            'https://qieman.com/portfolios/ZH043108'
-            ]
+            'https://qieman.com/portfolios/ZH043108']
     for url in urls:
         f = getFundInfo(url)
         persistentstorage.addFund(f)
