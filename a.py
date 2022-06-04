@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
 import pymysql
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
 import BackEnd.crawler
 import time
