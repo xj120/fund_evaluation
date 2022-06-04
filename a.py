@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request
 import pymysql
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
-import BackEnd.crawler
-import time
+#import BackEnd.crawler
+#import time
+import datetime
+import json
+
 
 
 
@@ -14,7 +16,7 @@ conn = pymysql.connect(
     host='127.0.0.1',
     user='root',
     password='123456',
-    db='danjuan',
+    db='Portfolio_Evaluation',
     charset='utf8'
 )
 app.debug = True
@@ -23,44 +25,50 @@ app.debug = True
 @app.route('/')
 def index2():
     cur = conn.cursor()
-    sql = "select * from student"
+    sql = "select url from fund"
     cur.execute(sql)
     content = cur.fetchall()
     return render_template("index.html", content = content)
 
-@app.route('/delete/<i>')
+
+@app.route('/delete/<path:i>')
 def delete(i):
-   sql = "delete from student where id =" + i[1]
-   cur2 = conn.cursor()
-   cur2.execute(sql)
-   conn.commit()
-   return redirect("/")
+    print(type(i))
+    sql = 'delete from fund where url = ' + i;
+    cur2 = conn.cursor()
+    cur2.execute(sql)
+    conn.commit()
+    return redirect("/")
+
+
 
 #爬取一个URL，i[1]是URL
-@app.route('/spide/<i>')
-def spid(i):
- BackEnd.crawler.getFundInfo(i[1])
+"""@app.route('/spide/<i>')
+def spurl(i):
+ BackEnd.crawler.geturlInfo(i[1])
  cur4 = conn.cursor()
- sql="update student  set name=" + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) +"where id=" + i[1];
+ sql="update url  set found_date=" + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) +"where url=" + i[1];
  cur4.execute(sql)
  conn.commit();
  return redirect("/")
 
 #爬取全部URL，content是全部记录，i是单条记录，i[1]是URL
-@app.route('/spidall/<content>')
-def spidall(content):
+@app.route('/spideall/<content>')
+def spideall(content):
     for i in content:
-        BackEnd.crawler.getFundInfo(i[1])
+        BackEnd.crawler.geturlInfo(i[1])
         cur4 = conn.cursor()
-        sql = "update student  set name=" + time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + "where id=" + i[1];
+        sql = "update url  set found_date=" + time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())) + "where url=" + i[1];
         cur4.execute(sql)
         conn.commit();
-    return redirect("/")
+    return redirect("/")"""
 
 @app.route('/add', methods=["POST"])
 def add():
-    url = request.form.get("URL")
-    sql = "insert into student values(" + url +", '数据未爬取')"
+    Url = request.form.get("URL")
+    id = request.form.get("id")
+    time = datetime.datetime.today()
+    sql = "insert into fund(number,url) values(" + id + "," + Url + ")"
     cur3 = conn.cursor()
     cur3.execute(sql)
     conn.commit()
