@@ -166,7 +166,6 @@ def getHistoryRecord_qieman(number, size=30000):
         print('status_code:', response.status_code)
         return None
     except Exception as e:
-        print('nb')
         print(e)
         return None
 
@@ -260,34 +259,33 @@ if __name__ == '__main__':
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
 
-    # 'https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    # 'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
 
-    urls = [
-            'https://qieman.com/portfolios/ZH010246',
-            'https://qieman.com/portfolios/ZH006498',
-            'https://qieman.com/portfolios/ZH000193',
-            'https://qieman.com/portfolios/ZH001798',
-            'https://qieman.com/portfolios/ZH012926',
-            'https://qieman.com/portfolios/ZH009664',
-            'https://qieman.com/portfolios/ZH030684',
-            'https://qieman.com/portfolios/ZH017252',
-            'https://qieman.com/portfolios/ZH035411',
-            'https://qieman.com/portfolios/ZH043108']
-    size = 30000
-    for url in urls:
-        if persistentstorage.checkFund(url):
-            f = getFundInfo(url)
+    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    #         'https://qieman.com/portfolios/ZH010246',
+    #         'https://qieman.com/portfolios/ZH006498',
+    #         'https://qieman.com/portfolios/ZH000193',
+    #         'https://qieman.com/portfolios/ZH001798',
+    #         'https://qieman.com/portfolios/ZH012926',
+    #         'https://qieman.com/portfolios/ZH009664',
+    #         'https://qieman.com/portfolios/ZH030684',
+    #         'https://qieman.com/portfolios/ZH017252',
+    #         'https://qieman.com/portfolios/ZH035411',
+    #         'https://qieman.com/portfolios/ZH043108']
+
+    for link in persistentstorage.getFundList():
+        if persistentstorage.checkFund(link):
+            f = getFundInfo(link)
             persistentstorage.updateFund(f)
         else:
-            f = getFundInfo(url)
+            f = getFundInfo(link)
             persistentstorage.addFund(f)
 
-        persistentstorage.updateRecord()
+    persistentstorage.updateRecord()
 
 
 # 2022/5/28
