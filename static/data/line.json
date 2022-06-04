@@ -7,8 +7,18 @@
     },
     {
       "name": "张三",
+      "time": 2,
+      "weight": 131
+    },
+    {
+      "name": "张三",
       "time": 3,
       "weight": 132
+    },
+    {
+      "name": "张三",
+      "time": 4,
+      "weight": 133
     },
     {
       "name": "张三",
@@ -27,13 +37,28 @@
     },
     {
       "name": "李四",
+      "time": 3,
+      "weight": 141
+    },
+    {
+      "name": "李四",
       "time": 4,
       "weight": 142
     },
     {
       "name": "李四",
+      "time": 5,
+      "weight": 143
+    },
+    {
+      "name": "李四",
       "time": 6,
       "weight": 144
+    },
+    {
+      "name": "李四",
+      "time": 7,
+      "weight": 145
     },
     {
       "name": "李四",
