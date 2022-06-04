@@ -1,21 +1,72 @@
-import requests
+import datetime
 import json
 import time
+
+import requests
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 import fund
 import record
 import persistentstorage
-from seleniumwire import webdriver
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '165389994073772A072AC9C8DB93EBE4AC030E83FFA64'
+    'x-sign': '16543103125725E07D9390FE84C986CBFCEE8D5736823'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
+def updateXsign():
+    # print(qm_header['x-sign'][0:13])
+    last_xsign = int(qm_header['x-sign'][0:13]) // 1000
+    last_time = time.localtime(last_xsign)
+    last_date = datetime.datetime(last_time[0], last_time[1], last_time[2])
+    now_time = time.localtime()
+    now_date = datetime.datetime(now_time[0], now_time[1], now_time[2])
+
+    span = (now_date-last_date).days
+
+    if span != 0:
+        qm_header['x-sign'] = getXsign()
+
 def getXsign():
-    driver = webdriver.Chrome()
-    driver.get('https://qieman.com')
+    try:
+        caps = {
+            'browserName': 'chrome',
+            'loggingPrefs': {
+                'browser': 'ALL',
+                'driver': 'ALL',
+                'performance': 'ALL',
+            },
+            'goog:chromeOptions': {
+                'perfLoggingPrefs': {
+                    'enableNetwork': True,
+                },
+                'w3c': False,
+            },
+        }
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_experimental_option('w3c', False)
+        driver = webdriver.Chrome(desired_capabilities=caps, options=options)
+        driver.get('https://qieman.com')
+        info = driver.get_log('performance')
+        for i in info:
+            dic_info = json.loads(i["message"])
+            # print(dic_info)
+            info = dic_info["message"]['params']
+            # print(info)
+            if 'request' in info:
+                # print(info['request'])
+                if 'headers' in info['request']:
+                    # print(info['request']['headers'])
+                    if 'x-sign' in info['request']['headers']:
+                        return info['request']['headers']['x-sign']
+    except Exception as e:
+        print(e)
+        return None
 
 
 def getFundInfo(url):
@@ -203,10 +254,35 @@ def getHistoryRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    f2 = getFundInfo('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
-    persistentstorage.addFund(f2)
-    r2 = getHistoryRecord('https://danjuanapp.com/strategy/CSI1065?channel=1300100141')
-    persistentstorage.addHistoryRecord(r2)
+    updateXsign()
+    print(qm_header['x-sign'])
+    # starttime = datetime.datetime.now()
+    # print(getXsign())
+    # endtime = datetime.datetime.now()
+    # print(endtime - starttime)
+
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+            'https://qieman.com/portfolios/ZH010246',
+            'https://qieman.com/portfolios/ZH006498',
+            'https://qieman.com/portfolios/ZH000193',
+            'https://qieman.com/portfolios/ZH001798',
+            'https://qieman.com/portfolios/ZH012926',
+            'https://qieman.com/portfolios/ZH009664',
+            'https://qieman.com/portfolios/ZH030684',
+            'https://qieman.com/portfolios/ZH017252',
+            'https://qieman.com/portfolios/ZH035411',
+            'https://qieman.com/portfolios/ZH043108']
+    for url in urls:
+        f = getFundInfo(url)
+        persistentstorage.addFund(f)
+        r = getHistoryRecord(url)
+        persistentstorage.addHistoryRecord(r)
+
 
 
 
@@ -228,3 +304,7 @@ if __name__ == '__main__':
 # 1654098370411 91E9B60F728EB9BC3AAF27330D0BE38D
 # 2022/6/2
 # 1654134810875 4C1CA98C7E0D820B2D5F8CC1BAC7CFB7
+# 2022/6/3
+# 1654245014670 09D30CFCCDB475FA9F196B651A85A6CE
+# 2022/6/4
+# 1654310312572 5E07D9390FE84C986CBFCEE8D5736823

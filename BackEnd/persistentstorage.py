@@ -1,3 +1,5 @@
+import json
+
 import pymysql
 
 
@@ -87,9 +89,16 @@ def updateFund(fund):
         return False
 
 
-def getLastDate(number):
+def getLastDate(url):
     db = linkDatabase()
     cursor = db.cursor()
+    if len(url) != 38 and len(url) != 58:
+        return None
+
+    if len(url) == 38:
+        number = url[30:38]
+    elif len(url) == 58:
+        number = url[32:39]
     try:
         sql = '''
         select date
@@ -124,9 +133,11 @@ def checkFund(number):
         db.commit()
         data = cursor.fetchone()
         if data is not None:
+            cursor.close()
             db.close()
             return True
         else:
+            cursor.close()
             db.close()
             return False
     except Exception as e:
@@ -137,5 +148,70 @@ def checkFund(number):
         return False
 
 
+def getTableJson():
+    table = {"code": 0,"msg": ""}
+    data = []
+    db = linkDatabase()
+    cursor = db.cursor()
+    sql = '''
+    select number, name, income_since_found, max_drawdown, sharpe_rate, volatility, followers
+    from fund
+    '''
+    try:
+        cursor.execute(sql)
+        db.commit()
+        funds = cursor.fetchall()
+        for fund in funds:
+            fund_dict = {"v_id": fund[0], "group_id": fund[1], "gains": fund[2], "max_retracement": fund[3],
+                         "sharpe_ratio": fund[4], "annualized_volatility": fund[5], "fans_num": fund[6]}
+            data.append(fund_dict)
+        table["data"] = data
+        with open(file='..\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
+            t = json.dumps(table, ensure_ascii=False)
+            f.write(t)
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+# TODO
+def getRecordJson():
+    line = {}
+    data = []
+    db = linkDatabase()
+    cursor = db.cursor()
+    sql = '''
+    select name, daily_rise_drop, date
+    from fund,history_record
+    where fund.number = history_record.number
+    '''
+    try:
+        cursor.execute(sql)
+        db.commit()
+        records = cursor.fetchall()
+        for record in records:
+            r_dict = {"name":record[0], "daily_rise_drop":record[1], "date":str(record[2])}
+            data.append(r_dict)
+        line["data"] = data
+        with open(file='..\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
+            t = json.dumps(line, ensure_ascii=False)
+            f.write(t)
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
 if __name__ == '__main__':
-    print(checkFund('CSI1027'))
+    getTableJson()
+    getRecordJson()

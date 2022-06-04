@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -11,6 +11,14 @@ def index():
 @app.route('/')
 def mainPage():
     return render_template("MainPage.html")
+
+
+@app.route('/testAjax', methods=['POST'])
+def testAjax():
+    value = request.form.get("value")
+    data = request.args.get("data")
+    endDate = request.args.get("endDate")
+    return {'success': '1'}
 
 
 if __name__ == '__main__':
