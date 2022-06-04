@@ -6,10 +6,11 @@ from seleniumwire import webdriver
 
 import fund
 import record
+import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '165424501467009D30CFCCDB475FA9F196B651A85A6CE'
+    'x-sign': '16543103125725E07D9390FE84C986CBFCEE8D5736823'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -204,23 +205,30 @@ def getHistoryRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    danjuan = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-               'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-               'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-               'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-               'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-               'https://danjuanapp.com/strategy/CSI1065?channel=1300100141']
+    getXsign()
+    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    #         'https://qieman.com/portfolios/ZH010246',
+    #         'https://qieman.com/portfolios/ZH006498',
+    #         'https://qieman.com/portfolios/ZH000193',
+    #         'https://qieman.com/portfolios/ZH001798',
+    #         'https://qieman.com/portfolios/ZH012926',
+    #         'https://qieman.com/portfolios/ZH009664',
+    #         'https://qieman.com/portfolios/ZH030684',
+    #         'https://qieman.com/portfolios/ZH017252',
+    #         'https://qieman.com/portfolios/ZH035411',
+    #         'https://qieman.com/portfolios/ZH043108'
+    #         ]
+    # for url in urls:
+    #     f = getFundInfo(url)
+    #     persistentstorage.addFund(f)
+    #     r = getHistoryRecord(url)
+    #     persistentstorage.addHistoryRecord(r)
 
-    qieman = ['https://qieman.com/portfolios/ZH010246',
-              'https://qieman.com/portfolios/ZH006498',
-              'https://qieman.com/portfolios/ZH000193',
-              'https://qieman.com/portfolios/ZH001798',
-              'https://qieman.com/portfolios/ZH012926',
-              'https://qieman.com/portfolios/ZH009664',
-              'https://qieman.com/portfolios/ZH030684',
-              'https://qieman.com/portfolios/ZH017252',
-              'https://qieman.com/portfolios/ZH035411',
-              'https://qieman.com/portfolios/ZH043108']
 
 
 
@@ -244,3 +252,5 @@ if __name__ == '__main__':
 # 1654134810875 4C1CA98C7E0D820B2D5F8CC1BAC7CFB7
 # 2022/6/3
 # 1654245014670 09D30CFCCDB475FA9F196B651A85A6CE
+# 2022/6/4
+# 1654310312572 5E07D9390FE84C986CBFCEE8D5736823
