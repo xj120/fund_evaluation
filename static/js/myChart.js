@@ -96,7 +96,8 @@ $.ajax({
                         {
                             name: result.data[i].name,
                             type: 'line',
-                            data: []
+                            data: [],
+                            showSymbol: false
                         }
                     )
                     //重复上面if里面的内容
