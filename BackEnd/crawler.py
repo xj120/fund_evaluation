@@ -259,7 +259,6 @@ if __name__ == '__main__':
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
 
-
     # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
     #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
     #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
