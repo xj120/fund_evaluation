@@ -13,23 +13,25 @@ import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16543103125725E07D9390FE84C986CBFCEE8D5736823'
+    'x-sign': '16543576809253F8ABE46942E0CC167D8545A40B9AA93'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
+
 
 def updateXsign():
     # print(qm_header['x-sign'][0:13])
     last_xsign = int(qm_header['x-sign'][0:13]) // 1000
     last_time = time.localtime(last_xsign)
-    last_date = datetime.datetime(last_time[0], last_time[1], last_time[2])
+    last_date = datetime.datetime(last_time[0], last_time[1], last_time[2], last_time[3], last_time[4])
     now_time = time.localtime()
-    now_date = datetime.datetime(now_time[0], now_time[1], now_time[2])
+    now_date = datetime.datetime(now_time[0], now_time[1], now_time[2], now_time[3], now_time[4])
 
-    span = (now_date-last_date).days
+    span = (now_date-last_date).seconds/3600
 
-    if span != 0:
+    if span > 12:
         qm_header['x-sign'] = getXsign()
+
 
 def getXsign():
     try:
@@ -81,16 +83,16 @@ def getFundInfo(url):
         return getFundInfo_danjuan(number)
 
 
-def getHistoryRecord(url):
+def getHistoryRecord(url, size):
     if len(url) != 38 and len(url) != 58:
         return None
 
     if len(url) == 38:
         number = url[30:38]
-        return getHistoryRecord_qieman(number)
+        return getHistoryRecord_qieman(number, size)
     elif len(url) == 58:
         number = url[32:39]
-        return getHistoryRecord_danjuan(number)
+        return getHistoryRecord_danjuan(number, size)
 
 
 def formatTime(second):
@@ -98,6 +100,7 @@ def formatTime(second):
     time_array = time.localtime(second)
     format_date = time.strftime("%Y-%m-%d", time_array)
     return format_date
+
 
 def getFundInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
@@ -140,7 +143,8 @@ def getFundInfo_qieman(number):
         print(e)
         return None
 
-def getHistoryRecord_qieman(number):
+
+def getHistoryRecord_qieman(number, size=30000):
     url = "https://qieman.com/pmdj/v1/pomodels/"+number+"/nav-history"
     try:
         response = requests.get(url=url, headers=qm_header)
@@ -148,7 +152,7 @@ def getHistoryRecord_qieman(number):
         content = response.text
         items = json.loads(content)
         records = []
-        for item in items:
+        for item in items[-1:-int(size)-1:-1]:
             nav = item.get('nav')
             if item.get('dailyReturn') is not None:
                 daily_rd = item.get('dailyReturn') * 100
@@ -159,13 +163,11 @@ def getHistoryRecord_qieman(number):
         return records
     except requests.HTTPError as e:
         print(e)
-        print('status_code:',response.status_code)
+        print('status_code:', response.status_code)
         return None
     except Exception as e:
         print(e)
         return None
-
-
 
 
 def getFundInfo_danjuan(number):
@@ -219,10 +221,8 @@ def getFundInfo_danjuan(number):
         return None
 
 
-
-
-def getHistoryRecord_danjuan(number):
-    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size=30000&page=1"
+def getHistoryRecord_danjuan(number, size=30000):
+    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size="+size+"&page=1"
 
     try:
         response = requests.get(url=url, headers=dj_header)
@@ -244,13 +244,11 @@ def getHistoryRecord_danjuan(number):
         return records
     except requests.HTTPError as e:
         print(e)
-        print('status_code:',response.status_code)
+        print('status_code:', response.status_code)
         return None
     except Exception as e:
         print(e)
         return None
-
-
 
 
 if __name__ == '__main__':
@@ -261,33 +259,32 @@ if __name__ == '__main__':
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
 
-    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-            'https://qieman.com/portfolios/ZH010246',
-            'https://qieman.com/portfolios/ZH006498',
-            'https://qieman.com/portfolios/ZH000193',
-            'https://qieman.com/portfolios/ZH001798',
-            'https://qieman.com/portfolios/ZH012926',
-            'https://qieman.com/portfolios/ZH009664',
-            'https://qieman.com/portfolios/ZH030684',
-            'https://qieman.com/portfolios/ZH017252',
-            'https://qieman.com/portfolios/ZH035411',
-            'https://qieman.com/portfolios/ZH043108']
-    for url in urls:
-        f = getFundInfo(url)
-        persistentstorage.addFund(f)
-        r = getHistoryRecord(url)
-        persistentstorage.addHistoryRecord(r)
+    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    #         'https://qieman.com/portfolios/ZH010246',
+    #         'https://qieman.com/portfolios/ZH006498',
+    #         'https://qieman.com/portfolios/ZH000193',
+    #         'https://qieman.com/portfolios/ZH001798',
+    #         'https://qieman.com/portfolios/ZH012926',
+    #         'https://qieman.com/portfolios/ZH009664',
+    #         'https://qieman.com/portfolios/ZH030684',
+    #         'https://qieman.com/portfolios/ZH017252',
+    #         'https://qieman.com/portfolios/ZH035411',
+    #         'https://qieman.com/portfolios/ZH043108']
 
+    for link in persistentstorage.getFundList():
+        if persistentstorage.checkFund(link):
+            f = getFundInfo(link)
+            persistentstorage.updateFund(f)
+        else:
+            f = getFundInfo(link)
+            persistentstorage.addFund(f)
 
-
-
-
-
+    persistentstorage.updateRecord()
 
 
 # 2022/5/28
@@ -307,4 +304,5 @@ if __name__ == '__main__':
 # 2022/6/3
 # 1654245014670 09D30CFCCDB475FA9F196B651A85A6CE
 # 2022/6/4
-# 1654310312572 5E07D9390FE84C986CBFCEE8D5736823
+# 1654310312572 5E07D9390FE84C986CBFCEE8D5736823(23:30不行了）10:38
+# 1654357680925 3F8ABE46942E0CC167D8545A40B9AA93

@@ -1,4 +1,8 @@
+import datetime
 import json
+import time
+
+import crawler
 
 import pymysql
 
@@ -57,10 +61,32 @@ def addHistoryRecord(records):
         db.close()
         return True
     except Exception as e:
+        print('sb')
         print(e)
         db.rollback()
         cursor.close()
         db.close()
+        return False
+
+
+def updateRecord():
+    try:
+        links = getFundList()
+        for link in links:
+            last_date = getLastDate(link)
+            if last_date is None:
+                span = 30000
+            else:
+                now_date = time.localtime(time.time())
+                now_date = datetime.date(now_date[0], now_date[1], now_date[2])
+                span = (now_date - last_date).days
+                print(span)
+
+            records = crawler.getHistoryRecord(link, str(span))
+            addHistoryRecord(records)
+        return True
+    except Exception as e:
+        print(e)
         return False
 
 
@@ -120,9 +146,16 @@ def getLastDate(url):
         return None
 
 
-def checkFund(number):
+def checkFund(url):
     db = linkDatabase()
     cursor = db.cursor()
+    if len(url) != 38 and len(url) != 58:
+        return False
+
+    if len(url) == 38:
+        number = url[30:38]
+    elif len(url) == 58:
+        number = url[32:39]
     try:
         sql = '''
         select *
@@ -146,6 +179,28 @@ def checkFund(number):
         cursor.close()
         db.close()
         return False
+
+
+def getFundList():
+    db = linkDatabase()
+    cursor = db.cursor()
+    sql = '''
+    select url
+    from fund
+    '''
+    urls_list = []
+    try:
+        cursor.execute(sql)
+        db.commit()
+        links = cursor.fetchall()
+        for link in links:
+            urls_list.append(link[0])
+        return urls_list
+    except Exception as e:
+        print(e)
+        cursor.close()
+        db.close()
+        return None
 
 
 def getTableJson():
@@ -179,7 +234,7 @@ def getTableJson():
         db.close()
         return False
 
-# TODO
+
 def getRecordJson():
     line = {}
     data = []
