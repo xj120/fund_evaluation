@@ -8,7 +8,7 @@ $(function () {
             , url: '../static/data/table.json'
             , height: 510
             , toolbar: true
-            , page: true //开启分页
+            , page: false //开启分页
             , cols: [[ //表头
                 {field: 'v_id', title: '大V名字', width: 130, fixed: 'left'}
                 , {field: 'group_id', title: '组合名字', width: 130}
