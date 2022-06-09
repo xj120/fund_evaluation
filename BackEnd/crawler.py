@@ -13,7 +13,7 @@ import persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16543576809253F8ABE46942E0CC167D8545A40B9AA93'
+    'x-sign': '1654750142906FCE88EE4F8BB7130C6722218A9530CE9'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -259,24 +259,24 @@ if __name__ == '__main__':
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
 
-    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-    #         'https://qieman.com/portfolios/ZH010246',
-    #         'https://qieman.com/portfolios/ZH006498',
-    #         'https://qieman.com/portfolios/ZH000193',
-    #         'https://qieman.com/portfolios/ZH001798',
-    #         'https://qieman.com/portfolios/ZH012926',
-    #         'https://qieman.com/portfolios/ZH009664',
-    #         'https://qieman.com/portfolios/ZH030684',
-    #         'https://qieman.com/portfolios/ZH017252',
-    #         'https://qieman.com/portfolios/ZH035411',
-    #         'https://qieman.com/portfolios/ZH043108']
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+            'https://qieman.com/portfolios/ZH010246',
+            'https://qieman.com/portfolios/ZH006498',
+            'https://qieman.com/portfolios/ZH000193',
+            'https://qieman.com/portfolios/ZH001798',
+            'https://qieman.com/portfolios/ZH012926',
+            'https://qieman.com/portfolios/ZH009664',
+            'https://qieman.com/portfolios/ZH030684',
+            'https://qieman.com/portfolios/ZH017252',
+            'https://qieman.com/portfolios/ZH035411',
+            'https://qieman.com/portfolios/ZH043108']
 
-    for link in persistentstorage.getFundList():
+    for link in urls:
         if persistentstorage.checkFund(link):
             f = getFundInfo(link)
             persistentstorage.updateFund(f)
@@ -284,7 +284,18 @@ if __name__ == '__main__':
             f = getFundInfo(link)
             persistentstorage.addFund(f)
 
-    persistentstorage.updateRecord()
+        r = getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
+
+    # for link in persistentstorage.getFundList():
+    #     if persistentstorage.checkFund(link):
+    #         f = getFundInfo(link)
+    #         persistentstorage.updateFund(f)
+    #     else:
+    #         f = getFundInfo(link)
+    #         persistentstorage.addFund(f)
+
+    # persistentstorage.updateRecord()
 
 
 # 2022/5/28
@@ -306,3 +317,13 @@ if __name__ == '__main__':
 # 2022/6/4
 # 1654310312572 5E07D9390FE84C986CBFCEE8D5736823(23:30不行了）10:38
 # 1654357680925 3F8ABE46942E0CC167D8545A40B9AA93
+
+
+# 蛋卷基金调仓历史
+# https://danjuanapp.com/djapi/plan/CSI1065/trade_history?size=200&page=1
+# 蛋卷基金基金数据
+# https://danjuanapp.com/djapi/fund/nav/history/519008?page=1&size=10000
+# 且慢基金调仓历史
+# https://qieman.com/pmdj/v1/pomodels/ZH030684/adjustments?page=0&size=10&format=openapi&isDesc=true
+# 且慢基金基金数据
+# https://qieman.com/funds/163411
