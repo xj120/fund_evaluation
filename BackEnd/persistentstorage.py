@@ -2,7 +2,7 @@ import datetime
 import json
 import time
 
-import crawler
+import BackEnd.crawler
 
 import pymysql
 
@@ -82,7 +82,7 @@ def updateRecord():
                 span = (now_date - last_date).days
                 print(span)
 
-            records = crawler.getHistoryRecord(link, str(span))
+            records = BackEnd.crawler.getHistoryRecord(link, str(span))
             addHistoryRecord(records)
         return True
     except Exception as e:
@@ -203,6 +203,14 @@ def getFundList():
         return None
 
 
+def getUrlAndDateInfo():
+    info_dict = {}
+    fund_list = getFundList()
+    for f in fund_list:
+        info_dict[f] = str(getLastDate(f))
+    return info_dict
+
+
 def getTableJson():
     table = {"code": 0,"msg": ""}
     data = []
@@ -270,3 +278,4 @@ def getRecordJson():
 if __name__ == '__main__':
     getTableJson()
     getRecordJson()
+    print(getUrlAndDateInfo())

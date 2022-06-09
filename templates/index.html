@@ -147,6 +147,7 @@ line-height:30px;
 </form>
 <form name="spiderALL">
     <input type="button" value="爬取全部" onclick= spideall()>
+</form>
 </div>
     <script>
         function spideall(){
@@ -192,133 +193,18 @@ for(var i =2;i<row.length;i++)
             <td id="actions"> <input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
         </tr>
 
-{% for i in content %}
-        {% for j in i%}
+{% for key,value in content.items() %}
+
         <tr>
-        <td>j[0]</td>
-        <td>j[1]</td>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
         <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
         </tr>
+
         {% endfor %}
-        {% endfor %}
 
 
-        <tr>
-            <td>https://qieman.com/portfolios/ZH012926</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
 
-        <tr>
-            <td>https://qieman.com/portfolios/ZH001798</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH039471</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH010246</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH006498</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH000193</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH009664</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH000193</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH030684</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH017252</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH007973</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH037807</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH007974</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH017409</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH035411</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH043108</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://qieman.com/portfolios/ZH043126</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1033?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1032?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1038?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1029?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1006?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
-        <tr>
-            <td>https://danjuanapp.com/strategy/CSI1065?channel=1300100141</td>
-            <td>数据未爬取</td>
-            <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
-        </tr>
 
 
  </table>

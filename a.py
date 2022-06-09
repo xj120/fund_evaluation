@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request
-import pymysql
+
 from werkzeug.utils import redirect
-#import BackEnd.crawler
-#import time
+
+from BackEnd.persistentstorage import getUrlAndDateInfo
+
 import datetime
 import json
 
@@ -24,7 +25,7 @@ app.debug = True
 
 @app.route('/')
 def index2():
-
+    content = getUrlAndDateInfo()
     #content：url的字典
     return render_template("index.html",content = content)
 
@@ -44,9 +45,9 @@ def delete(i):
 @app.route('/spide', methods=["POST"])
 def spide():
     #爬虫程序：
- a = request.form.get('url')
- print(a)
- return redirect('/')
+    a = request.form.get('url')
+    print(type(a))
+    return redirect('/')
 
 
 if __name__ == "__main__":

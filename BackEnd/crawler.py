@@ -5,11 +5,10 @@ import time
 import requests
 
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-import fund
-import record
-import persistentstorage
+import BackEnd.fund as fund
+import BackEnd.record as record
+import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
