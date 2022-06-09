@@ -1,1 +1,150 @@
-{"code": 0, "msg": "", "data": [{"v_id": "CSI1006", "group_id": "全球精选", "gains": 55.4, "max_retracement": 41.56, "sharpe_ratio": 0.63, "annualized_volatility": 17.65, "fans_num": null}, {"v_id": "CSI1029", "group_id": "银河战舰", "gains": 48.47, "max_retracement": 24.38, "sharpe_ratio": 1.24, "annualized_volatility": 12.96, "fans_num": null}, {"v_id": "CSI1032", "group_id": "积极进取", "gains": 100.39, "max_retracement": 31.71, "sharpe_ratio": 1.43, "annualized_volatility": 14.87, "fans_num": null}, {"v_id": "CSI1033", "group_id": "螺丝钉主动优选组合", "gains": 39.92, "max_retracement": 32.52, "sharpe_ratio": 1.08, "annualized_volatility": 13.0, "fans_num": null}, {"v_id": "CSI1038", "group_id": "宇宙奇兵", "gains": 46.79, "max_retracement": 33.61, "sharpe_ratio": 0.92, "annualized_volatility": 18.12, "fans_num": null}, {"v_id": "CSI1065", "group_id": "久聪基金经理优选", "gains": 17.4, "max_retracement": 37.03, "sharpe_ratio": 0.5, "annualized_volatility": 13.7, "fans_num": null}, {"v_id": "ZH000193", "group_id": "巨人指数", "gains": 0.3829, "max_retracement": 0.3605, "sharpe_ratio": 0.2103, "annualized_volatility": 0.1684, "fans_num": 29482}, {"v_id": "ZH001798", "group_id": "进取一号", "gains": 0.7812, "max_retracement": 0.3687, "sharpe_ratio": 0.4688, "annualized_volatility": 0.1784, "fans_num": 2506}, {"v_id": "ZH006498", "group_id": "价值五剑", "gains": 0.9994, "max_retracement": 0.3253, "sharpe_ratio": 0.6643, "annualized_volatility": 0.1679, "fans_num": 25951}, {"v_id": "ZH009664", "group_id": "盈米股基精选组合", "gains": 0.7708, "max_retracement": 0.3737, "sharpe_ratio": 0.5997, "annualized_volatility": 0.1676, "fans_num": 19997}, {"v_id": "ZH010246", "group_id": "银河之力", "gains": 0.5254, "max_retracement": 0.4102, "sharpe_ratio": 0.3711, "annualized_volatility": 0.1869, "fans_num": 2826}, {"v_id": "ZH012926", "group_id": "远足", "gains": 1.0288, "max_retracement": 0.2376, "sharpe_ratio": 0.7551, "annualized_volatility": 0.181, "fans_num": 5569}, {"v_id": "ZH017252", "group_id": "交银赢定投", "gains": -0.058, "max_retracement": 0.1349, "sharpe_ratio": null, "annualized_volatility": null, "fans_num": 2438}, {"v_id": "ZH030684", "group_id": "成长五剑", "gains": 1.236, "max_retracement": 0.31, "sharpe_ratio": 1.1214, "annualized_volatility": 0.1976, "fans_num": 12559}, {"v_id": "ZH035411", "group_id": "兴证全球进取派优选", "gains": -0.0317, "max_retracement": 0.1621, "sharpe_ratio": null, "annualized_volatility": null, "fans_num": 12515}, {"v_id": "ZH043108", "group_id": "中欧股票优选", "gains": 0.0476, "max_retracement": 0.0, "sharpe_ratio": null, "annualized_volatility": null, "fans_num": 3334}]}
+{
+  "code": 0 ,
+  "data": [
+    {
+      "v_id": "CSI1006" ,
+      "group_id": "全球精选" ,
+      "gains": 55.4 ,
+      "max_retracement": 41.56 ,
+      "sharpe_ratio": 0.63 ,
+      "annualized_volatility": 17.65 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "CSI1029" ,
+      "group_id": "银河战舰" ,
+      "gains": 48.47 ,
+      "max_retracement": 24.38 ,
+      "sharpe_ratio": 1.24 ,
+      "annualized_volatility": 12.96 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "CSI1032" ,
+      "group_id": "积极进取" ,
+      "gains": 100.39 ,
+      "max_retracement": 31.71 ,
+      "sharpe_ratio": 1.43 ,
+      "annualized_volatility": 14.87 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "CSI1033" ,
+      "group_id": "螺丝钉主动优选组合" ,
+      "gains": 39.92 ,
+      "max_retracement": 32.52 ,
+      "sharpe_ratio": 1.08 ,
+      "annualized_volatility": 13.0 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "CSI1038" ,
+      "group_id": "宇宙奇兵" ,
+      "gains": 46.79 ,
+      "max_retracement": 33.61 ,
+      "sharpe_ratio": 0.92 ,
+      "annualized_volatility": 18.12 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "CSI1065" ,
+      "group_id": "久聪基金经理优选" ,
+      "gains": 17.4 ,
+      "max_retracement": 37.03 ,
+      "sharpe_ratio": 0.5 ,
+      "annualized_volatility": 13.7 ,
+      "fans_num": null
+    } ,
+    {
+      "v_id": "ZH000193" ,
+      "group_id": "巨人指数" ,
+      "gains": 0.3829 ,
+      "max_retracement": 0.3605 ,
+      "sharpe_ratio": 0.2103 ,
+      "annualized_volatility": 0.1684 ,
+      "fans_num": 29482
+    } ,
+    {
+      "v_id": "ZH001798" ,
+      "group_id": "进取一号" ,
+      "gains": 0.7812 ,
+      "max_retracement": 0.3687 ,
+      "sharpe_ratio": 0.4688 ,
+      "annualized_volatility": 0.1784 ,
+      "fans_num": 2506
+    } ,
+    {
+      "v_id": "ZH006498" ,
+      "group_id": "价值五剑" ,
+      "gains": 0.9994 ,
+      "max_retracement": 0.3253 ,
+      "sharpe_ratio": 0.6643 ,
+      "annualized_volatility": 0.1679 ,
+      "fans_num": 25951
+    } ,
+    {
+      "v_id": "ZH009664" ,
+      "group_id": "盈米股基精选组合" ,
+      "gains": 0.7708 ,
+      "max_retracement": 0.3737 ,
+      "sharpe_ratio": 0.5997 ,
+      "annualized_volatility": 0.1676 ,
+      "fans_num": 19997
+    } ,
+    {
+      "v_id": "ZH010246" ,
+      "group_id": "银河之力" ,
+      "gains": 0.5254 ,
+      "max_retracement": 0.4102 ,
+      "sharpe_ratio": 0.3711 ,
+      "annualized_volatility": 0.1869 ,
+      "fans_num": 2826
+    } ,
+    {
+      "v_id": "ZH012926" ,
+      "group_id": "远足" ,
+      "gains": 1.0288 ,
+      "max_retracement": 0.2376 ,
+      "sharpe_ratio": 0.7551 ,
+      "annualized_volatility": 0.181 ,
+      "fans_num": 5569
+    } ,
+    {
+      "v_id": "ZH017252" ,
+      "group_id": "交银赢定投" ,
+      "gains": -0.058 ,
+      "max_retracement": 0.1349 ,
+      "sharpe_ratio": null ,
+      "annualized_volatility": null ,
+      "fans_num": 2438
+    } ,
+    {
+      "v_id": "ZH030684" ,
+      "group_id": "成长五剑" ,
+      "gains": 1.236 ,
+      "max_retracement": 0.31 ,
+      "sharpe_ratio": 1.1214 ,
+      "annualized_volatility": 0.1976 ,
+      "fans_num": 12559
+    } ,
+    {
+      "v_id": "ZH035411" ,
+      "group_id": "兴证全球进取派优选" ,
+      "gains": -0.0317 ,
+      "max_retracement": 0.1621 ,
+      "sharpe_ratio": null ,
+      "annualized_volatility": null ,
+      "fans_num": 12515
+    } ,
+    {
+      "v_id": "ZH043108" ,
+      "group_id": "中欧股票优选" ,
+      "gains": 0.0476 ,
+      "max_retracement": 0.0 ,
+      "sharpe_ratio": null ,
+      "annualized_volatility": null ,
+      "fans_num": 3334
+    }
+  ] ,
+  "msg": ""
+}

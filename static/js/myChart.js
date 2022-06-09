@@ -42,7 +42,7 @@ let option = {
     },
     xAxis: {
         data: [],
-        type: 'value',
+        type: 'time',
         boundaryGap: false
     },
     yAxis: {
@@ -58,13 +58,13 @@ let option = {
         {
             type: 'slider',
             start: 0,
-            end: 100,
+            end: 20,
             bottom: 0,
         },
         {
             type: 'inside',
             start: 0,
-            end: 100,
+            end: 20,
             bottom: 0,
         },
     ],
@@ -88,22 +88,23 @@ $.ajax({
                 }
                 if (result.data[i].name === found.name) {//如果series数组中有data当前对象的名称，直接添加
                     data1 = [0, 0];
-                    data1[0] = result.data[i].time;
-                    data1[1] = result.data[i].weight;
+                    data1[0] = result.data[i].date;
+                    data1[1] = result.data[i].daily_rise_drop;
                     found.data.push(data1);
                 } else {//如果没有，就新push一个series元素,此处要注意series数据结构理解
                     option.series.push(
                         {
                             name: result.data[i].name,
                             type: 'line',
-                            data: []
+                            data: [],
+                            showSymbol: false
                         }
                     )
                     //重复上面if里面的内容
                     data1 = [0, 0];
                     let sFound = option.series.find(element => result.data[i].name === element.name);
-                    data1[0] = result.data[i].time;
-                    data1[1] = result.data[i].weight;
+                    data1[0] = result.data[i].date;
+                    data1[1] = result.data[i].daily_rise_drop;
                     sFound.data.push(data1);
                 }
             }
