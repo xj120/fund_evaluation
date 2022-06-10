@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel="stylesheet" href="./static/css/all.css">
     <script src="https://kit.fontawesome.com/yourcode.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <style>
 
        .upper{
@@ -42,6 +44,16 @@ input{
        margin-right:10px;
        margin-top:10px;
        }
+
+.del{
+height:20px;
+width:60px;
+}
+
+.spi{
+height:20px;
+width:60px;
+}
 
 .textInput{
 background-color:white;
@@ -134,36 +146,150 @@ line-height:30px;
    <input type="button" onclick="show()" value="新建URL">
 </form>
 <form name="spiderALL">
-    <input type="button" value="爬取全部" href="/spidall/{{content}}">
+    <input type="button" value="爬取全部" onclick= spideall()>
+</form>
 </div>
+    <script>
+        function spideall(){
+        var urltb = document.getElementById('URLtable')
+        var row = urltb.rows;
+for(var i =2;i<row.length;i++)
+        {
+        var cell = row[i].cells;
+        alert(cell[0].innerHTML)
+        var myDate = new Date();
+        cell[1].innerText = myDate;
+        $.ajax({
+            type: 'POST',
+            url: '/spide',
+            data: {'url':cell[0].innerHTML},
+            dataType: 'json',
+            success: function () {
+                alert("成功");
+            },
+            error: function () {
+                alert("失败");
+            }
+        })
+        }
+        }
+    </script>
 </form>
 
-    <table class="URLtable">
+
+    <table id="URLtable">
+
         <tr>
             <th>URL <i class="fas fa-chevron-up"></i></th>
             <th>数据最后时间</th>
             <th>操作</th>
         </tr>
-{% for i in content %}
-        <tr>
-            {% for j in i %}
-            <td>{{j}}</td>
-            {% endfor %}
-            <td> <i class="fas fa-download"></i><a href="/delete/{{i}}"><i class="fas fa-trash"></i></a><i class="fas fa-brush"><a href="/spide/{{i}}"></a></i></td>
+
+
+
+        <tr hidden="hidden">
+            <td></td>
+            <td id="time">数据未爬取</td>
+            <td id="actions"> <input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
         </tr>
+
+{% for key,value in content.items() %}
+
+        <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+        <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
+        </tr>
+
         {% endfor %}
-    </table>
+
+
+
+
+
+ </table>
+        <script>
+        var TB = document.getElementsByTagName('tbody')[0];
+	    var myContent = document.getElementById('content');
+
+	    // 给tbody绑定点击事件（事件委托）
+	    TB.onclick = function (e) {
+	        // 如果当前点击的是删除按钮
+	        if (e.target.className == 'del') {
+
+	                // e.target 为当前点击对象--->删除
+	                // e.target.parentElement ---> td
+	                // e.target.parentElement.parentElement  ---> tr
+                    alert(e.target.parentElement.parentElement.children[0].innerText);
+
+	                TB.removeChild(e.target.parentElement.parentElement)
+
+	        }
+	        }
+        </script>>
+        <script>
+
+function spide(td){
+alert(td.parentElement.parentElement.children[0].innerText)
+alert(td.parentElement.parentElement.children[1].innerText)
+var myDate = new Date();
+td.parentElement.parentElement.children[1].innerText = myDate;
+$.ajax({
+            type: 'POST',
+            url: '/spide',
+            data: {'url':td.parentElement.parentElement.children[0].innerText},
+            dataType: 'json',
+            success: function () {
+                alert("成功");
+            },
+            error: function () {
+                alert("失败");
+            }
+        })
+}
+
+        </script>
+
 </div>
 <div id="shade" class="c1 hide"></div>
 <div id="modal" class="c2 hide">
     <p class="text">添加URL</p>
-    <form action="/add" method="post">
-        <input type="text" name="URL" class="textInput"><br>
-        <input type="submit"  value="确定" onclick="Hide()" class="buttonInput">
-    </form>
+<form onsubmit="return addURL()">
+    <input type="text" name="URL" class="textInput" id = "urlinput"><br>
+    <input type="button"  value="确定" onclick="return addURL()" class="buttonInput">
+</form>
     <input type="button" value="取消" onclick="Hide()" class="buttonInput">
-
 </div>
+
+<script type="text/javascript">
+
+
+function addURL(){
+
+var url = document.getElementById('urlinput').value
+alert(url)
+var time = document.getElementById('time').innerHTML
+alert(time)
+var actions = document.getElementById('actions').innerHTML
+alert(actions)
+tb = document.getElementById('URLtable')
+var row = document.createElement('tr'); //创建行
+
+	 var idCell = document.createElement('td'); //创建第一列id
+	 idCell.innerHTML = url; //填充数据
+	 row.appendChild(idCell); //加入行  ，下面类似
+
+	 var nameCell = document.createElement('td');//创建第二列name
+	 nameCell.innerHTML = time;
+	 row.appendChild(nameCell);
+
+	 var jobCell = document.createElement('td');//创建第三列job
+	 jobCell.innerHTML = actions;
+	 row.appendChild(jobCell)
+
+	 tb.appendChild(row)
+}
+</script>
 
 <script>
 function show()
