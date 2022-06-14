@@ -37,7 +37,7 @@ let option = {
     legend: {
         x: 'left',
         padding: [0, 0, 0, 185],
-        width: 700,
+        width: 1100,
         itemWidth: 16
     },
     xAxis: {
