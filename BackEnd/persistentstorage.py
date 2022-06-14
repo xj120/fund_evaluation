@@ -7,6 +7,7 @@ import BackEnd.crawler
 import pymysql
 
 
+# 连接数据库
 def linkDatabase():
     try:
         pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
@@ -19,6 +20,7 @@ def linkDatabase():
         return db
 
 
+# 添加一个投资组合
 def addFund(fund):
     db = linkDatabase()
     cursor = db.cursor()
@@ -44,6 +46,7 @@ def addFund(fund):
         return False
 
 
+# 添加一个投资组合的历史记录
 def addHistoryRecord(records):
     db = linkDatabase()
     cursor = db.cursor()
@@ -69,6 +72,7 @@ def addHistoryRecord(records):
         return False
 
 
+# 更新投资组合的历史记录
 def updateRecord():
     try:
         links = getFundList()
@@ -90,6 +94,7 @@ def updateRecord():
         return False
 
 
+# 更新投资组合的基本信息
 def updateFund(fund):
     db = linkDatabase()
     cursor = db.cursor()
@@ -115,6 +120,7 @@ def updateFund(fund):
         return False
 
 
+# 得到投资组合历史记录的最后一天
 def getLastDate(url):
     db = linkDatabase()
     cursor = db.cursor()
@@ -146,6 +152,7 @@ def getLastDate(url):
         return None
 
 
+# 检查该url是否合法，再检查投资组合是否存在
 def checkFund(url):
     db = linkDatabase()
     cursor = db.cursor()
@@ -181,6 +188,7 @@ def checkFund(url):
         return False
 
 
+# 得到数据库内已有的投资组合列表
 def getFundList():
     db = linkDatabase()
     cursor = db.cursor()
@@ -203,6 +211,7 @@ def getFundList():
         return None
 
 
+# 得到URL和时间的信息，传给前端
 def getUrlAndDateInfo():
     info_dict = {}
     fund_list = getFundList()
@@ -211,6 +220,7 @@ def getUrlAndDateInfo():
     return info_dict
 
 
+# 编写投资组合信息JSON文件给前端
 def getTableJson():
     table = {"code": 0,"msg": ""}
     data = []
@@ -243,6 +253,7 @@ def getTableJson():
         return False
 
 
+# 编写投资组合历史记录的JSON文件给前端
 def getRecordJson():
     line = {}
     data = []

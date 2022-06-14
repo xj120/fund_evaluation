@@ -8,16 +8,18 @@ from selenium import webdriver
 
 import BackEnd.fund as fund
 import BackEnd.record as record
+import BackEnd.reposition as reposition
 import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '1654750142906FCE88EE4F8BB7130C6722218A9530CE9'
+    'x-sign': '16552022484715345E2FA4FCE716B14AEEB5E179AF71A'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
 
+# 看情况更新Xsign
 def updateXsign():
     # print(qm_header['x-sign'][0:13])
     last_xsign = int(qm_header['x-sign'][0:13]) // 1000
@@ -26,12 +28,15 @@ def updateXsign():
     now_time = time.localtime()
     now_date = datetime.datetime(now_time[0], now_time[1], now_time[2], now_time[3], now_time[4])
 
-    span = (now_date-last_date).seconds/3600
+    difference = now_date - last_date
+
+    span = difference.days*24 + difference.seconds/3600
 
     if span > 12:
         qm_header['x-sign'] = getXsign()
 
 
+# 得到Xsign参数
 def getXsign():
     try:
         caps = {
@@ -70,18 +75,20 @@ def getXsign():
         return None
 
 
-def getFundInfo(url):
+# 获取投资组合基本信息的统一接口
+def getPortfolioInfo(url):
     if len(url) != 38 and len(url) != 58:
         return None
 
     if len(url) == 38:
         number = url[30:38]
-        return getFundInfo_qieman(number)
+        return getPortfolioInfo_qieman(number)
     elif len(url) == 58:
         number = url[32:39]
-        return getFundInfo_danjuan(number)
+        return getPortfolioInfo_danjuan(number)
 
 
+# 获取投资组合历史记录的统一接口
 def getHistoryRecord(url, size):
     if len(url) != 38 and len(url) != 58:
         return None
@@ -94,6 +101,7 @@ def getHistoryRecord(url, size):
         return getHistoryRecord_danjuan(number, size)
 
 
+# 将秒格式化为日期
 def formatTime(second):
     second /= 1000
     time_array = time.localtime(second)
@@ -101,7 +109,8 @@ def formatTime(second):
     return format_date
 
 
-def getFundInfo_qieman(number):
+# TODO 获取且慢基金投资组合的信息（有信息疑似提取错误）
+def getPortfolioInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     try:
         response = requests.get(url=url, headers=qm_header)
@@ -131,7 +140,7 @@ def getFundInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
-        return fund.fund(number=number, name=name, url=sourse_url, found_date=found_date,
+        return fund.fund(number=number, name=name, manager_name=None, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
@@ -143,6 +152,7 @@ def getFundInfo_qieman(number):
         return None
 
 
+# 获取且慢基金投资组合的历史记录
 def getHistoryRecord_qieman(number, size=30000):
     url = "https://qieman.com/pmdj/v1/pomodels/"+number+"/nav-history"
     try:
@@ -169,7 +179,59 @@ def getHistoryRecord_qieman(number, size=30000):
         return None
 
 
-def getFundInfo_danjuan(number):
+# 获取且慢基金的调仓历史记录
+def getRepositionRecord_qieman(number):
+    url = 'https://qieman.com/pmdj/v1/pomodels/'+number+'/adjustments?page=0&size=100&format=openapi&isDesc=true'
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        items = items.get('content')
+        repositions = []
+        for item in items:
+            adjust_date = item.get('adjustedOn')
+            records = []
+            details = item.get('details')
+            for detail in details:
+                d = {'fund_code': detail.get('fundCode'), 'percent': detail.get('toPercent')}
+                records.append(d)
+            repositions.append(reposition.reposition(adjust_date=adjust_date, records=records))
+        return repositions
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:', response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
+# 获取且慢基金的涨幅记录（已完成）
+def getFundRise_qieman(number, sell_date):
+    now_date = time.localtime()
+    now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
+    url = 'https://qieman.com/pmdj/v1/funds/'+number+'/nav-history?start='+str(sell_date)+'&end='+str(now_date)
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        rise_and_drop = 0.0
+        for item in items:
+            rise_and_drop += item.get('dailyReturn') * 100
+        return rise_and_drop
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:', response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
+# 获取蛋卷基金投资组合的基本信息
+def getPortfolioInfo_danjuan(number):
     url = "http://danjuanapp.com/djapi/plan/"+number
 
     try:
@@ -186,6 +248,8 @@ def getFundInfo_danjuan(number):
         sourse_url = 'https://danjuanapp.com/strategy/' + number + '?channel=1300100141'
         # 名字
         name = obj.get('plan_name')
+        # 主理人名字
+        manager_name = obj.get('manager_name')
         # 累计收益
         income_since_found = obj.get('yield')
         # 成立以来年化率
@@ -208,7 +272,7 @@ def getFundInfo_danjuan(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
-        return fund.fund(number=number, name=name, url=sourse_url, found_date=found_date,
+        return fund.fund(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found)
     except requests.HTTPError as e:
@@ -220,8 +284,9 @@ def getFundInfo_danjuan(number):
         return None
 
 
+# 获取蛋卷基金投资组合的历史记录
 def getHistoryRecord_danjuan(number, size=30000):
-    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size="+size+"&page=1"
+    url = "https://danjuanapp.com/djapi/plan/nav/history/"+number+"?size="+str(size)+"&page=1"
 
     try:
         response = requests.get(url=url, headers=dj_header)
@@ -250,6 +315,53 @@ def getHistoryRecord_danjuan(number, size=30000):
         return None
 
 
+# 获取蛋卷基金的调仓记录
+def getRepositionRecord_danjuan(number):
+    url = 'https://danjuanapp.com/djapi/plan/'+number+'/trade_history?size=1000&page=1'
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        items = items.get('data').get('items')
+        repositions = []
+        for item in items:
+            adjust_date = str(formatTime(item.get('trade_date')))
+            records = []
+            details = item.get('trading_elements')
+            for detail in details:
+                d = {'fund_code': detail.get('fd_code'), 'percent': detail.get('percent')}
+                records.append(d)
+            repositions.append(reposition.reposition(adjust_date=adjust_date, records=records))
+        return repositions
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:', response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
+# TODO 蛋卷基金获取基金的涨跌记录，未完成，只获取了字典
+def getFundRise_danjuan(number):
+    url = 'https://danjuanapp.com/djapi/fund/nav/history/'+number+'?page=1&size=10000'
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        # 得到基金数据的一个 列表(由字典组成)
+        items = items.get('data').get('items')
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:', response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
 if __name__ == '__main__':
     updateXsign()
     print(qm_header['x-sign'])
@@ -258,42 +370,46 @@ if __name__ == '__main__':
     # endtime = datetime.datetime.now()
     # print(endtime - starttime)
 
-    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-            'https://qieman.com/portfolios/ZH010246',
-            'https://qieman.com/portfolios/ZH006498',
-            'https://qieman.com/portfolios/ZH000193',
-            'https://qieman.com/portfolios/ZH001798',
-            'https://qieman.com/portfolios/ZH012926',
-            'https://qieman.com/portfolios/ZH009664',
-            'https://qieman.com/portfolios/ZH030684',
-            'https://qieman.com/portfolios/ZH017252',
-            'https://qieman.com/portfolios/ZH035411',
-            'https://qieman.com/portfolios/ZH043108']
+    # getRepositionRecord_qieman('ZH030684')
 
-    for link in urls:
-        if persistentstorage.checkFund(link):
-            f = getFundInfo(link)
-            persistentstorage.updateFund(f)
-        else:
-            f = getFundInfo(link)
-            persistentstorage.addFund(f)
+    # print(getRepositionRecord_qieman('ZH030684'))
 
-        r = getHistoryRecord(link, '30000')
-        persistentstorage.addHistoryRecord(r)
-
-    # for link in persistentstorage.getFundList():
+    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    #         'https://qieman.com/portfolios/ZH010246',
+    #         'https://qieman.com/portfolios/ZH006498',
+    #         'https://qieman.com/portfolios/ZH000193',
+    #         'https://qieman.com/portfolios/ZH001798',
+    #         'https://qieman.com/portfolios/ZH012926',
+    #         'https://qieman.com/portfolios/ZH009664',
+    #         'https://qieman.com/portfolios/ZH030684',
+    #         'https://qieman.com/portfolios/ZH017252',
+    #         'https://qieman.com/portfolios/ZH035411',
+    #         'https://qieman.com/portfolios/ZH043108']
+    #
+    # for link in urls:
     #     if persistentstorage.checkFund(link):
-    #         f = getFundInfo(link)
+    #         f = getPortfolioInfo(link)
     #         persistentstorage.updateFund(f)
     #     else:
-    #         f = getFundInfo(link)
+    #         f = getPortfolioInfo(link)
     #         persistentstorage.addFund(f)
-
+    #
+    #     r = getHistoryRecord(link, '30000')
+    #     persistentstorage.addHistoryRecord(r)
+    #
+    # for link in persistentstorage.getFundList():
+    #     if persistentstorage.checkFund(link):
+    #         f = getPortfolioInfo(link)
+    #         persistentstorage.updateFund(f)
+    #     else:
+    #         f = getPortfolioInfo(link)
+    #         persistentstorage.addFund(f)
+    #
     # persistentstorage.updateRecord()
 
 

@@ -1,7 +1,8 @@
 class fund:
-    def __init__(self,number,name,url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers=None):
+    def __init__(self,number,name,manager_name,url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers=None):
         self.number = number
         self.name = name
+        self.manager_name = manager_name
         self.url = url
         self.found_date = found_date
         self.max_drawdown = max_drawdown
