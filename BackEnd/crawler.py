@@ -212,7 +212,7 @@ def getRepositionRecord_qieman(number):
             for detail in details:
                 d = {'fund_code': detail.get('fundCode'), 'percent': detail.get('toPercent')}
                 records.append(d)
-            repositions.append(reposition.reposition(adjust_date=adjust_date, records=records))
+            repositions.append(reposition.reposition(number=number, adjust_date=adjust_date, records=records))
         return repositions
     except requests.HTTPError as e:
         print(e)
@@ -346,9 +346,9 @@ def getRepositionRecord_danjuan(number):
             records = []
             details = item.get('trading_elements')
             for detail in details:
-                d = {'fund_code': detail.get('fd_code'), 'percent': detail.get('percent')}
+                d = {'fund_code': detail.get('fd_code'), 'percent': detail.get('portion')*100}
                 records.append(d)
-            repositions.append(reposition.reposition(adjust_date=adjust_date, records=records))
+            repositions.append(reposition.reposition(number=number, adjust_date=adjust_date, records=records))
         return repositions
     except requests.HTTPError as e:
         print(e)
