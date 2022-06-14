@@ -125,7 +125,7 @@ def formatTime(second):
     return format_date
 
 
-# TODO 获取且慢基金投资组合的信息（有信息疑似提取错误）
+# TODO 获取且慢基金投资组合的信息（有信息疑似提取错误）主理人和粉丝未爬取
 def getPortfolioInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     try:
@@ -141,6 +141,8 @@ def getPortfolioInfo_qieman(number):
         sourse_url = 'https://qieman.com/portfolios/' + number
         # 名字
         name = obj.get('poName')
+        # 主理人名字
+        manager_name = obj.get('poManagers')[0].get('poManagerName')
         # 粉丝数量
         followers = obj.get('followCount')
         # 成立日
@@ -156,7 +158,7 @@ def getPortfolioInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
-        return portfolio.portfolio(number=number, name=name, manager_name=None, url=sourse_url, found_date=found_date,
+        return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
@@ -390,33 +392,34 @@ if __name__ == '__main__':
 
     # print(getRepositionRecord_qieman('ZH030684'))
 
-    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-    #         'https://qieman.com/portfolios/ZH010246',
-    #         'https://qieman.com/portfolios/ZH006498',
-    #         'https://qieman.com/portfolios/ZH000193',
-    #         'https://qieman.com/portfolios/ZH001798',
-    #         'https://qieman.com/portfolios/ZH012926',
-    #         'https://qieman.com/portfolios/ZH009664',
-    #         'https://qieman.com/portfolios/ZH030684',
-    #         'https://qieman.com/portfolios/ZH017252',
-    #         'https://qieman.com/portfolios/ZH035411',
-    #         'https://qieman.com/portfolios/ZH043108']
-    #
-    # for link in urls:
-    #     if persistentstorage.checkPortfolio(link):
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.updatePortfolio(f)
-    #     else:
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.addPortfolio(f)
-    #
-    #     r = getHistoryRecord(link, '30000')
-    #     persistentstorage.addHistoryRecord(r)
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+            'https://qieman.com/portfolios/ZH010246',
+            'https://qieman.com/portfolios/ZH006498',
+            'https://qieman.com/portfolios/ZH000193',
+            'https://qieman.com/portfolios/ZH001798',
+            'https://qieman.com/portfolios/ZH012926',
+            'https://qieman.com/portfolios/ZH009664',
+            'https://qieman.com/portfolios/ZH030684',
+            'https://qieman.com/portfolios/ZH017252',
+            'https://qieman.com/portfolios/ZH035411',
+            'https://qieman.com/portfolios/ZH043108']
+
+    for link in urls:
+        if persistentstorage.checkPortfolio(link):
+            f = getPortfolioInfo(link)
+            persistentstorage.updatePortfolio(f)
+        else:
+            f = getPortfolioInfo(link)
+            persistentstorage.addPortfolio(f)
+        d = getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
+        r = getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
     #
     # for link in persistentstorage.getPortfolioList():
     #     if persistentstorage.checkPortfolio(link):

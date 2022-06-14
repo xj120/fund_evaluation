@@ -26,10 +26,10 @@ def addPortfolio(portfolio):
     cursor = db.cursor()
     try:
         sql = '''
-        insert into portfolio(number,name,url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
-        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        insert into portfolio(number,name, manager_name, url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         '''
-        param = (portfolio.number, portfolio.name, portfolio.url, portfolio.found_date,
+        param = (portfolio.number, portfolio.name, portfolio.manager_name, portfolio.url, portfolio.found_date,
                  portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
                  portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers)
         cursor.execute(sql, param)
@@ -79,7 +79,7 @@ def addRepositionRecord(repositions):
     try:
         for reposition in repositions:
             sql = '''
-            insert into reposition_record(number,adjust_date,fund_code,propotion)
+            insert into reposition_record(number,adjust_date,fund_code,proportion)
             values(%s,%s,%s,%s)
             '''
             for record in reposition.records:
