@@ -47,12 +47,12 @@ def delete(i):
 def spide():
     #爬虫程序：
     link = request.form.get('url')
-    if persistentstorage.checkFund(link):
+    if persistentstorage.checkPortfolio(link):
         f = crawler.getPortfolioInfo(link)
-        persistentstorage.updateFund(f)
+        persistentstorage.updatePortfolio(f)
     else:
         f = crawler.getPortfolioInfo(link)
-        persistentstorage.addFund(f)
+        persistentstorage.addPortfolio(f)
 
     r = crawler.getHistoryRecord(link, '30000')
     persistentstorage.addHistoryRecord(r)

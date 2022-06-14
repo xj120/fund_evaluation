@@ -6,7 +6,7 @@ import requests
 
 from selenium import webdriver
 
-import BackEnd.fund as fund
+import BackEnd.portfolio as portfolio
 import BackEnd.record as record
 import BackEnd.reposition as reposition
 import BackEnd.persistentstorage as persistentstorage
@@ -101,6 +101,22 @@ def getHistoryRecord(url, size):
         return getHistoryRecord_danjuan(number, size)
 
 
+# 获取投资组合调仓历史记录的统一接口
+def getRepositionRecord(url):
+    if len(url) != 38 and len(url) != 58:
+        return None
+
+    if len(url) == 38:
+        number = url[30:38]
+        return getRepositionRecord_qieman(number)
+    elif len(url) == 58:
+        number = url[32:39]
+        return getRepositionRecord_danjuan(number)
+
+
+# TODO 获取基金历史涨跌记录的统一接口（未写）
+
+
 # 将秒格式化为日期
 def formatTime(second):
     second /= 1000
@@ -140,7 +156,7 @@ def getPortfolioInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
-        return fund.fund(number=number, name=name, manager_name=None, url=sourse_url, found_date=found_date,
+        return portfolio.portfolio(number=number, name=name, manager_name=None, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
@@ -272,7 +288,7 @@ def getPortfolioInfo_danjuan(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
-        return fund.fund(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
+        return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found)
     except requests.HTTPError as e:
@@ -392,23 +408,23 @@ if __name__ == '__main__':
     #         'https://qieman.com/portfolios/ZH043108']
     #
     # for link in urls:
-    #     if persistentstorage.checkFund(link):
+    #     if persistentstorage.checkPortfolio(link):
     #         f = getPortfolioInfo(link)
-    #         persistentstorage.updateFund(f)
+    #         persistentstorage.updatePortfolio(f)
     #     else:
     #         f = getPortfolioInfo(link)
-    #         persistentstorage.addFund(f)
+    #         persistentstorage.addPortfolio(f)
     #
     #     r = getHistoryRecord(link, '30000')
     #     persistentstorage.addHistoryRecord(r)
     #
-    # for link in persistentstorage.getFundList():
-    #     if persistentstorage.checkFund(link):
+    # for link in persistentstorage.getPortfolioList():
+    #     if persistentstorage.checkPortfolio(link):
     #         f = getPortfolioInfo(link)
-    #         persistentstorage.updateFund(f)
+    #         persistentstorage.updatePortfolio(f)
     #     else:
     #         f = getPortfolioInfo(link)
-    #         persistentstorage.addFund(f)
+    #         persistentstorage.addPortfolio(f)
     #
     # persistentstorage.updateRecord()
 

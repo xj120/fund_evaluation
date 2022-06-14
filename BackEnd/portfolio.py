@@ -1,4 +1,4 @@
-class fund:
+class portfolio:
     def __init__(self,number,name,manager_name,url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers=None):
         self.number = number
         self.name = name
