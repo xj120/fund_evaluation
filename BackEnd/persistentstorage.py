@@ -7,6 +7,7 @@ import BackEnd.crawler
 import pymysql
 
 
+# 连接数据库
 def linkDatabase():
     try:
         pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
@@ -19,17 +20,18 @@ def linkDatabase():
         return db
 
 
-def addFund(fund):
+# 添加一个投资组合
+def addPortfolio(portfolio):
     db = linkDatabase()
     cursor = db.cursor()
     try:
         sql = '''
-        insert into fund(number,name,url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
-        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        insert into portfolio(number,name, manager_name, url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         '''
-        param = (fund.number, fund.name, fund.url, fund.found_date,
-                 fund.max_drawdown, fund.volatility, fund.sharpe_rate,
-                 fund.rate_per_ann, fund.income_since_found, fund.followers)
+        param = (portfolio.number, portfolio.name, portfolio.manager_name, portfolio.url, portfolio.found_date,
+                 portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
+                 portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers)
         cursor.execute(sql, param)
         db.commit()
 
@@ -44,6 +46,7 @@ def addFund(fund):
         return False
 
 
+# 添加一个投资组合的历史记录
 def addHistoryRecord(records):
     db = linkDatabase()
     cursor = db.cursor()
@@ -69,9 +72,36 @@ def addHistoryRecord(records):
         return False
 
 
+# TODO 向数据库中插入调仓历史记录
+def addRepositionRecord(repositions):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        for reposition in repositions:
+            sql = '''
+            insert into reposition_record(number,adjust_date,fund_code,proportion)
+            values(%s,%s,%s,%s)
+            '''
+            for record in reposition.records:
+                param = (reposition.number, reposition.adjust_date, record.get('fund_code'), record.get('percent'))
+                cursor.execute(sql, param)
+                db.commit()
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print('sb')
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
+# 更新投资组合的历史记录
 def updateRecord():
     try:
-        links = getFundList()
+        links = getPortfolioList()
         for link in links:
             last_date = getLastDate(link)
             if last_date is None:
@@ -90,17 +120,18 @@ def updateRecord():
         return False
 
 
-def updateFund(fund):
+# 更新投资组合的基本信息
+def updatePortfolio(portfolio):
     db = linkDatabase()
     cursor = db.cursor()
     try:
         sql = '''
-        update fund
+        update portfolio
         set max_drawdown = %s, volatility = %s, sharpe_rate = %s, rate_per_ann = %s, income_since_found = %s, followers = %s
         where number = %s
         '''
-        param = (fund.max_drawdown, fund.volatility, fund.sharpe_rate,
-                 fund.rate_per_ann, fund.income_since_found, fund.followers, fund.number)
+        param = (portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
+                 portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers, portfolio.number)
         cursor.execute(sql, param)
         db.commit()
 
@@ -115,6 +146,7 @@ def updateFund(fund):
         return False
 
 
+# 得到投资组合历史记录的最后一天
 def getLastDate(url):
     db = linkDatabase()
     cursor = db.cursor()
@@ -146,7 +178,8 @@ def getLastDate(url):
         return None
 
 
-def checkFund(url):
+# 检查该url是否合法，再检查投资组合是否存在
+def checkPortfolio(url):
     db = linkDatabase()
     cursor = db.cursor()
     if len(url) != 38 and len(url) != 58:
@@ -181,12 +214,13 @@ def checkFund(url):
         return False
 
 
-def getFundList():
+# 得到数据库内已有的投资组合列表
+def getPortfolioList():
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
     select url
-    from fund
+    from portfolio
     '''
     urls_list = []
     try:
@@ -203,14 +237,16 @@ def getFundList():
         return None
 
 
+# 得到URL和时间的信息，传给前端
 def getUrlAndDateInfo():
     info_dict = {}
-    fund_list = getFundList()
-    for f in fund_list:
+    portfolio_list = getPortfolioList()
+    for f in portfolio_list:
         info_dict[f] = str(getLastDate(f))
     return info_dict
 
 
+# 编写投资组合信息JSON文件给前端
 def getTableJson():
     table = {"code": 0,"msg": ""}
     data = []
@@ -218,16 +254,16 @@ def getTableJson():
     cursor = db.cursor()
     sql = '''
     select number, name, income_since_found, max_drawdown, sharpe_rate, volatility, followers
-    from fund
+    from portfolio
     '''
     try:
         cursor.execute(sql)
         db.commit()
-        funds = cursor.fetchall()
-        for fund in funds:
-            fund_dict = {"v_id": fund[0], "group_id": fund[1], "gains": fund[2], "max_retracement": fund[3],
-                         "sharpe_ratio": fund[4], "annualized_volatility": fund[5], "fans_num": fund[6]}
-            data.append(fund_dict)
+        portfolios = cursor.fetchall()
+        for portfolio in portfolios:
+            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "gains": portfolio[2], "max_retracement": portfolio[3],
+                         "sharpe_ratio": portfolio[4], "annualized_volatility": portfolio[5], "fans_num": portfolio[6]}
+            data.append(portfolio_dict)
         table["data"] = data
         with open(file='..\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
             t = json.dumps(table, ensure_ascii=False)
@@ -243,6 +279,7 @@ def getTableJson():
         return False
 
 
+# 编写投资组合历史记录的JSON文件给前端
 def getRecordJson():
     line = {}
     data = []
@@ -250,8 +287,8 @@ def getRecordJson():
     cursor = db.cursor()
     sql = '''
     select name, daily_rise_drop, date
-    from fund,history_record
-    where fund.number = history_record.number
+    from portfolio,history_record
+    where portfolio.number = history_record.number
     '''
     try:
         cursor.execute(sql)
