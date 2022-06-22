@@ -300,6 +300,8 @@ if __name__ == '__main__':
     a = "CSI1006"
     b = "161005"
     c = "2018-09-27"
+
     # print(getPortfolioFollows("CSI1033"))
     # getStore()
-    print(getIncomeCalculation())
+
+    print(crawler.getFundRise_qieman(b,c))
