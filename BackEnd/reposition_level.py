@@ -54,7 +54,7 @@ def getPortfolioUP(numbers,date):
     m=value2-value1
     return  m
 
-
+##########钥开兄看这里##########
 #单个基金调仓情况
 def getMoveState(numbers,fund):
     db = linkDatabase()
@@ -85,6 +85,7 @@ def getMoveState(numbers,fund):
     results2 = cursor2.fetchall()
     for row in results2:
         date = row[0]
+     #在这里令a等于基金的涨幅函数就可以了
         a=0*proportion
         b=getPortfolioUP(numbers,date)
         if b>a:
@@ -92,6 +93,12 @@ def getMoveState(numbers,fund):
         else:
             return 0
     return 0
+
+
+
+
+
+
 #某个组合调仓总次数
 def getMoveTimes(numbers):
     db = linkDatabase()
