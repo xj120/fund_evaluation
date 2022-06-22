@@ -8,6 +8,7 @@ import BackEnd.crawler
 
 import pymysql
 
+
 # 连接数据库
 def linkDatabase():
     try:
@@ -21,16 +22,16 @@ def linkDatabase():
         return db
 
 
-#某个组合的某个基金持有时间
-def getFundHoldingTime(numbers,fund_code):
+# 某个组合的某个基金持有时间
+def getFundHoldingTime(numbers, fund_code):
     db = linkDatabase()
     cursor = db.cursor()
     cursor2 = db.cursor()
-    sql1='''
+    sql1 = '''
     SELECT proportion
         from reposition_record
         where number=
-        '''+"\'"+numbers+"\'"+"and fund_code="+"\'"+fund_code+"\'"+'''
+        ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
         ORDER BY adjust_date DESC
         LIMIT 1
         '''
@@ -38,8 +39,8 @@ def getFundHoldingTime(numbers,fund_code):
     results2 = cursor2.fetchall()
     for row in results2:
         proportion = row[0]
-        if proportion==0:
-           sql2 = '''
+        if proportion == 0:
+            sql2 = '''
                 SELECT datediff(
                     (select adjust_date
                     from reposition_record
@@ -54,7 +55,7 @@ def getFundHoldingTime(numbers,fund_code):
                     LIMIT 1)) as DuringTime 
                     '''
 
-        else :
+        else:
             sql2 = '''
                             SELECT datediff(
                                 (select curdate()),
@@ -71,7 +72,7 @@ def getFundHoldingTime(numbers,fund_code):
         return duringtime
 
 
-#某个组合的所有基金平均持有时间
+# 某个组合的所有基金平均持有时间
 def getFund(numbers):
     db = linkDatabase()
     cursor = db.cursor()
@@ -79,20 +80,21 @@ def getFund(numbers):
            select fund_code
            from reposition_record
            where number=
-           ''' + "\'" + numbers + "\'"+'''
+           ''' + "\'" + numbers + "\'" + '''
            group by fund_code
            '''
     cursor.execute(sql2)
-    results =cursor.rowcount
+    results = cursor.rowcount
     results2 = cursor.fetchall()
-    m=0
-    i=0
+    m = 0
+    i = 0
     for row in results2:
-         fundlist=row[0]
-         m=m+getFundHoldingTime(numbers,fundlist)
+        fundlist = row[0]
+        m = m + getFundHoldingTime(numbers, fundlist)
     return m / results / 30
 
-#将组合的平均持有时间存入数据库
+
+# 将组合的平均持有时间存入数据库
 def getStore():
     db = linkDatabase()
     cursor = db.cursor()
@@ -107,16 +109,17 @@ def getStore():
     results2 = cursor.fetchall()
 
     for row in results2:
-         row[0]
-         sql2 = '''
+        row[0]
+        sql2 = '''
                     update portfolio
-                    set average_holding_time = '''+str(round(getFund(row[0])))+'''
-                    where number='''+ "\'" + row[0] + "\'"
-         cursor2.execute(sql2)
-         db.commit()
+                    set average_holding_time = ''' + str(round(getFund(row[0]))) + '''
+                    where number=''' + "\'" + row[0] + "\'"
+        cursor2.execute(sql2)
+        db.commit()
 
 
 if __name__ == '__main__':
     a = "CSI1006"
-    b="161005"
+    b = "161005"
     getStore()
+    # print(persistentstorage.getPortfolioList())
