@@ -13,11 +13,12 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16552022484715345E2FA4FCE716B14AEEB5E179AF71A'
+    'x-sign': '165590567617433B1AA0E953B757282525B01A67F8F1D'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
+xq_header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44',}
 
 # 看情况更新Xsign
 def updateXsign():
@@ -248,6 +249,33 @@ def getFundRise_qieman(number, sell_date):
         return None
 
 
+def getPortfolioFans_danjuan(number):
+    try:
+        url = 'https://danjuanapp.com/djapi/v2/plan/detail/opinions?plan_code='+number
+        response = requests.get(url=url, headers=xq_header)
+        response.raise_for_status()
+        content = response.text
+        obj = json.loads(content)
+        xq_name = obj.get('data').get('xq_id')
+
+        url = 'https://xueqiu.com/query/v1/search/user.json?q=' + xq_name + '&count=3&page=1'
+        session = requests.session()
+        session.get(url="https://xueqiu.com", headers=xq_header)
+        response = session.get(url=url, headers=xq_header)
+        response.raise_for_status()
+        obj = json.loads(response.text)
+        obj = obj.get('list')
+        followers = obj[0].get('followers_count')
+        return followers
+    except requests.HTTPError as e:
+        print(e)
+        print("status_code", response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
+
 # 获取蛋卷基金投资组合的基本信息
 def getPortfolioInfo_danjuan(number):
     url = "http://danjuanapp.com/djapi/plan/"+number
@@ -290,9 +318,12 @@ def getPortfolioInfo_danjuan(number):
         # 夏普比率
         sharpe = obj.get('sharpe')
 
+        # 粉丝
+        followers = getPortfolioFans_danjuan(number)
+
         return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
-                         rate_per_ann=rate_per_ann, income_since_found=income_since_found)
+                         rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
         print(e)
         print('status_code:',response.status_code)
