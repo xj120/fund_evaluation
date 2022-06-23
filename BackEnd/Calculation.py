@@ -3,8 +3,8 @@ import BackEnd.persistentstorage as persistentstorage
 import datetime
 import json
 import time
+from BackEnd import a
 import pymysql
-
 
 # 连接数据库
 def linkDatabase():
@@ -19,26 +19,28 @@ def linkDatabase():
         return db
 
 
-# 所有组合的的年收益率的数学期望E(x)
+
+
+#所有组合的的年收益率的数学期望E(x)，E(X)=所有组合年收益率之和
 def getIncomeEX():
     db = linkDatabase()
     cursor2 = db.cursor()
-    sql1 = '''
+    sql1='''
     SELECT income_since_found
         FROM portfolio
         '''
     cursor2.execute(sql1)
     results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
+    value1=0
+    number=0
     for row in results2:
-        if row[0] < 2:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
+        if row[0]<2:
+            number=number+1
+            value1 = row[0]+value1
+    return round((value1/number),2)
 
 
-# 所有组合的最大回撤的数学期望E(x)
+#所有组合的最大回撤的数学期望E(x)，E(X)=所有组合最大回撤之和除以总组合数
 def getMaxDrawDownEX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -57,26 +59,8 @@ def getMaxDrawDownEX():
     return round((value1 / number), 2)
 
 
-# 所有组合的市值的数学期望E(x)
-def getSHIZHIEX():
-    db = linkDatabase()
-    cursor2 = db.cursor()
-    sql1 = '''
-        SELECT income_since_found
-            FROM portfolio
-            '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0] < 2:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
 
-
-# 粉丝数量的数学期望
+#粉丝数量的数学期望，E(X)=所有组合粉丝数之和除以总组合数
 def getFollowersEX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -89,13 +73,15 @@ def getFollowersEX():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] != None:
+        if row[0]!=None:
             number = number + 1
             value1 = row[0] + value1
     return round((value1 / number), 2)
 
 
-# 计算收益与粉丝的E(XY)
+
+
+#计算收益与粉丝的E(XY)，E(XY)=所有组合年收益率与粉丝的乘积之和除以总组合数
 def getIncomeEXY():
     db = linkDatabase()
     cursor = db.cursor()
@@ -108,13 +94,12 @@ def getIncomeEXY():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] != None:
+        if row[0]!=None:
             number = number + 1
             value1 = row[0] + value1
     return round((value1 / number), 2)
 
-
-# 计算最大回撤与粉丝的E(XY)
+#计算最大回撤与粉丝的E(XY)，E(XY)=所有组合最大回撤与粉丝的乘积之和除以总组合数
 def getMaxDrawDownEXY():
     db = linkDatabase()
     cursor = db.cursor()
@@ -127,59 +112,33 @@ def getMaxDrawDownEXY():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] != None:
+        if row[0]!=None:
             number = number + 1
             value1 = row[0] + value1
     return round((value1 / number), 2)
 
 
-# 计算市值与粉丝的E(XY)
-def getSHIZHIEXY():
-    db = linkDatabase()
-    cursor = db.cursor()
-    sql1 = '''
-        SELECT income_since_found*followers
-            FROM portfolio
-            '''
-    cursor.execute(sql1)
-    results2 = cursor.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0] != None:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
 
 
-# 计算收益的Cov(X)
+#计算收益的Cov(X)，Cov(X)=E(XY)-E(X)E(Y)
 def getIncomeCov():
-    a = getIncomeEXY()
-    b = getIncomeEX()
-    c = getFollowersEX()
-    d = a - b * c
+    a=getIncomeEXY()
+    b=getIncomeEX()
+    c=getFollowersEX()
+    d=a-b*c
     return d
 
-
-# 计算最大回撤的Cov(X)
+#计算最大回撤的Cov(X),Cov(X)=E(XY)-E(X)E(Y)
 def getMaxDrawDownCov():
-    a = getMaxDrawDownEXY()
-    b = getMaxDrawDownEX()
-    c = getFollowersEX()
-    d = a - b * c
+    a=getMaxDrawDownEXY()
+    b=getMaxDrawDownEX()
+    c=getFollowersEX()
+    d=a-b*c
     return d
 
 
-# 计算市值的Cov(X)
-def getSHIZHICov():
-    a = getSHIZHIEXY()
-    b = getSHIZHIEX()
-    c = getFollowersEX()
-    d = a - b * c
-    return d
 
-
-# 计算收益的D(X)的平方根
+#计算收益的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
 def getIncomeDX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -194,14 +153,14 @@ def getIncomeDX():
     for row in results2:
         if row[0] < 2:
             number = number + 1
-            value1 = row[0] * row[0] + value1
-    # D(X)的平方
-    b = getIncomeEX()
-    a = round((value1 / number), 2) - b * b
-    return pow(a, 0.5)
+            value1 = row[0]*row[0] + value1
+    #D(X)的平方根
+    b=getIncomeEX()
+    a=round((value1 / number), 2)-b*b
+    return pow(a,0.5)
 
 
-# 计算最大回撤的D(X)的平方根
+#计算最大回撤的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
 def getMaxDrawDownDX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -214,38 +173,17 @@ def getMaxDrawDownDX():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] != None:
+        if row[0]!=None:
             number = number + 1
-            value1 = row[0] * row[0] + value1
-    # D(X)的平方
-    b = getMaxDrawDownEX()
-    a = round((value1 / number), 2) - b * b
-    return pow(a, 0.5)
+            value1 = row[0]*row[0] + value1
+    #D(X)的平方
+    b=getMaxDrawDownEX()
+    a=round((value1 / number), 2)-b*b
+    return pow(a,0.5)
 
 
-# 计算市值的D(X)的平方根
-def getSHIZHIDX():
-    db = linkDatabase()
-    cursor2 = db.cursor()
-    sql1 = '''
-       SELECT income_since_found
-           FROM portfolio
-           '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0] < 2:
-            number = number + 1
-            value1 = row[0] * row[0] + value1
-    # D(X)的平方
-    b = getIncomeEX()
-    a = round((value1 / number), 2) - b * b
-    return pow(a, 0.5)
 
-
-# 计算粉丝的D(X)的平方根
+#计算粉丝的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
 def getFollowersDX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -258,50 +196,39 @@ def getFollowersDX():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] is not None:
+        if row[0] !=None:
             number = number + 1
-            value1 = row[0] * row[0] + value1
-    # D(X)的平方
-    b = getFollowersEX()
-    a = round((value1 / number), 2) - b * b
+            value1 = row[0]*row[0] + value1
+    #D(X)的平方
+    b=getFollowersEX()
+    a=round((value1 / number), 2)-b*b
 
-    c = pow(a, 0.5)
+    c=pow(a,0.5)
     return c
 
+######   调用函数请看下面     #########
 
-# 收益相关系数
+#一键计算收益与粉丝的相关系数，相关系数=Cov(X)除以粉丝的D(Y)的平方根与收益率的D(X)的平方根
 def getIncomeCalculation():
-    a = getIncomeCov()
-    b = getIncomeDX()
-    c = getFollowersDX()
-    d = round((a / c / b), 2)
+    a=getIncomeCov()
+    b=getIncomeDX()
+    c=getFollowersDX()
+    d=round((a/c/b),2)
     return d
 
-
-# 最大回撤相关系数
+#一键计算最大回撤与粉丝的相关系数,相关系数=Cov(X)除以粉丝的D(Y)的平方根与最大回撤的D(X)的平方根
 def getMaxDrawDownCalculation():
-    a = getMaxDrawDownCov()
-    b = getMaxDrawDownDX()
-    c = getFollowersDX()
-    d = round((a / c / b), 2)
-    return d
-
-
-# 市值相关系数
-def getSHIZHICalculation():
-    a = getSHIZHICov()
-    b = getSHIZHIDX()
-    c = getFollowersDX()
-    d = round((a / c / b), 2)
+    a=getMaxDrawDownCov()
+    b=getMaxDrawDownDX()
+    c=getFollowersDX()
+    d=round((a/c/b),2)
     return d
 
 
 if __name__ == '__main__':
     a = "CSI1006"
-    b = "161005"
-    c = "2018-09-27"
-
-    # print(getPortfolioFollows("CSI1033"))
-    # getStore()
-
-    print(crawler.getFundRise_qieman(b,c))
+    b="161005"
+    c="2018-09-27"
+    #print(getPortfolioFollows("CSI1033"))
+    #getStore()
+    print(getIncomeCalculation())
