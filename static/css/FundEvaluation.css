@@ -79,17 +79,8 @@ li a:hover:not(.active) {
 #FansCorrelation {
     position: absolute;
     top: 190%;
-    left: 8%;
-    width: 34%;
-    height: 50%;
-    background: #00FF00;
-}
-
-#MarketCapCorrelation {
-    position: absolute;
-    top: 190%;
-    right: 8%;
-    width: 34%;
-    height: 50%;
-    background: #00F7DE;
+    left: 12%;
+    width: 76%;
+    height: 70%;
+    background: #e1e1e1;
 }
