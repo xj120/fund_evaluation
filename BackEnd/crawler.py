@@ -115,7 +115,27 @@ def getRepositionRecord(url):
         return getRepositionRecord_danjuan(number)
 
 
-# TODO 获取基金历史涨跌记录的统一接口（未写）
+# 获取基金历史涨跌记录的统一接口
+def getFundRise(number, sell_date):
+    now_date = time.localtime()
+    now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
+    url = 'https://qieman.com/pmdj/v1/funds/'+number+'/nav-history?start='+str(sell_date)+'&end='+str(now_date)
+    try:
+        response = requests.get(url=url, headers=qm_header)
+        response.raise_for_status()
+        content = response.text
+        items = json.loads(content)
+        rise_and_drop = 0.0
+        for item in items:
+            rise_and_drop += item.get('dailyReturn') * 100
+        return rise_and_drop
+    except requests.HTTPError as e:
+        print(e)
+        print('status_code:', response.status_code)
+        return None
+    except Exception as e:
+        print(e)
+        return None
 
 
 # 将秒格式化为日期
@@ -217,29 +237,6 @@ def getRepositionRecord_qieman(number):
                 records.append(d)
             repositions.append(reposition.reposition(number=number, adjust_date=adjust_date, records=records))
         return repositions
-    except requests.HTTPError as e:
-        print(e)
-        print('status_code:', response.status_code)
-        return None
-    except Exception as e:
-        print(e)
-        return None
-
-
-# 获取且慢基金的涨幅记录（已完成）
-def getFundRise_qieman(number, sell_date):
-    now_date = time.localtime()
-    now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
-    url = 'https://qieman.com/pmdj/v1/funds/'+number+'/nav-history?start='+str(sell_date)+'&end='+str(now_date)
-    try:
-        response = requests.get(url=url, headers=qm_header)
-        response.raise_for_status()
-        content = response.text
-        items = json.loads(content)
-        rise_and_drop = 0.0
-        for item in items:
-            rise_and_drop += item.get('dailyReturn') * 100
-        return rise_and_drop
     except requests.HTTPError as e:
         print(e)
         print('status_code:', response.status_code)
@@ -383,26 +380,6 @@ def getRepositionRecord_danjuan(number):
                 records.append(d)
             repositions.append(reposition.reposition(number=number, adjust_date=adjust_date, records=records))
         return repositions
-    except requests.HTTPError as e:
-        print(e)
-        print('status_code:', response.status_code)
-        return None
-    except Exception as e:
-        print(e)
-        return None
-
-
-# TODO 蛋卷基金获取基金的涨跌记录，未完成，只获取了字典
-def getFundRise_danjuan(number):
-    url = 'https://danjuanapp.com/djapi/fund/nav/history/'+number+'?page=1&size=10000'
-    try:
-        response = requests.get(url=url, headers=qm_header)
-        response.raise_for_status()
-        content = response.text
-        items = json.loads(content)
-        # 得到基金数据的一个 列表(由字典组成)
-        items = items.get('data').get('items')
-        return items
     except requests.HTTPError as e:
         print(e)
         print('status_code:', response.status_code)
