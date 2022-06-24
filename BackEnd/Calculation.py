@@ -34,9 +34,13 @@ def getIncomeEX():
     value1=0
     number=0
     for row in results2:
-        if row[0]<2:
-            number=number+1
-            value1 = row[0]+value1
+        number = number + 1
+        # 这里是因为且慢基金爬取的收益率没有百分号，所以将收益率大于二的全部除以100
+        if row[0] > 2:
+            a=row[0]/100
+        else:
+            a = row[0]
+        value1 = a + value1
     return round((value1/number),2)
 
 
@@ -85,9 +89,15 @@ def getFollowersEX():
 def getIncomeEXY():
     db = linkDatabase()
     cursor = db.cursor()
+    # 这里是因为且慢基金爬取的收益率没有百分号，所以将且慢和蛋卷的分开查找再合并
     sql1 = '''
-        SELECT income_since_found*followers
+        (SELECT *
+         FROM (SELECT income_since_found*followers
             FROM portfolio
+						where income_since_found<2)as d)UNION (SELECT *
+         FROM (SELECT income_since_found*followers*0.01
+            FROM portfolio
+						where income_since_found>2)as d)
             '''
     cursor.execute(sql1)
     results2 = cursor.fetchall()
@@ -151,9 +161,13 @@ def getIncomeDX():
     value1 = 0
     number = 0
     for row in results2:
-        if row[0] < 2:
-            number = number + 1
-            value1 = row[0]*row[0] + value1
+        number = number + 1
+        #这里是因为且慢基金爬取的收益率没有百分号，所以将收益率大于二的全部除以100
+        if row[0] > 2:
+            a = row[0] / 100
+        else:
+            a = row[0]
+        value1 = a*a+ value1
     #D(X)的平方根
     b=getIncomeEX()
     a=round((value1 / number), 2)-b*b
@@ -231,4 +245,14 @@ if __name__ == '__main__':
     c="2018-09-27"
     #print(getPortfolioFollows("CSI1033"))
     #getStore()
+    print(getIncomeEX())
+    print(getIncomeEXY())
+    print(getIncomeCov())
+    print(getIncomeDX())
     print(getIncomeCalculation())
+
+    print(getMaxDrawDownEX())
+    print(getMaxDrawDownEXY())
+    print(getMaxDrawDownCov())
+    print(getMaxDrawDownDX())
+    print(getMaxDrawDownCalculation())
