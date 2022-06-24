@@ -390,8 +390,8 @@ def getRepositionRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    # updateXsign()
-    # print(qm_header['x-sign'])
+    updateXsign()
+    print(qm_header['x-sign'])
     # starttime = datetime.datetime.now()
     # print(getXsign())
     # endtime = datetime.datetime.now()
@@ -401,44 +401,44 @@ if __name__ == '__main__':
 
     # print(getRepositionRecord_qieman('ZH030684'))
 
-    # urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
-    #         'https://qieman.com/portfolios/ZH010246',
-    #         'https://qieman.com/portfolios/ZH006498',
-    #         'https://qieman.com/portfolios/ZH000193',
-    #         'https://qieman.com/portfolios/ZH001798',
-    #         'https://qieman.com/portfolios/ZH012926',
-    #         'https://qieman.com/portfolios/ZH009664',
-    #         'https://qieman.com/portfolios/ZH030684',
-    #         'https://qieman.com/portfolios/ZH017252',
-    #         'https://qieman.com/portfolios/ZH035411',
-    #         'https://qieman.com/portfolios/ZH043108']
-    #
-    # for link in urls:
-    #     if persistentstorage.checkPortfolio(link):
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.updatePortfolio(f)
-    #     else:
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.addPortfolio(f)
-    #     d = getRepositionRecord(link)
-    #     persistentstorage.addRepositionRecord(d)
-    #     r = getHistoryRecord(link, '30000')
-    #     persistentstorage.addHistoryRecord(r)
-    #
-    # for link in persistentstorage.getPortfolioList():
-    #     if persistentstorage.checkPortfolio(link):
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.updatePortfolio(f)
-    #     else:
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.addPortfolio(f)
-    #
-    # persistentstorage.updateRecord()
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+            'https://qieman.com/portfolios/ZH010246',
+            'https://qieman.com/portfolios/ZH006498',
+            'https://qieman.com/portfolios/ZH000193',
+            'https://qieman.com/portfolios/ZH001798',
+            'https://qieman.com/portfolios/ZH012926',
+            'https://qieman.com/portfolios/ZH009664',
+            'https://qieman.com/portfolios/ZH030684',
+            'https://qieman.com/portfolios/ZH017252',
+            'https://qieman.com/portfolios/ZH035411',
+            'https://qieman.com/portfolios/ZH043108']
+
+    for link in urls:
+        if persistentstorage.checkPortfolio(link):
+            f = getPortfolioInfo(link)
+            persistentstorage.updatePortfolio(f)
+        else:
+            f = getPortfolioInfo(link)
+            persistentstorage.addPortfolio(f)
+        d = getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
+        r = getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
+
+    for link in persistentstorage.getPortfolioList():
+        if persistentstorage.checkPortfolio(link):
+            f = getPortfolioInfo(link)
+            persistentstorage.updatePortfolio(f)
+        else:
+            f = getPortfolioInfo(link)
+            persistentstorage.addPortfolio(f)
+
+    persistentstorage.updateRecord()
 
 
 # 2022/5/28
