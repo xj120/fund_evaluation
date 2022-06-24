@@ -418,7 +418,6 @@ if __name__ == '__main__':
     #         'https://qieman.com/portfolios/ZH035411',
     #         'https://qieman.com/portfolios/ZH043108']
     #
-    print(getFundRise_danjuan('000290'))
     # for link in urls:
     #     if persistentstorage.checkPortfolio(link):
     #         f = getPortfolioInfo(link)
