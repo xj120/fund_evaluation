@@ -146,7 +146,6 @@ def formatTime(second):
     return format_date
 
 
-# TODO 获取且慢基金投资组合的信息（有信息疑似提取错误）主理人和粉丝未爬取
 def getPortfolioInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     try:
@@ -169,15 +168,15 @@ def getPortfolioInfo_qieman(number):
         # 成立日
         found_date = obj.get('establishedOn')
         # 年化收益率
-        rate_per_ann = obj.get('annualCompoundedReturn')
+        rate_per_ann = str(round(float(obj.get('annualCompoundedReturn'))*100, 2))
         # 累计收益
-        income_since_found = obj.get('fromSetupReturn')
+        income_since_found = str(round(float(obj.get('fromSetupReturn'))*100, 2))
         # 最大回撤
-        max_drawdown = obj.get('maxDrawdown')
+        max_drawdown = str(round(float(obj.get('maxDrawdown'))*100, 2))
         # 年化波动率
-        volatility = obj.get('volatility')
+        volatility = str(round(float(obj.get('volatility'))*100, 2))
         # 夏普比率
-        sharpe = obj.get('sharpe')
+        sharpe = obj.get('sharpe')[0:4]
 
         return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
@@ -414,9 +413,7 @@ if __name__ == '__main__':
             'https://qieman.com/portfolios/ZH012926',
             'https://qieman.com/portfolios/ZH009664',
             'https://qieman.com/portfolios/ZH030684',
-            'https://qieman.com/portfolios/ZH017252',
-            'https://qieman.com/portfolios/ZH035411',
-            'https://qieman.com/portfolios/ZH043108']
+            ]
 
     for link in urls:
         if persistentstorage.checkPortfolio(link):
@@ -438,7 +435,7 @@ if __name__ == '__main__':
             f = getPortfolioInfo(link)
             persistentstorage.addPortfolio(f)
 
-    persistentstorage.updateRecord()
+    # persistentstorage.updateRecord()
 
 
 # 2022/5/28

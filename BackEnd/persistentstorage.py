@@ -64,7 +64,6 @@ def addHistoryRecord(records):
         db.close()
         return True
     except Exception as e:
-        print('sb')
         print(e)
         db.rollback()
         cursor.close()
@@ -90,7 +89,6 @@ def addRepositionRecord(repositions):
         db.close()
         return True
     except Exception as e:
-        print('sb')
         print(e)
         db.rollback()
         cursor.close()
