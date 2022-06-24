@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '165590567617433B1AA0E953B757282525B01A67F8F1D'
+    'x-sign': '1656071238046B58372B61DD176E9C044CB034D5C27A0'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -117,6 +117,7 @@ def getRepositionRecord(url):
 
 # 获取基金历史涨跌记录的统一接口
 def getFundRise(number, sell_date):
+    updateXsign()
     now_date = time.localtime()
     now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
     url = 'https://qieman.com/pmdj/v1/funds/'+number+'/nav-history?start='+str(sell_date)+'&end='+str(now_date)
@@ -415,28 +416,20 @@ if __name__ == '__main__':
             'https://qieman.com/portfolios/ZH030684',
             ]
 
-    for link in urls:
-        if persistentstorage.checkPortfolio(link):
-            f = getPortfolioInfo(link)
-            persistentstorage.updatePortfolio(f)
-        else:
-            f = getPortfolioInfo(link)
-            persistentstorage.addPortfolio(f)
-        d = getRepositionRecord(link)
-        persistentstorage.addRepositionRecord(d)
-        r = getHistoryRecord(link, '30000')
-        persistentstorage.addHistoryRecord(r)
+    # for link in urls:
+    #     if persistentstorage.checkPortfolio(link):
+    #         f = getPortfolioInfo(link)
+    #         persistentstorage.updatePortfolio(f)
+    #     else:
+    #         f = getPortfolioInfo(link)
+    #         persistentstorage.addPortfolio(f)
+    #     d = getRepositionRecord(link)
+    #     persistentstorage.addRepositionRecord(d)
+    #     r = getHistoryRecord(link, '30000')
+    #     persistentstorage.addHistoryRecord(r)
 
-    for link in persistentstorage.getPortfolioList():
-        if persistentstorage.checkPortfolio(link):
-            f = getPortfolioInfo(link)
-            persistentstorage.updatePortfolio(f)
-        else:
-            f = getPortfolioInfo(link)
-            persistentstorage.addPortfolio(f)
-
-    # persistentstorage.updateRecord()
-
+    # for url in urls:
+    #     print(persistentstorage.updateRecord(url))
 
 # 2022/5/28
 # 1653721631613

@@ -55,12 +55,15 @@ def spide():
     if persistentstorage.checkPortfolio(link):
         f = crawler.getPortfolioInfo(link)
         persistentstorage.updatePortfolio(f)
+        persistentstorage.updateRecord(link)
     else:
         f = crawler.getPortfolioInfo(link)
         persistentstorage.addPortfolio(f)
+        r = crawler.getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
 
-    r = crawler.getHistoryRecord(link, '30000')
-    persistentstorage.addHistoryRecord(r)
+    persistentstorage.getTableJson()
+    persistentstorage.getRecordJson()
 
     return redirect('/')
 

@@ -97,10 +97,10 @@ def addRepositionRecord(repositions):
 
 
 # 更新投资组合的历史记录
-def updateRecord():
+def updateRecord(link):
     try:
         links = getPortfolioList()
-        for link in links:
+        if link in links:
             last_date = getLastDate(link)
             if last_date is None:
                 span = 30000
@@ -108,7 +108,7 @@ def updateRecord():
                 now_date = time.localtime(time.time())
                 now_date = datetime.date(now_date[0], now_date[1], now_date[2])
                 span = (now_date - last_date).days
-                print(span)
+                # print(span)
 
             records = BackEnd.crawler.getHistoryRecord(link, str(span))
             addHistoryRecord(records)
@@ -313,4 +313,3 @@ def getRecordJson():
 if __name__ == '__main__':
     getTableJson()
     getRecordJson()
-    print(getUrlAndDateInfo())
