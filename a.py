@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request
-
+import pymysql
 from werkzeug.utils import redirect
-
-import BackEnd.persistentstorage as persistentstorage
-import BackEnd.crawler as crawler
-
+#import BackEnd.crawler
+#import time
 import datetime
 import json
 
@@ -26,7 +24,7 @@ app.debug = True
 
 @app.route('/')
 def index2():
-    content = persistentstorage.getUrlAndDateInfo()
+
     #content：url的字典
     return render_template("index.html",content = content)
 
@@ -46,18 +44,10 @@ def delete(i):
 @app.route('/spide', methods=["POST"])
 def spide():
     #爬虫程序：
-    link = request.form.get('url')
-    if persistentstorage.checkPortfolio(link):
-        f = crawler.getPortfolioInfo(link)
-        persistentstorage.updatePortfolio(f)
-    else:
-        f = crawler.getPortfolioInfo(link)
-        persistentstorage.addPortfolio(f)
+ a = request.form.get('url')
+ print(a)
+ return redirect('/')
 
-    r = crawler.getHistoryRecord(link, '30000')
-    persistentstorage.addHistoryRecord(r)
-
-    return redirect('/')
 
 
 if __name__ == "__main__":
