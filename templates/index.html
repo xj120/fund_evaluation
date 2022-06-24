@@ -203,7 +203,7 @@ for(var i =2;i<row.length;i++)
         <tr hidden="hidden">
             <td></td>
             <td id="time">数据未爬取</td>
-            <td id="actions"> <input type = "submit" value="删除" class="del" onclick="del(this)"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
+            <td id="actions"> <input type = "submit" value="删除" class="del" onclick="del(this)"><input type ="submit" value="爬取" class="spi" onclick="spide(this)"></td>
         </tr>
 
 {% for key,value in content.items() %}
@@ -211,7 +211,7 @@ for(var i =2;i<row.length;i++)
         <tr>
         <td>{{ key }}</td>
         <td>{{ value }}</td>
-        <td><input type = "submit" value="删除" class="del" onclick=del(this)><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
+        <td><input type = "submit" value="删除" class="del" onclick="del(this)"><input type ="submit" value="爬取" class="spi" onclick= "spide(this)"></td>
         </tr>
 
         {% endfor %}
