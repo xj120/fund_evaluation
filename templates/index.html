@@ -226,7 +226,7 @@ function del(td){
 $.ajax({
             type: 'POST',
             url: '/delete',
-            data: {'url':td.parentElement.parentElement.children[0].innerText},
+            data: {'url2':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
 
@@ -236,7 +236,9 @@ $.ajax({
             }
         })
 }
+</script>
 
+    <script>
 function spide(td){
 $.ajax({
             type: 'POST',
