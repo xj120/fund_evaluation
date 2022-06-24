@@ -165,6 +165,7 @@ line-height:30px;
         function spideall(){
         var urltb = document.getElementById('URLtable')
         var row = urltb.rows;
+        alert('爬取成功！‘）
 for(var i =2;i<row.length;i++)
         {
         var cell = row[i].cells;
@@ -221,18 +222,16 @@ for(var i =2;i<row.length;i++)
 <script>
 
 function del(td){
-
-
 $.ajax({
             type: 'POST',
             url: '/delete',
             data: {'url2':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
-
+alert(’删除成功!')
             },
             error: function () {
-
+alert(’删除成功!')
             }
         })
 }
