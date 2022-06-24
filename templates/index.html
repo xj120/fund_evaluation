@@ -168,7 +168,7 @@ line-height:30px;
 for(var i =2;i<row.length;i++)
         {
         var cell = row[i].cells;
-        alert(cell[0].innerHTML)
+
         var myDate = new Date();
         cell[1].innerText = myDate;
         $.ajax({
@@ -177,10 +177,10 @@ for(var i =2;i<row.length;i++)
             data: {'url':cell[0].innerHTML},
             dataType: 'json',
             success: function () {
-                alert("成功");
+
             },
             error: function () {
-                alert("失败");
+
             }
         })
         }
@@ -210,52 +210,44 @@ for(var i =2;i<row.length;i++)
         <tr>
         <td>{{ key }}</td>
         <td>{{ value }}</td>
-        <td><input type = "submit" value="删除" class="del"><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
+        <td><input type = "submit" value="删除" class="del" onclick=del(this)><input type ="submit" value="爬取" class="spi" onclick= spide(this)></td>
         </tr>
 
         {% endfor %}
 
 
-
-
-
  </table>
-        <script>
-        var TB = document.getElementsByTagName('tbody')[0];
-	    var myContent = document.getElementById('content');
 
-	    // 给tbody绑定点击事件（事件委托）
-	    TB.onclick = function (e) {
-	        // 如果当前点击的是删除按钮
-	        if (e.target.className == 'del') {
 
-	                // e.target 为当前点击对象--->删除
-	                // e.target.parentElement ---> td
-	                // e.target.parentElement.parentElement  ---> tr
-                    alert(e.target.parentElement.parentElement.children[0].innerText);
 
-	                TB.removeChild(e.target.parentElement.parentElement)
+function del(td){
 
-	        }
-	        }
-        </script>>
-        <script>
+
+$.ajax({
+            type: 'POST',
+            url: '/delete',
+            data: {'url':td.parentElement.parentElement.children[0].innerText},
+            dataType: 'json',
+            success: function () {
+
+            },
+            error: function () {
+
+            }
+        })
+}
 
 function spide(td){
-alert(td.parentElement.parentElement.children[0].innerText)
-alert(td.parentElement.parentElement.children[1].innerText)
-var myDate = new Date();
-td.parentElement.parentElement.children[1].innerText = myDate;
 $.ajax({
             type: 'POST',
             url: '/spide',
             data: {'url':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
-                alert("成功");
+
             },
             error: function () {
-                alert("失败");
+
             }
         })
 }
@@ -268,7 +260,7 @@ $.ajax({
     <p class="text">添加URL</p>
 <form onsubmit="return addURL()">
     <input type="text" name="URL" class="textInput" id = "urlinput"><br>
-    <input type="button"  value="确定" onclick="return addURL()" class="buttonInput">
+    <input type="button"  value="确定" onclick="addURL();Hide()" class="buttonInput">
 </form>
     <input type="button" value="取消" onclick="Hide()" class="buttonInput">
 </div>
@@ -279,11 +271,9 @@ $.ajax({
 function addURL(){
 
 var url = document.getElementById('urlinput').value
-alert(url)
 var time = document.getElementById('time').innerHTML
-alert(time)
 var actions = document.getElementById('actions').innerHTML
-alert(actions)
+
 tb = document.getElementById('URLtable')
 var row = document.createElement('tr'); //创建行
 

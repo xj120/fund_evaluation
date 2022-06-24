@@ -64,6 +64,13 @@ def spide():
 
     return redirect('/')
 
+@app.route('/delete',methods=["POST"])
+def delete():
+    link = request.form.get('url')
+    #删除
+
+    return redirect('/')
+
 
 if __name__ == '__main__':
     app.run()
