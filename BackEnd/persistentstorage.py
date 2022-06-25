@@ -10,11 +10,11 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='123456', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='123456', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -33,6 +33,39 @@ def addPortfolio(portfolio):
                  portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
                  portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers)
         cursor.execute(sql, param)
+        db.commit()
+
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
+# 删除一个投资组合
+def deletePortfolio(link):
+    if len(link) != 38 and len(link) != 58:
+        return False
+
+    if len(link) == 38:
+        number = link[30:38]
+    elif len(link) == 58:
+        number = link[32:39]
+
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        delete from portfolio
+        where number = %s
+        '''
+        param = (number)
+        cursor.execute(sql,param)
+
         db.commit()
 
         cursor.close()
@@ -263,7 +296,7 @@ def getTableJson():
                          "sharpe_ratio": portfolio[4], "annualized_volatility": portfolio[5], "fans_num": portfolio[6]}
             data.append(portfolio_dict)
         table["data"] = data
-        with open(file='..\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
             t = json.dumps(table, ensure_ascii=False)
             f.write(t)
         cursor.close()
@@ -296,7 +329,7 @@ def getRecordJson():
             r_dict = {"name":record[0], "daily_rise_drop":record[1], "date":str(record[2])}
             data.append(r_dict)
         line["data"] = data
-        with open(file='..\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
             f.write(t)
         cursor.close()
