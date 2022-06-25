@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '1656071238046B58372B61DD176E9C044CB034D5C27A0'
+    'x-sign': '16561234439651062E9A9B1D272AA9D18C608C68FD5E8'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -390,7 +390,7 @@ def getRepositionRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    updateXsign()
+    # updateXsign()
     print(qm_header['x-sign'])
     # starttime = datetime.datetime.now()
     # print(getXsign())
@@ -416,17 +416,17 @@ if __name__ == '__main__':
             'https://qieman.com/portfolios/ZH030684',
             ]
 
-    # for link in urls:
-    #     if persistentstorage.checkPortfolio(link):
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.updatePortfolio(f)
-    #     else:
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.addPortfolio(f)
-    #     d = getRepositionRecord(link)
-    #     persistentstorage.addRepositionRecord(d)
-    #     r = getHistoryRecord(link, '30000')
-    #     persistentstorage.addHistoryRecord(r)
+    for link in urls:
+        if persistentstorage.checkPortfolio(link):
+            f = getPortfolioInfo(link)
+            persistentstorage.updatePortfolio(f)
+        else:
+            f = getPortfolioInfo(link)
+            persistentstorage.addPortfolio(f)
+        d = getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
+        r = getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
 
     # for url in urls:
     #     print(persistentstorage.updateRecord(url))

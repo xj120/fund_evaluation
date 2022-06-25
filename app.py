@@ -67,7 +67,7 @@ def spide():
 
     return redirect('/')
 
-@app.route('/delete',methods=["POST"])
+@app.route('/delete', methods=["POST"])
 def delete():
     link = request.form.get('url2')
     #删除

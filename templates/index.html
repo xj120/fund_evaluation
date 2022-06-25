@@ -12,10 +12,11 @@
     <style>
 
        .upper{
+       margin-top:70px;
        height:60px;
        background-color:#F5F5F5;
        border-bottom:1px solid #fff;
-      box-shadow:0px 15px 10px -15px #000;
+      box-shadow:0px 10px 10px -15px #000;
        }
 
        .URLrecorded{
@@ -40,24 +41,93 @@
 input{
        height:40px;
        width:120px;
-       background-color:#007BFF;
-       color:white;
-       border:none;
        float:right;
-       margin-right:10px;
-       margin-top:10px;
+       /* 文字颜色 */
+      color: #0099CC;
+      /* 清除背景色 */
+      background: transparent;
+      /* 边框样式、颜色、宽度 */
+      border: 2px solid #008CBA;
+      /* 给边框添加圆角 */
+      border-radius: 6px;
+      /* 字母转大写 */
+      color: black;
+      <!--padding: 20px 10px;-->
+      text-align: center;
+      display: inline-block;
+      font-size: 6px;
+      margin: 5px 2px;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;;
        }
 
+input:hover{
+ background-color: #008CBA;
+      color: white;
+}
+
 .del{
+float:none;
 height:20px;
-width:60px;
+width:50px;
+ /* 文字颜色 */
+      color: #0099CC;
+      /* 清除背景色 */
+      background: transparent;
+      /* 边框样式、颜色、宽度 */
+      border: 2px solid #008CBA;
+      /* 给边框添加圆角 */
+      border-radius: 6px;
+      /* 字母转大写 */
+      color: black;
+      <!--padding: 20px 10px;-->
+      text-align: center;
+      display: inline-block;
+      font-size: 6px;
+      margin: 5px 2px;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;
 }
-
+.del:hover {
+      background-color: #008CBA;
+      color: white;
+}
 .spi{
+float:none;
 height:20px;
-width:60px;
+width:50px;
+ /* 文字颜色 */
+      color: #0099CC;
+      /* 清除背景色 */
+      background: transparent;
+      /* 边框样式、颜色、宽度 */
+      border: 2px solid #008CBA;
+      /* 给边框添加圆角 */
+      border-radius: 6px;
+      /* 字母转大写 */
+      color: black;
+      <!--padding: 20px 10px;-->
+      text-align: center;
+      display: inline-block;
+      font-size: 6px;
+      margin: 5px 2px;
+      -webkit-transition-duration: 0.4s; /* Safari */
+      transition-duration: 0.4s;
+      cursor: pointer;
+      text-decoration: none;
+      text-transform: uppercase;;
 }
 
+.spi:hover {
+      background-color: #008CBA;
+      color: white;
+}
 .textInput{
 background-color:white;
 color:black;
@@ -85,6 +155,14 @@ margin-left:140px;
 
        table{
        width:100%;
+       }
+       table tr:nth-child(odd)
+       {
+       background:#fff
+       }
+       table tr:nth-child(even)
+       {
+       background:rgb(211,223,237)
        }
        tr
        {
@@ -158,20 +236,17 @@ line-height:30px;
    <input type="button" onclick="show()" value="新建URL">
 </form>
 <form name="spiderALL">
-    <input type="button" value="爬取全部" onclick= spideall()>
+    <input type="button" value="爬取全部" onclick = spideall()>
 </form>
 </div>
-    <script>
+<script>
         function spideall(){
-        var urltb = document.getElementById('URLtable')
-        var row = urltb.rows;
-        alert('爬取成功！‘）
-for(var i =2;i<row.length;i++)
+        alert('success')
+        var urltb = document.getElementById("URLtable")
+        var row = urltb.rows
+        for(var i =2;i<row.length;i++)
         {
         var cell = row[i].cells;
-
-        var myDate = new Date();
-        cell[1].innerText = myDate;
         $.ajax({
             type: 'POST',
             url: '/spide',
@@ -186,12 +261,12 @@ for(var i =2;i<row.length;i++)
         })
         }
         }
-    </script>
+</script>
 
     <table id="URLtable">
 
         <tr>
-            <th>URL <i class="fas fa-chevron-up"></i></th>
+            <th>URL</th>
             <th>数据最后时间</th>
             <th>操作</th>
         </tr>
@@ -222,7 +297,7 @@ $.ajax({
             data: {'url':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
-alert("爬取成功。")
+alert("爬取成功")
             },
             error: function () {
 alert("爬取成功")
@@ -240,10 +315,10 @@ $.ajax({
             data: {'url2':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
-alert(’删除成功!')
+alert('删除成功!')
             },
             error: function () {
-alert(’删除成功!')
+alert('删除成功!')
             }
         })
 }
@@ -266,11 +341,13 @@ alert(’删除成功!')
 
 function addURL(){
 
+let zhengze = /^(http)s:\/\/(danjuanapp\.com|qieman\.com)\/(strategy|portfolios)\/[a-zA-Z0-9]+(\?channel=\d+)*/
 var url = document.getElementById('urlinput').value
 var time = document.getElementById('time').innerHTML
 var actions = document.getElementById('actions').innerHTML
 
-tb = document.getElementById('URLtable')
+if(zhengze.test(url))
+{tb = document.getElementById('URLtable')
 var row = document.createElement('tr'); //创建行
 
 	 var idCell = document.createElement('td'); //创建第一列id
@@ -286,6 +363,12 @@ var row = document.createElement('tr'); //创建行
 	 row.appendChild(jobCell)
 
 	 tb.appendChild(row)
+	 }
+	 else
+	 {
+	 alert('数据格式错误，请重新输入！')
+	 }
+
 }
 </script>
 
