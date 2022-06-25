@@ -188,8 +188,6 @@ for(var i =2;i<row.length;i++)
         }
     </script>
 
-
-
     <table id="URLtable">
 
         <tr>
@@ -203,7 +201,7 @@ for(var i =2;i<row.length;i++)
         <tr hidden="hidden">
             <td></td>
             <td id="time">数据未爬取</td>
-            <td id="actions"> <input type = "submit" value="删除" class="del" onclick="del(this)"><input type ="submit" value="爬取" class="spi" onclick="spide(this)"></td>
+            <td id="actions"> <input type = "submit" value="删除" class="del" onclick=del(this)><input type ="submit" value="爬取" class="spi" onclick=spide(this)></td>
         </tr>
 
 {% for key,value in content.items() %}
@@ -211,16 +209,31 @@ for(var i =2;i<row.length;i++)
         <tr>
         <td>{{ key }}</td>
         <td>{{ value }}</td>
-        <td><input type = "submit" value="删除" class="del" onclick="del(this)"><input type ="submit" value="爬取" class="spi" onclick= "spide(this)"></td>
+        <td><input type = "submit" value="删除" class="del" onclick=del(this)><input type ="submit" value="爬取" class="spi" onclick=spide(this)></td>
         </tr>
 
         {% endfor %}
 
+<script>
+function spide(td){
+$.ajax({
+            type: 'POST',
+            url: '/spide',
+            data: {'url':td.parentElement.parentElement.children[0].innerText},
+            dataType: 'json',
+            success: function () {
+alert("爬取成功。")
+            },
+            error: function () {
+alert("爬取成功")
+            }
+        })
+}
+</script>
 
- </table>
-
-    <script>
+<script>
 function del(td){
+alert('..')
 $.ajax({
             type: 'POST',
             url: '/delete',
@@ -234,24 +247,8 @@ alert(’删除成功!')
             }
         })
 }
-    </script>
-
-    <script>
-function spide(td){
-$.ajax({
-            type: 'POST',
-            url: '/spide',
-            data: {'url':td.parentElement.parentElement.children[0].innerText},
-            dataType: 'json',
-            success: function () {
-alert("爬取成功。)
-            },
-            error: function () {
-alert("爬取成功")
-            }
-        })
-}
-    </script>
+</script>
+    </table>
 
 </div>
 <div id="shade" class="c1 hide"></div>
