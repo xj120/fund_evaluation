@@ -309,6 +309,7 @@ alert("爬取成功")
 <script>
 function del(td){
 alert('..')
+
 $.ajax({
             type: 'POST',
             url: '/delete',
@@ -321,6 +322,7 @@ alert('删除成功!')
 alert('删除成功!')
             }
         })
+        td.parentElement.parentElement.remove();
 }
 </script>
     </table>
