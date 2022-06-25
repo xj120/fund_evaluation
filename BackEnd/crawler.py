@@ -147,6 +147,7 @@ def formatTime(second):
     return format_date
 
 
+# 获取且慢基金投资组合的基本信息
 def getPortfolioInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     try:
@@ -246,6 +247,7 @@ def getRepositionRecord_qieman(number):
         return None
 
 
+# 蛋卷获取大V粉丝数
 def getPortfolioFans_danjuan(number):
     try:
         url = 'https://danjuanapp.com/djapi/v2/plan/detail/opinions?plan_code='+number

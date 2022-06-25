@@ -32,6 +32,7 @@ app.debug = True
 
 @app.route('/url')
 def index2():
+    crawler.updateXsign()
     content = persistentstorage.getUrlAndDateInfo()
     # content：url的字典
     return render_template("index.html", content=content)
@@ -66,6 +67,7 @@ def spide():
     #persistentstorage.getRecordJson()
 
     return redirect('/')
+
 
 @app.route('/delete',methods=["POST"])
 def delete():
