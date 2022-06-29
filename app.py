@@ -9,9 +9,8 @@ app = Flask(__name__)
 
 @app.route('/FundEvaluation', methods=['GET', 'POST'])
 def index():
-    test = '!!!!!'
-    ab = '??????'
-    return render_template("FundEvaluation.html", test=test, ab=ab)
+    test = 'test'
+    return render_template("FundEvaluation.html", test=test)
 
 
 @app.route('/')

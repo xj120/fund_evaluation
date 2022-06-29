@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '1656071238046B58372B61DD176E9C044CB034D5C27A0'
+    'x-sign': '16561196895752A6924A5AC741E482611672EC86E9729'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -401,12 +401,12 @@ if __name__ == '__main__':
 
     # print(getRepositionRecord_qieman('ZH030684'))
 
-    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    urls = [#'https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
             'https://qieman.com/portfolios/ZH010246',
             'https://qieman.com/portfolios/ZH006498',
             'https://qieman.com/portfolios/ZH000193',
@@ -416,17 +416,17 @@ if __name__ == '__main__':
             'https://qieman.com/portfolios/ZH030684',
             ]
 
-    # for link in urls:
-    #     if persistentstorage.checkPortfolio(link):
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.updatePortfolio(f)
-    #     else:
-    #         f = getPortfolioInfo(link)
-    #         persistentstorage.addPortfolio(f)
-    #     d = getRepositionRecord(link)
-    #     persistentstorage.addRepositionRecord(d)
-    #     r = getHistoryRecord(link, '30000')
-    #     persistentstorage.addHistoryRecord(r)
+    for link in urls:
+        if persistentstorage.checkPortfolio(link):
+            f = getPortfolioInfo(link)
+            persistentstorage.updatePortfolio(f)
+        else:
+            f = getPortfolioInfo(link)
+            persistentstorage.addPortfolio(f)
+        d = getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
+        r = getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
 
     # for url in urls:
     #     print(persistentstorage.updateRecord(url))
