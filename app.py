@@ -31,6 +31,7 @@ app.debug = True
 
 @app.route('/url')
 def index2():
+    crawler.updateXsign()
     content = persistentstorage.getUrlAndDateInfo()
     # content：url的字典
     return render_template("index.html", content=content)
@@ -52,25 +53,29 @@ def spide():
     # 爬虫程序：
     link = request.form.get('url')
     if persistentstorage.checkPortfolio(link):
-     f = crawler.getPortfolioInfo(link)
-     persistentstorage.updatePortfolio(f)
-     persistentstorage.updateRecord(link)
+        f = crawler.getPortfolioInfo(link)
+        persistentstorage.updatePortfolio(f)
+        persistentstorage.updateRecord(link)
     else:
-     f = crawler.getPortfolioInfo(link)
-     persistentstorage.addPortfolio(f)
-     r = crawler.getHistoryRecord(link, '30000')
-     persistentstorage.addHistoryRecord(r)
+        f = crawler.getPortfolioInfo(link)
+        persistentstorage.addPortfolio(f)
+        r = crawler.getHistoryRecord(link, '30000')
+        persistentstorage.addHistoryRecord(r)
 
-    #persistentstorage.getTableJson()
-    #persistentstorage.getRecordJson()
+    persistentstorage.getTableJson()
+    persistentstorage.getRecordJson()
 
     return redirect('/')
 
-@app.route('/delete',methods=["POST"])
+
+@app.route('/delete', methods=["POST"])
 def delete():
     link = request.form.get('url2')
     #删除
+    persistentstorage.deletePortfolio(link)
 
+    persistentstorage.getTableJson()
+    persistentstorage.getRecordJson()
     return redirect('/')
 
 

@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16561196895752A6924A5AC741E482611672EC86E9729'
+    'x-sign': '16537306566637D079C8A719AD10D16316A36483A31E3'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -147,6 +147,7 @@ def formatTime(second):
     return format_date
 
 
+# 获取且慢基金投资组合的基本信息
 def getPortfolioInfo_qieman(number):
     url = 'https://qieman.com/pmdj/v1/pomodels/'+number
     try:
@@ -246,6 +247,7 @@ def getRepositionRecord_qieman(number):
         return None
 
 
+# 蛋卷获取大V粉丝数
 def getPortfolioFans_danjuan(number):
     try:
         url = 'https://danjuanapp.com/djapi/v2/plan/detail/opinions?plan_code='+number
@@ -390,7 +392,7 @@ def getRepositionRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    updateXsign()
+    # updateXsign()
     print(qm_header['x-sign'])
     # starttime = datetime.datetime.now()
     # print(getXsign())
@@ -401,12 +403,12 @@ if __name__ == '__main__':
 
     # print(getRepositionRecord_qieman('ZH030684'))
 
-    urls = [#'https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-    #         'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
+            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
             'https://qieman.com/portfolios/ZH010246',
             'https://qieman.com/portfolios/ZH006498',
             'https://qieman.com/portfolios/ZH000193',
