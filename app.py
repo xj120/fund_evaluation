@@ -61,8 +61,8 @@ def spide():
         persistentstorage.updateRecord(link)
         d = crawler.getRepositionRecord(link)
         persistentstorage.addRepositionRecord(d)
-        holdingtime.getSingleStore(link)
-        reposition_level.getSingleStore(link)
+        holdingtime.getHoldTimeSingleStore(link)
+        reposition_level.getRepositionLevelSingleStore(link)
     else:
         f = crawler.getPortfolioInfo(link)
         persistentstorage.addPortfolio(f)
@@ -70,8 +70,8 @@ def spide():
         persistentstorage.addHistoryRecord(r)
         d = crawler.getRepositionRecord(link)
         persistentstorage.addRepositionRecord(d)
-        holdingtime.getSingleStore(link)
-        reposition_level.getSingleStore(link)
+        holdingtime.getHoldTimeSingleStore(link)
+        reposition_level.getRepositionLevelSingleStore(link)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
