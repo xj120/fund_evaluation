@@ -10,60 +10,18 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                         charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
 
 
 # 添加一个投资组合
-
-import BackEnd.crawler
-
-import pymysql
-
-
-# 连接数据库
-def linkDatabase():
-    try:
-        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation', charset='utf8')
-    except:
-        return None
-    else:
-        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
-                             charset='utf8')
-        # print(type(db).__name__)
-        return db
-
-
-# 添加一个投资组合
-def addPortfolio(portfolio):
-    db = linkDatabase()
-    cursor = db.cursor()
-    try:
-        sql = '''
-        insert into portfolio(number,name, manager_name, url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
-        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-        '''
-        param = (portfolio.number, portfolio.name, portfolio.manager_name, portfolio.url, portfolio.found_date,
-                 portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
-                 portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers)
-        cursor.execute(sql, param)
-        db.commit()
-
-        cursor.close()
-        db.close()
-        return True
-    except Exception as e:
-        print(e)
-        db.rollback()
-
-
 def addPortfolio(portfolio):
     db = linkDatabase()
     cursor = db.cursor()
