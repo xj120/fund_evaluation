@@ -180,9 +180,10 @@ def getPortfolioInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')[0:4]
 
-        with open(file='.\\static\\data\\spidefail.json',mode='a',encoding='utf-8') as f:
-            f.seek(0)
-            f.truncate()
+        with open(file='.\\static\\data\\spidefail.json',mode='w',encoding='utf-8') as f:
+            success = {"data": []}
+            t = json.dumps(success, ensure_ascii=False)
+            f.write(t)
 
         return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
@@ -191,7 +192,7 @@ def getPortfolioInfo_qieman(number):
         print(e)
         print('status_code:',response.status_code)
         fail = {}
-        url = ['https://qieman.com/portfolios/'+number]
+        url = [{"test": 'https://qieman.com/portfolios/'+number}]
         fail["data"] = url
         with open(file='.\\static\\data\\spidefail.json',mode='w',encoding='utf-8') as f:
             t = json.dumps(fail, ensure_ascii=False)

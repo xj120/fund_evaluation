@@ -61,8 +61,6 @@ def spide():
         persistentstorage.updateRecord(link)
         d = crawler.getRepositionRecord(link)
         persistentstorage.addRepositionRecord(d)
-        holdingtime.getHoldTimeSingleStore(link)
-        reposition_level.getRepositionLevelSingleStore(link)
     else:
         f = crawler.getPortfolioInfo(link)
         persistentstorage.addPortfolio(f)
