@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 @app.route('/FundEvaluation', methods=['GET', 'POST'])
-def index():
+def index():  # 基金评比页面的渲染
     c1 = Calculation.getIncomeProcedure()
     c2 = Calculation.getMaxDrawDownProcedure()
     r1 = Calculation.getIncomeCalculation()
@@ -20,7 +20,7 @@ def index():
 
 
 @app.route('/')
-def mainPage():
+def mainPage():  # 主页的渲染
     return render_template("MainPage.html")
 
 
@@ -36,7 +36,7 @@ app.debug = True
 
 
 @app.route('/url')
-def index2():
+def index2():  # URL管理界面的渲染
     crawler.updateXsign()
     content = persistentstorage.getUrlAndDateInfo()
     # content：url的字典
@@ -53,7 +53,6 @@ def delete(i):
     return redirect("/")"""
 
 
-#
 @app.route('/spide', methods=["POST"])
 def spide():
     # 爬虫程序：
