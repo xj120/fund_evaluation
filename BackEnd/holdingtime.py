@@ -117,9 +117,35 @@ def getStore():
         cursor2.execute(sql2)
         db.commit()
 
+def getURLNumber(url):
+    if len(url)==38:
+        number=url[30:38]
+    return number
+#传入单个组合的url，即可将其基金平均持有时间存入数据库
+def getSingleStore(url):
+    number=getURLNumber(url)
+    db = linkDatabase()
+    cursor = db.cursor()
+    cursor2 = db.cursor()
+    sql2 = '''
+                       update portfolio
+                       set average_holding_time = ''' + str(round(getFund(number))) + '''
+                       where number=''' + "\'" + number + "\'"
+    cursor2.execute(sql2)
+    db.commit()
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     a = "CSI1006"
     b = "161005"
-    getStore()
+    getSingleStore('https://qieman.com/portfolios/ZH000193')
     # print(persistentstorage.getPortfolioList())
