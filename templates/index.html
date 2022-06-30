@@ -235,54 +235,8 @@ line-height:30px;
 <form name="createURL" >
    <input type="button" onclick="show()" value="新建URL">
 </form>
-<form name="spiderALL">
-    <input type="button" value="爬取全部" onclick = spideall()>
-</form>
 </div>
-<script>
-        function spideall(){
 
-        var urltb = document.getElementById("URLtable")
-        var row = urltb.rows
-        for(var i =2;i<row.length;i++)
-        {
-        var cell = row[i].cells;
-        $.ajax({
-            type: 'POST',
-            url: '/spide',
-            data: {'url':cell[0].innerHTML},
-            dataType: 'json',
-            success: function () {
-
-            },
-            error: function () {
-$.ajax({
-    type: 'get',
-    url: './static/data/spidefail.json',
-    dataType: "json",
-    success: function (result) {
-        if (result.data.length > 0) {
-            for (let i = 0; i < result.data.length; i++) {
-
-                    alert("爬取失败：" + result.data[i].test)
-
-                }
-            }
-         else {
-             alert("爬取成功")
-        }
-
-    },
-    error: function () {
-
-    }
-});
-            }
-        })
-
-        }
-        }
-</script>
 
     <table id="URLtable">
 
