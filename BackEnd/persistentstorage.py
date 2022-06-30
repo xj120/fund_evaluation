@@ -284,7 +284,7 @@ def getTableJson():
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, name, income_since_found, max_drawdown, sharpe_rate, volatility, followers, reposition_level, average_holding_time
+    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, volatility, followers, reposition_level, average_holding_time
     from portfolio
     '''
     try:
@@ -292,8 +292,8 @@ def getTableJson():
         db.commit()
         portfolios = cursor.fetchall()
         for portfolio in portfolios:
-            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "gains": portfolio[2], "max_retracement": portfolio[3],
-                         "sharpe_ratio": portfolio[4], "annualized_volatility": portfolio[5], "fans_num": portfolio[6], "reposition_level": portfolio[7], "average_holding_time": portfolio[8]}
+            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2], "gains": portfolio[3], "max_retracement": portfolio[4],
+                         "sharpe_ratio": portfolio[5], "annualized_volatility": portfolio[6], "fans_num": portfolio[7], "reposition_level": portfolio[8], "average_holding_time": portfolio[9]}
             data.append(portfolio_dict)
         table["data"] = data
         with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:

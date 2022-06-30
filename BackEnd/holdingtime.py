@@ -70,13 +70,13 @@ def getFundHoldingTime(numbers, fund_code):
         results = cursor.fetchall()
         for row in results:
             duringtime = row[0]
-            cursor.close
-            cursor2.close
-            db.close
+            cursor.close()
+            cursor2.close()
+            db.close()
             return duringtime
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 某个组合的所有基金平均持有时间
 def getFund(numbers):
@@ -98,12 +98,12 @@ def getFund(numbers):
         for row in results2:
             fundlist = row[0]
             m = m + getFundHoldingTime(numbers, fundlist)
-        cursor.close
-        db.close
+        cursor.close()
+        db.close()
         return m / results / 30
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 将组合的平均持有时间存入数据库
 def getStore():
@@ -126,12 +126,11 @@ def getStore():
                         where number=''' + "\'" + row[0] + "\'"
             cursor2.execute(sql2)
             db.commit()
-            cursor.close
-            cursor2.close
-            db.close
+            cursor.close()
+            cursor2.close()
+            db.close()
     except Exception as e:
         print(e)
-        db.rollback
 
 
 
@@ -156,12 +155,12 @@ def getHoldTimeSingleStore(url):
                            where number=''' + "\'" + number + "\'"
         cursor2.execute(sql2)
         db.commit()
-        cursor.close
-        cursor2.close
-        db.close
+        cursor.close()
+        cursor2.close()
+        db.close()
     except Exception as e:
         print(e)
-        db.rollback
+
 
 
 

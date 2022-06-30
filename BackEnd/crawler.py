@@ -20,9 +20,9 @@ dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 xq_header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44',}
 
+
 # 看情况更新Xsign
 def updateXsign():
-    # print(qm_header['x-sign'][0:13])
     last_xsign = int(qm_header['x-sign'][0:13]) // 1000
     last_time = time.localtime(last_xsign)
     last_date = datetime.datetime(last_time[0], last_time[1], last_time[2], last_time[3], last_time[4])

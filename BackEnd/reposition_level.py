@@ -9,11 +9,11 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -51,12 +51,12 @@ def getPortfolioUP(numbers, date):
         for row in results:
             value2 = row[0]
         m = value2 - value1
-        cursor.close
-        cursor2.close
+        cursor.close()
+        cursor2.close()
         return m
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 单个基金调仓情况
 def getMoveState(numbers, fund):
@@ -101,19 +101,19 @@ def getMoveState(numbers, fund):
                 b = getPortfolioUP(numbers, date)
                 print(proportion)
                 if b > a:
-                    cursor.close
-                    cursor2.close
+                    cursor.close()
+                    cursor2.close()
                     return 1
                 else:
-                    cursor.close
-                    cursor2.close
+                    cursor.close()
+                    cursor2.close()
                     return 0
-        cursor.close
-        cursor2.close
+        cursor.close()
+        cursor2.close()
         return 0
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 某个组合的调仓成功次数
 def getMoveSuccessTimes(numbers):
@@ -132,11 +132,11 @@ def getMoveSuccessTimes(numbers):
         m = 0
         for row in results2:
             m = m + getMoveState(numbers, row[0])
-            cursor.close
+            cursor.close()
         return m
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 某个组合调仓总次数
 def getMoveTimes(numbers):
@@ -157,11 +157,11 @@ def getMoveTimes(numbers):
             proportion = row[0]
             if proportion == 0:
                 m = m + 1
-        cursor2.close
+        cursor2.close()
         return m
     except Exception as e:
         print(e)
-        db.rollback
+
 
 # 调仓成功率，即调仓水平
 def getLevel(numbers):
@@ -198,12 +198,12 @@ def getStore():
                         where number=''' + "\'" + row[0] + "\'"
             cursor2.execute(sql2)
             db.commit()
-            cursor.close
-            cursor2.close
-            db.close
+            cursor.close()
+            cursor2.close()
+            db.close()
     except Exception as e:
         print(e)
-        db.rollback
+
 
 def getURLNumber(url):
     try:
@@ -228,12 +228,11 @@ def getRepositionLevelSingleStore(url):
                  where number=''' + "\'" + number + "\'"
         cursor2.execute(sql2)
         db.commit()
-        cursor.close
-        cursor2.close
-        db.close
+        cursor.close()
+        cursor2.close()
+        db.close()
     except Exception as e:
         print(e)
-        db.rollback
 
 
 if __name__ == '__main__':
