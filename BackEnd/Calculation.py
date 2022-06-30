@@ -28,20 +28,25 @@ def getIncomeEX():
     SELECT income_since_found
         FROM portfolio
         '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1=0
-    number=0
-    for row in results2:
-        number = number + 1
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1=0
+        number=0
+        for row in results2:
+            number = number + 1
         # 这里是因为且慢基金爬取的收益率没有百分号，所以将收益率大于二的全部除以100
-        if row[0] > 2:
-            a=row[0]/100
-        else:
-            a = row[0]
-        value1 = a + value1
-    return round((value1/number),2)
-
+            if row[0] > 2:
+                a=row[0]/100
+            else:
+                a = row[0]
+            value1 = a + value1
+        cursor2.close
+        db.close
+        return round((value1/number),2)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 #所有组合的最大回撤的数学期望E(x)，E(X)=所有组合最大回撤之和除以总组合数
 def getMaxDrawDownEX():
@@ -51,17 +56,21 @@ def getMaxDrawDownEX():
         SELECT max_drawdown
             FROM portfolio
             '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0] < 2:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
-
-
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0] < 2:
+                number = number + 1
+                value1 = row[0] + value1
+        cursor2.close
+        db.close
+        return round((value1 / number), 2)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 #粉丝数量的数学期望，E(X)=所有组合粉丝数之和除以总组合数
 def getFollowersEX():
@@ -71,18 +80,21 @@ def getFollowersEX():
         SELECT followers
             FROM portfolio
             '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0]!=None:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
-
-
-
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0]!=None:
+                number = number + 1
+                value1 = row[0] + value1
+        cursor2.close
+        db.close
+        return round((value1 / number), 2)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 #计算收益与粉丝的E(XY)，E(XY)=所有组合年收益率与粉丝的乘积之和除以总组合数
 def getIncomeEXY():
@@ -98,15 +110,21 @@ def getIncomeEXY():
             FROM portfolio
 						where income_since_found>2)as d)
             '''
-    cursor.execute(sql1)
-    results2 = cursor.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0]!=None:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
+    try:
+        cursor.execute(sql1)
+        results2 = cursor.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0]!=None:
+                number = number + 1
+                value1 = row[0] + value1
+        cursor.close
+        db.close
+        return round((value1 / number), 2)
+    except Exception as e:
+        prtin(e)
+        db.rollback
 
 #计算最大回撤与粉丝的E(XY)，E(XY)=所有组合最大回撤与粉丝的乘积之和除以总组合数
 def getMaxDrawDownEXY():
@@ -116,35 +134,46 @@ def getMaxDrawDownEXY():
         SELECT max_drawdown*followers
             FROM portfolio
             '''
-    cursor.execute(sql1)
-    results2 = cursor.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0]!=None:
-            number = number + 1
-            value1 = row[0] + value1
-    return round((value1 / number), 2)
-
+    try:
+        cursor.execute(sql1)
+        results2 = cursor.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0]!=None:
+                number = number + 1
+                value1 = row[0] + value1
+        cursor.close
+        db.close
+        return round((value1 / number), 2)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 
 
 #计算收益的Cov(X)，Cov(X)=E(XY)-E(X)E(Y)
 def getIncomeCov():
-    a=getIncomeEXY()
-    b=getIncomeEX()
-    c=getFollowersEX()
-    d=a-b*c
-    return d
+    try:
+        a=getIncomeEXY()
+        b=getIncomeEX()
+        c=getFollowersEX()
+        d=a-b*c
+        return d
+    except Exception as e:
+        print(e)
+
 
 #计算最大回撤的Cov(X),Cov(X)=E(XY)-E(X)E(Y)
 def getMaxDrawDownCov():
-    a=getMaxDrawDownEXY()
-    b=getMaxDrawDownEX()
-    c=getFollowersEX()
-    d=a-b*c
-    return d
-
+    try:
+        a=getMaxDrawDownEXY()
+        b=getMaxDrawDownEX()
+        c=getFollowersEX()
+        d=a-b*c
+        return d
+    except Exception as e:
+        print(e)
 
 
 #计算收益的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
@@ -155,22 +184,28 @@ def getIncomeDX():
        SELECT income_since_found
            FROM portfolio
            '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        number = number + 1
-        #这里是因为且慢基金爬取的收益率没有百分号，所以将收益率大于二的全部除以100
-        if row[0] > 2:
-            a = row[0] / 100
-        else:
-            a = row[0]
-        value1 = a*a+ value1
-    #D(X)的平方根
-    b=getIncomeEX()
-    a=round((value1 / number), 2)-b*b
-    return round(pow(a,0.5),4)
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            number = number + 1
+            #这里是因为且慢基金爬取的收益率没有百分号，所以将收益率大于二的全部除以100
+            if row[0] > 2:
+                a = row[0] / 100
+            else:
+                a = row[0]
+            value1 = a*a+ value1
+        #D(X)的平方根
+        b=getIncomeEX()
+        a=round((value1 / number), 2)-b*b
+        cursor2.close
+        db.close
+        return round(pow(a,0.5),4)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 
 #计算最大回撤的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
@@ -181,19 +216,24 @@ def getMaxDrawDownDX():
        SELECT max_drawdown
            FROM portfolio
            '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0]!=None:
-            number = number + 1
-            value1 = row[0]*row[0] + value1
-    #D(X)的平方
-    b=getMaxDrawDownEX()
-    a=round((value1 / number), 2)-b*b
-    return round(pow(a,0.5),4)
-
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0]!=None:
+                number = number + 1
+                value1 = row[0]*row[0] + value1
+        #D(X)的平方
+        b=getMaxDrawDownEX()
+        a=round((value1 / number), 2)-b*b
+        cursor2.close
+        db.close
+        return round(pow(a,0.5),4)
+    except Exception as e:
+        print(e)
+        db.rollback
 
 
 #计算粉丝的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
@@ -204,38 +244,52 @@ def getFollowersDX():
        SELECT followers
            FROM portfolio
            '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    value1 = 0
-    number = 0
-    for row in results2:
-        if row[0] !=None:
-            number = number + 1
-            value1 = row[0]*row[0] + value1
-    #D(X)的平方
-    b=getFollowersEX()
-    a=round((value1 / number), 2)-b*b
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        value1 = 0
+        number = 0
+        for row in results2:
+            if row[0] !=None:
+                number = number + 1
+                value1 = row[0]*row[0] + value1
+        #D(X)的平方
+        b=getFollowersEX()
+        a=round((value1 / number), 2)-b*b
 
-    c=round(pow(a,0.5),4)
-    return c
+        c=round(pow(a,0.5),4)
+        cursor2.close
+        db.close
+        return c
+    except Exception as e:
+        print(e)
+        db.rollback
+
 
 ######   调用函数请看下面     #########
 
 #一键计算收益与粉丝的相关系数，相关系数=Cov(X)除以粉丝的D(Y)的平方根与收益率的D(X)的平方根
 def getIncomeCalculation():
-    a=getIncomeCov()
-    b=getIncomeDX()
-    c=getFollowersDX()
-    d=round((a/c/b),2)
-    return d
+    try:
+        a=getIncomeCov()
+        b=getIncomeDX()
+        c=getFollowersDX()
+        d=round((a/c/b),2)
+        return d
+    except Exception as e:
+        print(e)
 
 #一键计算最大回撤与粉丝的相关系数,相关系数=Cov(X)除以粉丝的D(Y)的平方根与最大回撤的D(X)的平方根
 def getMaxDrawDownCalculation():
-    a=getMaxDrawDownCov()
-    b=getMaxDrawDownDX()
-    c=getFollowersDX()
-    d=round((a/c/b),2)
-    return d
+    try:
+        a=getMaxDrawDownCov()
+        b=getMaxDrawDownDX()
+        c=getFollowersDX()
+        d=round((a/c/b),2)
+        return d
+    except Exception as e:
+        print(e)
+
 
 #返回计算过程
 def getIncomeProcedure():
@@ -247,7 +301,10 @@ Cov(X)=E(XY)-E(X)E(Y)='''+str(getIncomeCov())+'''
 √D(X)=√(E(X^2)-E(X)*E(X))='''+str(getIncomeDX())+'''
 √D(Y)=√(E(X^2)-E(X)*E(X))='''+str(getFollowersDX())+'''
 r=Cov(X)/(√D(X)*√D(Y))='''+str(getIncomeCalculation())+''''''
-    return a
+    try:
+        return a
+    except Exception as e:
+        print(e)
 def getMaxDrawDownProcedure():
     a='''最大回撤与粉丝的相关系数计算过程,X:最大回撤,Y:粉丝
 E(X) = X1*p(X1） + X2*p(X2） + …… + Xn*p(Xn)='''+str(getMaxDrawDownEX())+'''
@@ -257,7 +314,10 @@ Cov(X)=E(XY)-E(X)E(Y)='''+str(getMaxDrawDownCov())+'''
 √D(X)=√(E(X^2)-E(X)*E(X))='''+str(getMaxDrawDownDX())+'''
 √D(Y)=√(E(X^2)-E(X)*E(X))='''+str(getFollowersDX())+'''
 r=Cov(X)/(√D(X)*√D(Y))='''+str(getMaxDrawDownCalculation())+''''''
-    return a
+    try:
+        return a
+    except Exception as e:
+        print(e)
 
 
 
@@ -273,7 +333,7 @@ if __name__ == '__main__':
     # print(getIncomeCov())
     # print(getIncomeDX())
     # print(getFollowersDX())
-    # print(getIncomeCalculation())
+    print(getIncomeCalculation())
     #
     # print(getMaxDrawDownEX())
     # print(getFollowersEX())
@@ -281,6 +341,6 @@ if __name__ == '__main__':
     # print(getMaxDrawDownCov())
     # print(getMaxDrawDownDX())
     # print(getFollowersDX())
-    # print(getMaxDrawDownCalculation())
+    print(getMaxDrawDownCalculation())
     #print(getIncomeProcedure())
-    print(getMaxDrawDownProcedure())
+    #print(getMaxDrawDownProcedure())
