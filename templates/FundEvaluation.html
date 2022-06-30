@@ -26,10 +26,21 @@
     <table id="datatable" lay-filter="test"></table>
     <script src="../static/js/DataTable.js"></script>
 </div>
-<div id="FansCorrelation">
-    <h1>粉丝数相关性指标研究</h1>
-    <h2>TEST：{{ ab }}</h2>
-    {{ test }}
+<div id="FansCorrelation01">
+    <h1>粉丝数与年化收益率相关性指标研究</h1><br>
+    <h2>相关性指数 = {{ r1 }}</h2><br><br>
+    <div class='hiddenMemo'
+         title={{ c1 }}>
+        鼠标移到这里查看计算过程：
+    </div>
+</div>
+<div id="FansCorrelation02">
+    <h1>粉丝数与最大回撤相关性指标研究</h1><br>
+    <h2>相关性指数 = {{ r2 }}</h2><br><br>
+    <div class='hiddenMemo'
+         title={{ c2 }}>
+        鼠标移到这里查看计算过程：
+    </div>
 </div>
 </body>
 </html>

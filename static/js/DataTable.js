@@ -10,7 +10,7 @@ $(function () {
             , toolbar: true
             , page: false //分页
             , cols: [[ //表头
-                {field: 'v_id', title: '组合号', width: 110, fixed: 'left'}
+                {field: 'v_id', title: 'VID', width: 110, fixed: 'left'}
                 , {field: 'group_id', title: '组合名字', width: 170}
                 , {field: 'gains', title: '涨幅(%)', width: 120, sort: true}
                 , {field: 'max_retracement', title: '最大回撤(%)', width: 140, sort: true}

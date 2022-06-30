@@ -5,15 +5,18 @@ import BackEnd.persistentstorage as persistentstorage
 import BackEnd.crawler as crawler
 import BackEnd.reposition_level as reposition_level
 import BackEnd.holdingtime as holdingtime
+from BackEnd import Calculation
 
 app = Flask(__name__)
 
 
 @app.route('/FundEvaluation', methods=['GET', 'POST'])
 def index():
-    test = '!!!!!'
-    ab = '??????'
-    return render_template("FundEvaluation.html", test=test, ab=ab)
+    c1 = Calculation.getIncomeProcedure()
+    c2 = Calculation.getMaxDrawDownProcedure()
+    r1 = Calculation.getIncomeCalculation()
+    r2 = Calculation.getMaxDrawDownCalculation()
+    return render_template("FundEvaluation.html", r1=r1, r2=r2, c1=c1, c2=c2)
 
 
 @app.route('/')
@@ -68,8 +71,6 @@ def spide():
         persistentstorage.addHistoryRecord(r)
         d = crawler.getRepositionRecord(link)
         persistentstorage.addRepositionRecord(d)
-        holdingtime.getHoldTimeSingleStore(link)
-        reposition_level.getRepositionLevelSingleStore(link)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
@@ -80,13 +81,12 @@ def spide():
 @app.route('/delete', methods=["POST"])
 def delete():
     link = request.form.get('url2')
-    #删除
+    # 删除
     persistentstorage.deletePortfolio(link)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
     return redirect('/')
-
 
 
 if __name__ == '__main__':

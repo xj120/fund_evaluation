@@ -76,11 +76,30 @@ li a:hover:not(.active) {
     left: 8%;
 }
 
-#FansCorrelation {
+#FansCorrelation01 {
     position: absolute;
     top: 190%;
     left: 12%;
-    width: 76%;
+    width: 38%;
     height: 70%;
-    background: #e1e1e1;
+}
+
+#FansCorrelation02 {
+    position: absolute;
+    top: 190%;
+    right: 12%;
+    width: 38%;
+    height: 70%;
+}
+
+/*多行隐藏显示的样式设定*/
+.hiddenMemo {
+    width: 270px; /*设置隐藏显示的最大宽度*/
+    overflow: hidden; /* 文字长度超出限定宽度，则隐藏超出的内容 */
+    text-overflow: ellipsis;
+    display: -webkit-box; /* 将对象作为弹性伸缩盒子模型显示 */
+    -webkit-line-clamp: 1; /* 控制最多显示几行，这里采用最多显示两行 */
+    -webkit-box-orient: vertical; /* 设置或检索伸缩盒对象的子元素的排列方式 */
+    font-size: large;
+    color: #0000FF;
 }
