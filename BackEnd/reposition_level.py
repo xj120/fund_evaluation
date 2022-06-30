@@ -9,11 +9,11 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation', charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -180,7 +180,7 @@ def getURLNumber(url):
     return number
 
 #传入单个组合的url，即可将其调仓水平存入数据库
-def getSingleStore(url):
+def getRepositionLevelSingleStore(url):
     number = getURLNumber(url)
     db = linkDatabase()
     cursor = db.cursor()
@@ -203,4 +203,4 @@ if __name__ == '__main__':
     # print(getPortfolioUP(a,b))
     # print(getMoveTimes(a))
     # print(getMoveState(a,b))
-    getSingleStore('https://qieman.com/portfolios/ZH030684')
+    getSingleStore('https://qieman.com/portfolios/ZH009664')
