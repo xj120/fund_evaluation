@@ -71,6 +71,8 @@ def spide():
         persistentstorage.addHistoryRecord(r)
         d = crawler.getRepositionRecord(link)
         persistentstorage.addRepositionRecord(d)
+        holdingtime.getHoldTimeSingleStore(link)
+        reposition_level.getRepositionLevelSingleStore(link)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
