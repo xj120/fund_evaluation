@@ -12,11 +12,11 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation', charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='111111', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -35,42 +35,48 @@ def getFundHoldingTime(numbers, fund_code):
         ORDER BY adjust_date DESC
         LIMIT 1
         '''
-    cursor2.execute(sql1)
-    results2 = cursor2.fetchall()
-    for row in results2:
-        proportion = row[0]
-        if proportion == 0:
-            sql2 = '''
-                SELECT datediff(
-                    (select adjust_date
-                    from reposition_record
-                    where number=
-                    ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
-                    ORDER BY adjust_date DESC
-                    LIMIT 1),
-                    (select adjust_date
-                    from reposition_record
-                    where number=\
-                    ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
-                    LIMIT 1)) as DuringTime 
-                    '''
+    try:
+        cursor2.execute(sql1)
+        results2 = cursor2.fetchall()
+        for row in results2:
+            proportion = row[0]
+            if proportion == 0:
+                sql2 = '''
+                    SELECT datediff(
+                        (select adjust_date
+                        from reposition_record
+                        where number=
+                        ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
+                        ORDER BY adjust_date DESC
+                        LIMIT 1),
+                        (select adjust_date
+                        from reposition_record
+                        where number=\
+                        ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
+                        LIMIT 1)) as DuringTime 
+                        '''
 
-        else:
-            sql2 = '''
-                            SELECT datediff(
-                                (select curdate()),
-                                (select adjust_date
-                                from reposition_record
-                                where number=\
-                                ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
-                                LIMIT 1)) as DuringTime 
-                                '''
-    cursor.execute(sql2)
-    results = cursor.fetchall()
-    for row in results:
-        duringtime = row[0]
-        return duringtime
-
+            else:
+                sql2 = '''
+                                SELECT datediff(
+                                    (select curdate()),
+                                    (select adjust_date
+                                    from reposition_record
+                                    where number=\
+                                    ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund_code + "\'" + '''
+                                    LIMIT 1)) as DuringTime 
+                                    '''
+        cursor.execute(sql2)
+        results = cursor.fetchall()
+        for row in results:
+            duringtime = row[0]
+            cursor.close
+            cursor2.close
+            db.close
+            return duringtime
+    except Exception as e:
+        print(e)
+        db.rollback
 
 # 某个组合的所有基金平均持有时间
 def getFund(numbers):
@@ -83,16 +89,21 @@ def getFund(numbers):
            ''' + "\'" + numbers + "\'" + '''
            group by fund_code
            '''
-    cursor.execute(sql2)
-    results = cursor.rowcount
-    results2 = cursor.fetchall()
-    m = 0
-    i = 0
-    for row in results2:
-        fundlist = row[0]
-        m = m + getFundHoldingTime(numbers, fundlist)
-    return m / results / 30
-
+    try:
+        cursor.execute(sql2)
+        results = cursor.rowcount
+        results2 = cursor.fetchall()
+        m = 0
+        i = 0
+        for row in results2:
+            fundlist = row[0]
+            m = m + getFundHoldingTime(numbers, fundlist)
+        cursor.close
+        db.close
+        return m / results / 30
+    except Exception as e:
+        print(e)
+        db.rollback
 
 # 将组合的平均持有时间存入数据库
 def getStore():
@@ -104,35 +115,53 @@ def getStore():
                from reposition_record
                group by number
                '''
-    cursor.execute(sql1)
+    try:
+        cursor.execute(sql1)
+        results2 = cursor.fetchall()
+        for row in results2:
+            row[0]
+            sql2 = '''
+                        update portfolio
+                        set average_holding_time = ''' + str(round(getFund(row[0]))) + '''
+                        where number=''' + "\'" + row[0] + "\'"
+            cursor2.execute(sql2)
+            db.commit()
+            cursor.close
+            cursor2.close
+            db.close
+    except Exception as e:
+        print(e)
+        db.rollback
 
-    results2 = cursor.fetchall()
 
-    for row in results2:
-        row[0]
-        sql2 = '''
-                    update portfolio
-                    set average_holding_time = ''' + str(round(getFund(row[0]))) + '''
-                    where number=''' + "\'" + row[0] + "\'"
-        cursor2.execute(sql2)
-        db.commit()
 
 def getURLNumber(url):
-    if len(url)==38:
-        number=url[30:38]
-    return number
+    try:
+        if len(url)==38:
+            number=url[30:38]
+        return number
+    except Exception as e:
+        print(e)
+
 #传入单个组合的url，即可将其基金平均持有时间存入数据库
 def getHoldTimeSingleStore(url):
-    number=getURLNumber(url)
-    db = linkDatabase()
-    cursor = db.cursor()
-    cursor2 = db.cursor()
-    sql2 = '''
-                       update portfolio
-                       set average_holding_time = ''' + str(round(getFund(number))) + '''
-                       where number=''' + "\'" + number + "\'"
-    cursor2.execute(sql2)
-    db.commit()
+    try:
+        number=getURLNumber(url)
+        db = linkDatabase()
+        cursor = db.cursor()
+        cursor2 = db.cursor()
+        sql2 = '''
+                           update portfolio
+                           set average_holding_time = ''' + str(round(getFund(number))) + '''
+                           where number=''' + "\'" + number + "\'"
+        cursor2.execute(sql2)
+        db.commit()
+        cursor.close
+        cursor2.close
+        db.close
+    except Exception as e:
+        print(e)
+        db.rollback
 
 
 
