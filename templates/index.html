@@ -253,27 +253,7 @@ line-height:30px;
             data: {'url':cell[0].innerHTML},
             dataType: 'json',
             success: function () {
-$.ajax({
-    type: 'get',
-    url: './static/data/spidefail.json',
-    dataType: "json",
-    success: function (result) {
-        if (result.data.length > 0) {
-            for (let i = 0; i < result.data.length; i++) {
 
-                    alert("爬取失败：" + result.data[0].test)
-
-                }
-            }
-         else {
-             alert("爬取成功")
-        }
-
-    },
-    error: function () {
-
-    }
-});
             },
             error: function () {
 $.ajax({
@@ -284,7 +264,7 @@ $.ajax({
         if (result.data.length > 0) {
             for (let i = 0; i < result.data.length; i++) {
 
-                    alert("爬取失败：" + result.data[0].test)
+                    alert("爬取失败：" + result.data[i].test)
 
                 }
             }
@@ -299,8 +279,6 @@ $.ajax({
 });
             }
         })
-
-
 
         }
         }
@@ -340,29 +318,6 @@ $.ajax({
             data: {'url':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
- $.ajax({
-    type: 'get',
-    url: './static/data/spidefail.json',
-    dataType: "json",
-    success: function (result) {
-
-        if(result.data.length<=0) {
-            alert("爬取成功")
-        }
-        else if (result.data.length > 0) {
-            for (let i = 0; i < result.data.length; i++) {
-
-                    alert("爬取失败：" + result.data[i].test )
-
-                }
-            }
-
-    },
-
-    error: function () {
-alert("success")
-    }
-});
 
             },
             error: function () {
