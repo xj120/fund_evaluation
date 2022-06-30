@@ -253,14 +253,7 @@ line-height:30px;
             data: {'url':cell[0].innerHTML},
             dataType: 'json',
             success: function () {
-
-            },
-            error: function () {
-
-            }
-        })
-
-         $.ajax({
+$.ajax({
     type: 'get',
     url: './static/data/spidefail.json',
     dataType: "json",
@@ -281,6 +274,33 @@ line-height:30px;
 
     }
 });
+            },
+            error: function () {
+$.ajax({
+    type: 'get',
+    url: './static/data/spidefail.json',
+    dataType: "json",
+    success: function (result) {
+        if (result.data.length > 0) {
+            for (let i = 0; i < result.data.length; i++) {
+
+                    alert("爬取失败：" + result.data[i].url)
+
+                }
+            }
+         else {
+
+        }
+
+    },
+    error: function () {
+
+    }
+});
+            }
+        })
+
+
 
         }
         }
@@ -320,14 +340,7 @@ $.ajax({
             data: {'url':td.parentElement.parentElement.children[0].innerText},
             dataType: 'json',
             success: function () {
-alert("爬取成功")
-            },
-            error: function () {
-alert("爬取成功")
-            }
-        })
-
-        $.ajax({
+ $.ajax({
     type: 'get',
     url: './static/data/spidefail.json',
     dataType: "json",
@@ -348,6 +361,34 @@ alert("爬取成功")
 
     }
 });
+
+            },
+            error: function () {
+ $.ajax({
+    type: 'get',
+    url: './static/data/spidefail.json',
+    dataType: "json",
+    success: function (result) {
+        if (result.data.length > 0) {
+            for (let i = 0; i < result.data.length; i++) {
+
+                    alert("爬取失败：" + result.data[i].url)
+
+                }
+            }
+        else {
+
+        }
+
+    },
+    error: function () {
+
+    }
+});
+
+            }
+        })
+
 
 }
 </script>
