@@ -104,7 +104,7 @@ def addHistoryRecord(records):
         return False
 
 
-# TODO 向数据库中插入调仓历史记录
+# 向数据库中插入调仓历史记录
 def addRepositionRecord(repositions):
     db = linkDatabase()
     cursor = db.cursor()
@@ -284,7 +284,7 @@ def getTableJson():
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, volatility, followers, reposition_level, average_holding_time
+    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, rate_per_ann, volatility, followers, reposition_level, average_holding_time
     from portfolio
     '''
     try:
@@ -293,7 +293,7 @@ def getTableJson():
         portfolios = cursor.fetchall()
         for portfolio in portfolios:
             portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2], "gains": portfolio[3], "max_retracement": portfolio[4],
-                         "sharpe_ratio": portfolio[5], "annualized_volatility": portfolio[6], "fans_num": portfolio[7], "reposition_level": portfolio[8], "average_holding_time": portfolio[9]}
+                         "sharpe_ratio": portfolio[5],"rate_per_ann": portfolio[6] ,"annualized_volatility": portfolio[7], "fans_num": portfolio[8], "reposition_level": portfolio[9], "average_holding_time": portfolio[10]}
             data.append(portfolio_dict)
         table["data"] = data
         with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
