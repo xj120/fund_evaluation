@@ -3,7 +3,6 @@ import BackEnd.persistentstorage as persistentstorage
 import datetime
 import json
 import time
-from BackEnd import a
 import pymysql
 
 # 连接数据库
@@ -67,6 +66,7 @@ def getMoveState(numbers,fund):
            ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund + "\'" + '''
            and proportion=0
            and number like "Z%"
+           limit 1
            '''
     sql2 = '''
            SELECT max(proportion)
@@ -75,7 +75,8 @@ def getMoveState(numbers,fund):
                ''' + "\'" + numbers + "\'" + "and fund_code=" + "\'" + fund + "\'" + '''
                 and number in(SELECT number
                 FROM reposition_record
-                where number like "Z%" and proportion=0)
+                where number like "Z%" and proportion=0
+                group by number)
                '''
     cursor.execute(sql2)
     results = cursor.fetchall()
@@ -90,8 +91,8 @@ def getMoveState(numbers,fund):
     for row in results2:
         date = row[0]
      #在这里令a等于基金的涨幅函数就可以了
-        if crawler.getFundRise_qieman(fund,date)!=None:
-             a = crawler.getFundRise_qieman(fund,date)/100*proportion
+        if crawler.getFundRise(fund,date)!=None:
+             a = crawler.getFundRise(fund,date)/100*proportion
              b = getPortfolioUP(numbers, date)
              print(proportion)
              if b > a:
@@ -173,9 +174,12 @@ def getStore():
 
 
 if __name__ == '__main__':
-    a = "ZH035411"
-    b="161005"
+    a = "ZH000193"
+    b="000509"
     c="2018-09-27"
     #print(getMoveSuccessTimes("CSI1033"))
 
+    #print(getPortfolioUP(a,b))
+    #print(getMoveTimes(a))
+    #print(getMoveState(a,b))
     getStore()
