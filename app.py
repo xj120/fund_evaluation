@@ -3,14 +3,17 @@ from werkzeug.utils import redirect
 
 import BackEnd.persistentstorage as persistentstorage
 import BackEnd.crawler as crawler
+import BackEnd.Calculation as Calculation
+
 
 app = Flask(__name__)
 
 
 @app.route('/FundEvaluation', methods=['GET', 'POST'])
 def index():
+    c1 = "test"
     test = 'test'
-    return render_template("FundEvaluation.html", test=test)
+    return render_template("FundEvaluation.html", test=test, c1=c1)
 
 
 @app.route('/')
