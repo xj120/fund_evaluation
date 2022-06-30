@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '16537306566637D079C8A719AD10D16316A36483A31E3'
+    'x-sign': '165651789573200079F0292EA58E05B3F6BEA45B51C83'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}

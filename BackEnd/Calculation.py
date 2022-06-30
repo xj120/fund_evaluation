@@ -3,7 +3,6 @@ import BackEnd.persistentstorage as persistentstorage
 import datetime
 import json
 import time
-from BackEnd import a
 import pymysql
 
 # 连接数据库
