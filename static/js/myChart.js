@@ -46,7 +46,7 @@ let option = {
         boundaryGap: false
     },
     yAxis: {
-        name: '涨幅(%)',
+        name: '累计涨幅(%)',
         type: 'value',
         nameTextStyle: {
             padding: [0, 0, -225, -150],
