@@ -3,8 +3,9 @@ from werkzeug.utils import redirect
 
 import BackEnd.persistentstorage as persistentstorage
 import BackEnd.crawler as crawler
-import BackEnd.Calculation as Calculation
-
+import BackEnd.reposition_level as reposition_level
+import BackEnd.holdingtime as holdingtime
+from BackEnd import Calculation
 
 app = Flask(__name__)
 
@@ -61,11 +62,15 @@ def spide():
         f = crawler.getPortfolioInfo(link)
         persistentstorage.updatePortfolio(f)
         persistentstorage.updateRecord(link)
+        d = crawler.getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
     else:
         f = crawler.getPortfolioInfo(link)
         persistentstorage.addPortfolio(f)
         r = crawler.getHistoryRecord(link, '30000')
         persistentstorage.addHistoryRecord(r)
+        d = crawler.getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
@@ -76,13 +81,12 @@ def spide():
 @app.route('/delete', methods=["POST"])
 def delete():
     link = request.form.get('url2')
-    #删除
+    # 删除
     persistentstorage.deletePortfolio(link)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
     return redirect('/')
-
 
 
 if __name__ == '__main__':
