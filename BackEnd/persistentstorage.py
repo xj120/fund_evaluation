@@ -10,11 +10,11 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation', charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -104,7 +104,7 @@ def addHistoryRecord(records):
         return False
 
 
-# 向数据库中插入调仓历史记录
+# TODO 向数据库中插入调仓历史记录
 def addRepositionRecord(repositions):
     db = linkDatabase()
     cursor = db.cursor()
@@ -284,7 +284,7 @@ def getTableJson():
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, rate_per_ann, volatility, followers, reposition_level, average_holding_time
+    select number, name, income_since_found, max_drawdown, sharpe_rate, volatility, followers
     from portfolio
     '''
     try:
@@ -292,8 +292,8 @@ def getTableJson():
         db.commit()
         portfolios = cursor.fetchall()
         for portfolio in portfolios:
-            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2], "gains": portfolio[3], "max_retracement": portfolio[4],
-                         "sharpe_ratio": portfolio[5],"rate_per_ann": portfolio[6] ,"annualized_volatility": portfolio[7], "fans_num": portfolio[8], "reposition_level": portfolio[9], "average_holding_time": portfolio[10]}
+            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "gains": portfolio[2], "max_retracement": portfolio[3],
+                         "sharpe_ratio": portfolio[4], "annualized_volatility": portfolio[5], "fans_num": portfolio[6]}
             data.append(portfolio_dict)
         table["data"] = data
         with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
