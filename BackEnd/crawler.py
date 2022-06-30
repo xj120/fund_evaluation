@@ -11,28 +11,37 @@ import BackEnd.record as record
 import BackEnd.reposition as reposition
 import BackEnd.persistentstorage as persistentstorage
 
+
+# 且慢基金的请求头
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
     'x-sign': '1656572036559A1A18240CDEA9BAFBA3E67D1B171C0FC'
 }
 
+
+# 蛋卷基金的请求头
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
 
+
+# 雪球网的请求头
 xq_header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44',}
+
 
 # 看情况更新Xsign
 def updateXsign():
-    # print(qm_header['x-sign'][0:13])
+    # 得到xsign的时间串
     last_xsign = int(qm_header['x-sign'][0:13]) // 1000
     last_time = time.localtime(last_xsign)
     last_date = datetime.datetime(last_time[0], last_time[1], last_time[2], last_time[3], last_time[4])
     now_time = time.localtime()
     now_date = datetime.datetime(now_time[0], now_time[1], now_time[2], now_time[3], now_time[4])
 
+    # 计算当前时间与xsign时间的时间跨度
     difference = now_date - last_date
 
     span = difference.days*24 + difference.seconds/3600
 
+    # 大于12小时就更新
     if span > 12:
         qm_header['x-sign'] = getXsign()
 
@@ -40,6 +49,7 @@ def updateXsign():
 # 得到Xsign参数
 def getXsign():
     try:
+        # 参数设置
         caps = {
             'browserName': 'chrome',
             'loggingPrefs': {
@@ -54,6 +64,7 @@ def getXsign():
                 'w3c': False,
             },
         }
+        # 参数设置
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_experimental_option('w3c', False)
@@ -61,15 +72,14 @@ def getXsign():
         driver.get('https://qieman.com')
         info = driver.get_log('performance')
         for i in info:
+            # 把json格式转成字典
             dic_info = json.loads(i["message"])
-            # print(dic_info)
+            # 找到request信息
             info = dic_info["message"]['params']
-            # print(info)
             if 'request' in info:
-                # print(info['request'])
                 if 'headers' in info['request']:
-                    # print(info['request']['headers'])
                     if 'x-sign' in info['request']['headers']:
+                        # 找到了x-sign就返回
                         return info['request']['headers']['x-sign']
     except Exception as e:
         print(e)
@@ -81,6 +91,7 @@ def getPortfolioInfo(url):
     if len(url) != 38 and len(url) != 58:
         return None
 
+    # 切割url转换成投资组合编号
     if len(url) == 38:
         number = url[30:38]
         return getPortfolioInfo_qieman(number)
@@ -94,6 +105,7 @@ def getHistoryRecord(url, size):
     if len(url) != 38 and len(url) != 58:
         return None
 
+    # 切割url转换成投资组合编号
     if len(url) == 38:
         number = url[30:38]
         return getHistoryRecord_qieman(number, size)
@@ -107,6 +119,7 @@ def getRepositionRecord(url):
     if len(url) != 38 and len(url) != 58:
         return None
 
+    # 切割url转换成投资组合编号
     if len(url) == 38:
         number = url[30:38]
         return getRepositionRecord_qieman(number)
@@ -122,6 +135,7 @@ def getFundRise(number, sell_date):
     now_date = datetime.datetime(now_date[0], now_date[1], now_date[2])
     url = 'https://qieman.com/pmdj/v1/funds/'+number+'/nav-history?start='+str(sell_date)+'&end='+str(now_date)
     try:
+        # 对时间跨度内的涨幅进行计算
         response = requests.get(url=url, headers=qm_header)
         response.raise_for_status()
         content = response.text
@@ -139,7 +153,7 @@ def getFundRise(number, sell_date):
         return None
 
 
-# 将秒格式化为日期
+# 将时间秒格式化为日期
 def formatTime(second):
     second /= 1000
     time_array = time.localtime(second)
@@ -180,6 +194,7 @@ def getPortfolioInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')[0:4]
 
+        # 爬取成功了就写一个json文件给前端
         with open(file='.\\static\\data\\spidefail.json',mode='w',encoding='utf-8') as f:
             success = {"data": []}
             t = json.dumps(success, ensure_ascii=False)
@@ -190,7 +205,8 @@ def getPortfolioInfo_qieman(number):
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
         print(e)
-        print('status_code:',response.status_code)
+        print('status_code:', response.status_code)
+        # 爬取失败了就写一个json文件给前端
         fail = {}
         url = [{"test": 'https://qieman.com/portfolios/'+number}]
         fail["data"] = url
@@ -212,6 +228,7 @@ def getHistoryRecord_qieman(number, size=30000):
         content = response.text
         items = json.loads(content)
         records = []
+        # 在字典中提取信息
         for item in items[-1:-int(size)-1:-1]:
             nav = item.get('nav')
             if item.get('dailyReturn') is not None:
@@ -240,6 +257,7 @@ def getRepositionRecord_qieman(number):
         items = json.loads(content)
         items = items.get('content')
         repositions = []
+        # 在字典中提取信息
         for item in items:
             adjust_date = item.get('adjustedOn')
             records = []
@@ -268,6 +286,7 @@ def getPortfolioFans_danjuan(number):
         obj = json.loads(content)
         xq_name = obj.get('data').get('xq_id')
 
+        # 将从蛋卷中提取出来的雪球网ID加到雪球网URL中
         url = 'https://xueqiu.com/query/v1/search/user.json?q=' + xq_name + '&count=3&page=1'
         session = requests.session()
         session.get(url="https://xueqiu.com", headers=xq_header)
@@ -403,7 +422,7 @@ def getRepositionRecord_danjuan(number):
 
 
 if __name__ == '__main__':
-    # updateXsign()
+    updateXsign()
     print(qm_header['x-sign'])
     # starttime = datetime.datetime.now()
     # print(getXsign())
@@ -414,12 +433,7 @@ if __name__ == '__main__':
 
     # print(getRepositionRecord_qieman('ZH030684'))
 
-    urls = ['https://danjuanapp.com/strategy/CSI1033?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1032?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1038?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1029?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1006?channel=1300100141',
-            'https://danjuanapp.com/strategy/CSI1065?channel=1300100141',
+    urls = [
             'https://qieman.com/portfolios/ZH010246',
             'https://qieman.com/portfolios/ZH006498',
             'https://qieman.com/portfolios/ZH000193',
