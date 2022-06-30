@@ -3,6 +3,8 @@ from werkzeug.utils import redirect
 
 import BackEnd.persistentstorage as persistentstorage
 import BackEnd.crawler as crawler
+import BackEnd.reposition_level as reposition_level
+import BackEnd.holdingtime as holdingtime
 
 app = Flask(__name__)
 
@@ -57,11 +59,15 @@ def spide():
         f = crawler.getPortfolioInfo(link)
         persistentstorage.updatePortfolio(f)
         persistentstorage.updateRecord(link)
+        d = crawler.getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
     else:
         f = crawler.getPortfolioInfo(link)
         persistentstorage.addPortfolio(f)
         r = crawler.getHistoryRecord(link, '30000')
         persistentstorage.addHistoryRecord(r)
+        d = crawler.getRepositionRecord(link)
+        persistentstorage.addRepositionRecord(d)
 
     persistentstorage.getTableJson()
     persistentstorage.getRecordJson()
