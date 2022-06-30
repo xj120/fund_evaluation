@@ -13,7 +13,7 @@ import BackEnd.persistentstorage as persistentstorage
 
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '165651789573200079F0292EA58E05B3F6BEA45B51C83'
+    'x-sign': '1656572036559A1A18240CDEA9BAFBA3E67D1B171C0FC'
 }
 
 dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36"}
@@ -180,12 +180,22 @@ def getPortfolioInfo_qieman(number):
         # 夏普比率
         sharpe = obj.get('sharpe')[0:4]
 
+        with open(file='.\\static\\data\\spidefail.json',mode='a',encoding='utf-8') as f:
+            f.seek(0)
+            f.truncate()
+
         return portfolio.portfolio(number=number, name=name, manager_name=manager_name, url=sourse_url, found_date=found_date,
                          max_drawdown=max_drawdown, volatility=volatility, sharpe_rate=sharpe,
                          rate_per_ann=rate_per_ann, income_since_found=income_since_found, followers=followers)
     except requests.HTTPError as e:
         print(e)
         print('status_code:',response.status_code)
+        fail = {}
+        url = ['https://qieman.com/portfolios/'+number]
+        fail["data"] = url
+        with open(file='.\\static\\data\\spidefail.json',mode='w',encoding='utf-8') as f:
+            t = json.dumps(fail, ensure_ascii=False)
+            f.write(t)
         return None
     except Exception as e:
         print(e)

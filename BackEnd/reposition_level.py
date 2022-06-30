@@ -203,4 +203,4 @@ if __name__ == '__main__':
     # print(getPortfolioUP(a,b))
     # print(getMoveTimes(a))
     # print(getMoveState(a,b))
-    getSingleStore('https://qieman.com/portfolios/ZH009664')
+    getRepositionLevelSingleStore('https://qieman.com/portfolios/ZH009664')

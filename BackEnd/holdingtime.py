@@ -139,5 +139,5 @@ def getHoldTimeSingleStore(url):
 if __name__ == '__main__':
     a = "CSI1006"
     b = "161005"
-    getSingleStore('https://qieman.com/portfolios/ZH000193')
+    getHoldTimeSingleStore('https://qieman.com/portfolios/ZH000193')
     # print(persistentstorage.getPortfolioList())
