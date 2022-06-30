@@ -10,6 +10,27 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
+        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+                        charset='utf8')
+    except:
+        return None
+    else:
+        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+                             charset='utf8')
+        # print(type(db).__name__)
+        return db
+
+
+# 添加一个投资组合
+
+import BackEnd.crawler
+
+import pymysql
+
+
+# 连接数据库
+def linkDatabase():
+    try:
         pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation', charset='utf8')
     except:
         return None
@@ -21,6 +42,28 @@ def linkDatabase():
 
 
 # 添加一个投资组合
+def addPortfolio(portfolio):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        insert into portfolio(number,name, manager_name, url,found_date,max_drawdown,volatility,sharpe_rate,rate_per_ann,income_since_found,followers) 
+        values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        '''
+        param = (portfolio.number, portfolio.name, portfolio.manager_name, portfolio.url, portfolio.found_date,
+                 portfolio.max_drawdown, portfolio.volatility, portfolio.sharpe_rate,
+                 portfolio.rate_per_ann, portfolio.income_since_found, portfolio.followers)
+        cursor.execute(sql, param)
+        db.commit()
+
+        cursor.close()
+        db.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+
+
 def addPortfolio(portfolio):
     db = linkDatabase()
     cursor = db.cursor()
@@ -64,7 +107,7 @@ def deletePortfolio(link):
         where number = %s
         '''
         param = (number)
-        cursor.execute(sql,param)
+        cursor.execute(sql, param)
 
         db.commit()
 
@@ -104,7 +147,7 @@ def addHistoryRecord(records):
         return False
 
 
-# TODO 向数据库中插入调仓历史记录
+# 向数据库中插入调仓历史记录
 def addRepositionRecord(repositions):
     db = linkDatabase()
     cursor = db.cursor()
@@ -194,7 +237,7 @@ def getLastDate(url):
         from history_record
         where number = %s
         order by history_record.date desc LIMIT 0,1
-        '''%('\"'+number+'\"')
+        ''' % ('\"' + number + '\"')
         cursor.execute(sql)
         db.commit()
         record = cursor.fetchone()
@@ -225,7 +268,7 @@ def checkPortfolio(url):
         select *
         from history_record
         where number = %s
-        '''%('\"'+number+'\"')
+        ''' % ('\"' + number + '\"')
         cursor.execute(sql)
         db.commit()
         data = cursor.fetchone()
@@ -279,12 +322,12 @@ def getUrlAndDateInfo():
 
 # 编写投资组合信息JSON文件给前端
 def getTableJson():
-    table = {"code": 0,"msg": ""}
+    table = {"code": 0, "msg": ""}
     data = []
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, name, income_since_found, max_drawdown, sharpe_rate, volatility, followers
+    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, rate_per_ann, volatility, followers, reposition_level, average_holding_time
     from portfolio
     '''
     try:
@@ -292,11 +335,14 @@ def getTableJson():
         db.commit()
         portfolios = cursor.fetchall()
         for portfolio in portfolios:
-            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "gains": portfolio[2], "max_retracement": portfolio[3],
-                         "sharpe_ratio": portfolio[4], "annualized_volatility": portfolio[5], "fans_num": portfolio[6]}
+            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2],
+                              "gains": portfolio[3], "max_retracement": portfolio[4],
+                              "sharpe_ratio": portfolio[5], "rate_per_ann": portfolio[6],
+                              "annualized_volatility": portfolio[7], "fans_num": portfolio[8],
+                              "reposition_level": portfolio[9], "average_holding_time": portfolio[10]}
             data.append(portfolio_dict)
         table["data"] = data
-        with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\table.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(table, ensure_ascii=False)
             f.write(t)
         cursor.close()
@@ -326,10 +372,10 @@ def getRecordJson():
         db.commit()
         records = cursor.fetchall()
         for record in records:
-            r_dict = {"name":record[0], "daily_rise_drop":record[1], "date":str(record[2])}
+            r_dict = {"name": record[0], "daily_rise_drop": record[1], "date": str(record[2])}
             data.append(r_dict)
         line["data"] = data
-        with open(file='.\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
             f.write(t)
         cursor.close()
