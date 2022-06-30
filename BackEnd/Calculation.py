@@ -20,7 +20,7 @@ def linkDatabase():
 
 
 
-#所有组合的的年收益率的数学期望E(x)，E(X)=所有组合年收益率之和
+#所有组合的的年化收益率的数学期望E(x)，E(X)=所有组合年收益率之和/组合数
 def getIncomeEX():
     db = linkDatabase()
     cursor2 = db.cursor()
@@ -170,7 +170,7 @@ def getIncomeDX():
     #D(X)的平方根
     b=getIncomeEX()
     a=round((value1 / number), 2)-b*b
-    return pow(a,0.5)
+    return round(pow(a,0.5),4)
 
 
 #计算最大回撤的D(X)的平方根，其中D(X)=E(X^2)-E(X)*E(X)
@@ -192,7 +192,7 @@ def getMaxDrawDownDX():
     #D(X)的平方
     b=getMaxDrawDownEX()
     a=round((value1 / number), 2)-b*b
-    return pow(a,0.5)
+    return round(pow(a,0.5),4)
 
 
 
@@ -216,7 +216,7 @@ def getFollowersDX():
     b=getFollowersEX()
     a=round((value1 / number), 2)-b*b
 
-    c=pow(a,0.5)
+    c=round(pow(a,0.5),4)
     return c
 
 ######   调用函数请看下面     #########
@@ -237,6 +237,29 @@ def getMaxDrawDownCalculation():
     d=round((a/c/b),2)
     return d
 
+#返回计算过程
+def getIncomeProcedure():
+    a='''年化收益率与粉丝的相关系数计算过程,X:年化收益率，Y:粉丝
+E(X) = X1*p(X1） + X2*p(X2） + …… + Xn*p(Xn)='''+str(getIncomeEX())+'''
+E(Y) = X1*p(X1） + X2*p(X2） + …… + Xn*p(Xn)='''+str(getFollowersEX())+'''
+E(XY) = XY1*p(XY1） + XY2*p(XY2） + …… + XYn*p(XYn)='''+str(getIncomeEXY())+'''
+Cov(X)=E(XY)-E(X)E(Y)='''+str(getIncomeCov())+'''
+√D(X)=√(E(X^2)-E(X)*E(X))='''+str(getIncomeDX())+'''
+√D(Y)=√(E(X^2)-E(X)*E(X))='''+str(getFollowersDX())+'''
+r=Cov(X)/(√D(X)*√D(Y))='''+str(getIncomeCalculation())+''''''
+    return a
+def getMaxDrawDownProcedure():
+    a='''最大回撤与粉丝的相关系数计算过程,X:最大回撤,Y:粉丝
+E(X) = X1*p(X1） + X2*p(X2） + …… + Xn*p(Xn)='''+str(getMaxDrawDownEX())+'''
+E(Y) = X1*p(X1） + X2*p(X2） + …… + Xn*p(Xn)='''+str(getFollowersEX())+'''
+E(XY) = XY1*p(XY1） + XY2*p(XY2） + …… + XYn*p(XYn)='''+str(getMaxDrawDownEXY())+'''
+Cov(X)=E(XY)-E(X)E(Y)='''+str(getMaxDrawDownCov())+'''
+√D(X)=√(E(X^2)-E(X)*E(X))='''+str(getMaxDrawDownDX())+'''
+√D(Y)=√(E(X^2)-E(X)*E(X))='''+str(getFollowersDX())+'''
+r=Cov(X)/(√D(X)*√D(Y))='''+str(getMaxDrawDownCalculation())+''''''
+    return a
+
+
 
 if __name__ == '__main__':
     a = "CSI1006"
@@ -244,14 +267,20 @@ if __name__ == '__main__':
     c="2018-09-27"
     #print(getPortfolioFollows("CSI1033"))
     #getStore()
-    print(getIncomeEX())
-    print(getIncomeEXY())
-    print(getIncomeCov())
-    print(getIncomeDX())
-    print(getIncomeCalculation())
-
-    print(getMaxDrawDownEX())
-    print(getMaxDrawDownEXY())
-    print(getMaxDrawDownCov())
-    print(getMaxDrawDownDX())
-    print(getMaxDrawDownCalculation())
+    # print(getIncomeEX())
+    # print(getFollowersEX())
+    # print(getIncomeEXY())
+    # print(getIncomeCov())
+    # print(getIncomeDX())
+    # print(getFollowersDX())
+    # print(getIncomeCalculation())
+    #
+    # print(getMaxDrawDownEX())
+    # print(getFollowersEX())
+    # print(getMaxDrawDownEXY())
+    # print(getMaxDrawDownCov())
+    # print(getMaxDrawDownDX())
+    # print(getFollowersDX())
+    # print(getMaxDrawDownCalculation())
+    #print(getIncomeProcedure())
+    print(getMaxDrawDownProcedure())
