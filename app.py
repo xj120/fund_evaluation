@@ -11,9 +11,11 @@ app = Flask(__name__)
 
 @app.route('/FundEvaluation', methods=['GET', 'POST'])
 def index():
-    c1 = "test"
-    test = 'test'
-    return render_template("FundEvaluation.html", test=test, c1=c1)
+    c1 = Calculation.getIncomeProcedure()
+    c2 = Calculation.getMaxDrawDownProcedure()
+    r1 = Calculation.getIncomeCalculation()
+    r2 = Calculation.getMaxDrawDownCalculation()
+    return render_template("FundEvaluation.html", r1=r1, r2=r2, c1=c1, c2=c2)
 
 
 @app.route('/')
