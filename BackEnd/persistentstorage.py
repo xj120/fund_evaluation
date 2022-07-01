@@ -10,7 +10,8 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation', charset='utf8')
+        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+                        charset='utf8')
     except:
         return None
     else:
@@ -64,7 +65,7 @@ def deletePortfolio(link):
         where number = %s
         '''
         param = (number)
-        cursor.execute(sql,param)
+        cursor.execute(sql, param)
 
         db.commit()
 
@@ -104,7 +105,7 @@ def addHistoryRecord(records):
         return False
 
 
-# TODO 向数据库中插入调仓历史记录
+# 向数据库中插入调仓历史记录
 def addRepositionRecord(repositions):
     db = linkDatabase()
     cursor = db.cursor()
@@ -194,7 +195,7 @@ def getLastDate(url):
         from history_record
         where number = %s
         order by history_record.date desc LIMIT 0,1
-        '''%('\"'+number+'\"')
+        ''' % ('\"' + number + '\"')
         cursor.execute(sql)
         db.commit()
         record = cursor.fetchone()
@@ -225,7 +226,7 @@ def checkPortfolio(url):
         select *
         from history_record
         where number = %s
-        '''%('\"'+number+'\"')
+        ''' % ('\"' + number + '\"')
         cursor.execute(sql)
         db.commit()
         data = cursor.fetchone()
@@ -279,12 +280,12 @@ def getUrlAndDateInfo():
 
 # 编写投资组合信息JSON文件给前端
 def getTableJson():
-    table = {"code": 0,"msg": ""}
+    table = {"code": 0, "msg": ""}
     data = []
     db = linkDatabase()
     cursor = db.cursor()
     sql = '''
-    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, volatility, followers, reposition_level, average_holding_time
+    select number, name, manager_name, income_since_found, max_drawdown, sharpe_rate, rate_per_ann, volatility, followers, reposition_level, average_holding_time
     from portfolio
     '''
     try:
@@ -292,11 +293,14 @@ def getTableJson():
         db.commit()
         portfolios = cursor.fetchall()
         for portfolio in portfolios:
-            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2], "gains": portfolio[3], "max_retracement": portfolio[4],
-                         "sharpe_ratio": portfolio[5], "annualized_volatility": portfolio[6], "fans_num": portfolio[7], "reposition_level": portfolio[8], "average_holding_time": portfolio[9]}
+            portfolio_dict = {"v_id": portfolio[0], "group_id": portfolio[1], "manager_name": portfolio[2],
+                              "gains": portfolio[3], "max_retracement": portfolio[4],
+                              "sharpe_ratio": portfolio[5], "rate_per_ann": portfolio[6],
+                              "annualized_volatility": portfolio[7], "fans_num": portfolio[8],
+                              "reposition_level": portfolio[9], "average_holding_time": portfolio[10]}
             data.append(portfolio_dict)
         table["data"] = data
-        with open(file='.\\static\\data\\table.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\table.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(table, ensure_ascii=False)
             f.write(t)
         cursor.close()
@@ -326,10 +330,10 @@ def getRecordJson():
         db.commit()
         records = cursor.fetchall()
         for record in records:
-            r_dict = {"name":record[0], "daily_rise_drop":record[1], "date":str(record[2])}
+            r_dict = {"name": record[0], "daily_rise_drop": record[1], "date": str(record[2])}
             data.append(r_dict)
         line["data"] = data
-        with open(file='.\\static\\data\\line.json',mode='w',encoding='utf-8') as f:
+        with open(file='.\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
             f.write(t)
         cursor.close()
