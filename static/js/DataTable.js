@@ -13,7 +13,7 @@ $(function () {
                 {field: 'v_id', title: '组合ID', width: 100, fixed: 'left'}
                 , {field: 'manager_name', title: '大V名字', width: 100}
                 , {field: 'group_id', title: '组合名字', width: 100}
-                , {field: 'gains', title: '涨幅(%)', width: 100, sort: true}
+                , {field: 'gains', title: '累计涨幅(%)', width: 123, sort: true}
                 , {field: 'max_retracement', title: '最大回撤(%)', width: 123, sort: true}
                 , {field: 'sharpe_ratio', title: '夏普率(%)', width: 110, sort: true}
                 , {field: 'annualized_volatility', title: '年化波动率(%)', width: 138, sort: true}
