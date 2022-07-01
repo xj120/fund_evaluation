@@ -87,7 +87,7 @@ def getMoveState(numbers, fund):
         results = cursor.fetchall()
         proportion = 0
         for row2 in results:
-            if row2[0] != None:
+            if row2[0] is not None:
                 proportion = row2[0]
                 if proportion > 1:
                     proportion = proportion / 100
@@ -96,7 +96,7 @@ def getMoveState(numbers, fund):
         for row in results2:
             date = row[0]
             # 在这里令a等于基金的涨幅函数就可以了
-            if crawler.getFundRise(fund, date) != None:
+            if crawler.getFundRise(fund, date) is not None:
                 a = crawler.getFundRise(fund, date) / 100 * proportion
                 b = getPortfolioUP(numbers, date)
                 print(proportion)
@@ -168,6 +168,8 @@ def getLevel(numbers):
     try:
         a = getMoveTimes(numbers)
         b = getMoveSuccessTimes(numbers)
+        print("movetimes:",a)
+        print("successtimes:",b)
         if a == 0:
             return 0
         else:

@@ -27,7 +27,7 @@ dj_header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 xq_header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44',}
 
 
-# 看情况更新Xsign
+# 根据时间差更新Xsign
 def updateXsign():
     # 得到xsign的时间串
     last_xsign = int(qm_header['x-sign'][0:13]) // 1000
@@ -216,6 +216,12 @@ def getPortfolioInfo_qieman(number):
         return None
     except Exception as e:
         print(e)
+        fail = {}
+        url = [{"test": 'https://qieman.com/portfolios/'+number}]
+        fail["data"] = url
+        with open(file='.\\static\\data\\spidefail.json',mode='w',encoding='utf-8') as f:
+            t = json.dumps(fail, ensure_ascii=False)
+            f.write(t)
         return None
 
 
