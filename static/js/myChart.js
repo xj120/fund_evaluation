@@ -46,7 +46,7 @@ let option = {
         boundaryGap: false
     },
     yAxis: {
-        name: '日涨幅(%)',
+        name: '累计涨幅(%)',
         type: 'value',
         nameTextStyle: {
             padding: [0, 0, -225, -150],
@@ -54,20 +54,6 @@ let option = {
             color: '#000000'
         },
     },
-    dataZoom: [
-        {
-            type: 'slider',
-            start: 0,
-            end: 20,
-            bottom: 0,
-        },
-        {
-            type: 'inside',
-            start: 0,
-            end: 20,
-            bottom: 0,
-        },
-    ],
     series: []
 }
 let data1 = [0, 0];
