@@ -72,13 +72,13 @@ li a:hover:not(.active) {
     position: absolute;
     width: 84%;
     height: 72%;
-    top: 104%;
+    top: 88%;
     left: 8%;
 }
 
 #FansCorrelation01 {
     position: absolute;
-    top: 190%;
+    top: 165%;
     left: 9%;
     width: 38%;
     height: 90%;
@@ -87,9 +87,17 @@ li a:hover:not(.active) {
 
 #FansCorrelation02 {
     position: absolute;
-    top: 190%;
+    top: 165%;
     right: 7%;
     width: 38%;
     height: 90%;
     white-space: pre;
+}
+
+.dateSelect{
+    position: absolute;
+    width: 40%;
+    height: 1%;
+    top: 14%;
+    right: 100px;
 }

@@ -9,12 +9,12 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                         charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -215,8 +215,6 @@ def getFollowersDX():
     return c
 
 
-######   调用函数请看下面     #########
-
 # 一键计算收益与粉丝的相关系数，相关系数=Cov(X)除以粉丝的D(Y)的平方根与收益率的D(X)的平方根
 def getIncomeCalculation():
     a = getIncomeCov()
@@ -241,7 +239,7 @@ def getIncomeProcedure():
      
 E(X) = X1 * p(X1) + X2 * p(X2) + …… + Xn * p(Xn) = ''' + str(getIncomeEX()) + '''
 
-E(Y) = X1 * p(X1) + X2 * p(X2) + …… + Xn * p(Xn) = ''' + str(getFollowersEX()) + '''
+E(Y) = Y1 * p(Y1) + Y2 * p(Y2) + …… + Yn * p(Yn) = ''' + str(getFollowersEX()) + '''
 
 E(XY) = XY1 * p(XY1) + XY2 * p(XY2) + …… + XYn * p(XYn) = ''' + str(getIncomeEXY()) + '''
 
@@ -249,7 +247,7 @@ Cov(X) = E(XY) - E(X) * E(Y) = ''' + str(getIncomeCov()) + '''
 
 √D(X) = √(E(X^2) - E(X) * E(X)) = ''' + str(getIncomeDX()) + '''
 
-√D(Y) = √(E(X^2) - E(X) * E(X)) = ''' + str(getFollowersDX()) + '''
+√D(Y) = √(E(Y^2) - E(Y) * E(Y)) = ''' + str(getFollowersDX()) + '''
 
 r = Cov(X) / (√D(X) * √D(Y)) = ''' + str(getIncomeCalculation()) + ''''''
     return a
@@ -260,7 +258,7 @@ def getMaxDrawDownProcedure():
     
 E(X) = X1 * p(X1) + X2 * p(X2) + …… + Xn * p(Xn) = ''' + str(getMaxDrawDownEX()) + '''
 
-E(Y) = X1 * p(X1) + X2 * p(X2) + …… + Xn * p(Xn) = ''' + str(getFollowersEX()) + '''
+E(Y) = Y1 * p(Y1) + Y2 * p(Y2) + …… + Yn * p(Yn) = ''' + str(getFollowersEX()) + '''
 
 E(XY) = XY1*p(XY1) + XY2 * p(XY2) + …… + XYn * p(XYn) = ''' + str(getMaxDrawDownEXY()) + '''
 
@@ -268,7 +266,7 @@ Cov(X) = E(XY) - E(X) * E(Y) = ''' + str(getMaxDrawDownCov()) + '''
 
 √D(X) = √(E(X^2) - E(X) * E(X)) = ''' + str(getMaxDrawDownDX()) + '''
 
-√D(Y) = √(E(X^2) - E(X) * E(X)) = ''' + str(getFollowersDX()) + '''
+√D(Y) = √(E(Y^2) - E(Y) * E(Y)) = ''' + str(getFollowersDX()) + '''
 
 r = Cov(X) / (√D(X) * √D(Y)) = ''' + str(getMaxDrawDownCalculation()) + ''''''
     return a
@@ -278,22 +276,4 @@ if __name__ == '__main__':
     a = "CSI1006"
     b = "161005"
     c = "2018-09-27"
-    # print(getPortfolioFollows("CSI1033"))
-    # getStore()
-    # print(getIncomeEX())
-    # print(getFollowersEX())
-    # print(getIncomeEXY())
-    # print(getIncomeCov())
-    # print(getIncomeDX())
-    # print(getFollowersDX())
-    # print(getIncomeCalculation())
-    #
-    # print(getMaxDrawDownEX())
-    # print(getFollowersEX())
-    # print(getMaxDrawDownEXY())
-    # print(getMaxDrawDownCov())
-    # print(getMaxDrawDownDX())
-    # print(getFollowersDX())
-    # print(getMaxDrawDownCalculation())
-    # print(getIncomeProcedure())
     print(getMaxDrawDownProcedure())
