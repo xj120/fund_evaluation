@@ -3,23 +3,22 @@ import json
 import time
 
 import BackEnd.crawler
+import app
 
 import pymysql
 import math
 import numpy
 
-import app
-
 
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                         charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -44,15 +43,15 @@ def calculateVolatility(start_date, end_date):
         diffs = []
         diffs_group = []
         numbers = []
-        for i in range(len(records)-1):
-            if records[i][0] == records[i+1][0]:
+        for i in range(len(records) - 1):
+            if records[i][0] == records[i + 1][0]:
                 diffs_group.append(math.log(records[i + 1][1] / records[i][1]))
             else:
                 diffs.append(diffs_group)
                 diffs_group = []
                 numbers.append(records[i][0])
         diffs.append(diffs_group)
-        numbers.append(records[len(records)-1][0])
+        numbers.append(records[len(records) - 1][0])
         # print(diffs)
         # print(numbers)
         # 标准差
@@ -64,7 +63,8 @@ def calculateVolatility(start_date, end_date):
         # print(year_volatility_list)
         year_volatility_dict = []
         for i in range(len(numbers)):
-            year_volatility_dict.append({'number': numbers[i], 'year_volatility': round(year_volatility_list[i]*100, 2)})
+            year_volatility_dict.append(
+                {'number': numbers[i], 'year_volatility': round(year_volatility_list[i] * 100, 2)})
         # print(year_volatility_dict)
         db.close()
         cursor.close()
@@ -149,7 +149,7 @@ def calculateSharpRate(start_date, end_date):
         sharpe_list = []
         sharpe_dict = {}
         for i in range(len(ann_list)):
-            sharpe = (ann_list[i].get('ann_rate')-no_risk_rate)/vol_list[i].get('year_volatility')
+            sharpe = (ann_list[i].get('ann_rate') - no_risk_rate) / vol_list[i].get('year_volatility')
             sharpe_dict['number'] = ann_list[i].get('number')
             sharpe_dict['sharpe_rate'] = round(sharpe, 2)
             sharpe_list.append(sharpe_dict.copy())
@@ -280,7 +280,8 @@ def calculateRangeRise(start_date, end_date):
             for j in range(len(end_records)):
                 if start_records[i][0] == end_records[j][0]:
                     range_rise_dict['number'] = start_records[i][0]
-                    range_rise_dict['rise'] = round((end_records[j][1] - start_records[i][1]) / start_records[i][1] * 100, 2)
+                    range_rise_dict['rise'] = round(
+                        (end_records[j][1] - start_records[i][1]) / start_records[i][1] * 100, 2)
                     range_rise_list.append(range_rise_dict.copy())
 
         # range_rise = {"data": range_rise_list}
@@ -350,10 +351,8 @@ def accumulateRangeCalculation(start_date, end_date):
                 if sharpe.get('number') == number:
                     cal_dict['sharpe_ratio'] = sharpe.get('sharpe_rate')
             cal_list.append(cal_dict.copy())
-        new_table = {'code': 0, 'msg': "", 'data': cal_list}
-
-        app.newTable = json.dumps(new_table, ensure_ascii=False)
-
+        n = {'code': 0, 'msg': "", 'data': cal_list}
+        app.new_table = json.dumps(n, ensure_ascii=False)
         db.close()
         cursor.close()
         return True

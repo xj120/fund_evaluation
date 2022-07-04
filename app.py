@@ -98,25 +98,26 @@ def delete():
 def test(s_year, s_month, s_day, e_year, e_month, e_day):
     start = s_year + '-' + s_month + '-' + s_day
     end = e_year + '-' + e_month + '-' + e_day
-    # +++++++++++
     range_calculate.accumulateRangeCalculation(start, end)
     persistentstorage.getRangeRecord(start, end)
     reply = {'success': 'true'}
     return json.dumps(reply)
 
 
-newLine = {"data": []}
-newTable = {"code": 0, "msg": "", "data": []}
+newLine = 0
 
 
 @app.route('/redrawLine')
 def redrawLine():
-    return json.dumps(newLine)
+    return newLine
+
+
+new_table = 0
 
 
 @app.route('/redrawTable')
 def redrawTable():
-    return json.dumps(newTable)
+    return new_table
 
 
 if __name__ == '__main__':

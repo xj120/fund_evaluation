@@ -1,22 +1,20 @@
 import datetime
 import json
 import time
-
 import BackEnd.crawler
 import app
-
 import pymysql
 
 
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                         charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
@@ -331,15 +329,15 @@ def getRecordJson():
         db.commit()
         records = cursor.fetchall()
         records = list(records)
-        for i in range(len(records)-1):
+        for i in range(len(records) - 1):
             records[i] = list(records[i])
-            if records[i][0] == records[i+1][0]:
+            if records[i][0] == records[i + 1][0]:
                 if records[i][1] is None:
                     records[i][1] = 100.0
                     r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                     data.append(r_dict.copy())
                 else:
-                    records[i][1] = records[i-1][1]+(records[i-1][1]*records[i][1]*0.01)
+                    records[i][1] = records[i - 1][1] + (records[i - 1][1] * records[i][1] * 0.01)
                     r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                     data.append(r_dict.copy())
             else:
@@ -362,7 +360,6 @@ def getRecordJson():
         return False
 
 
-
 # 写区间折线图
 def getRangeRecord(start_date, end_date):
     range_line = {}
@@ -381,16 +378,16 @@ def getRangeRecord(start_date, end_date):
         records = cursor.fetchall()
         records = list(records)
         flag = True
-        for i in range(len(records)-1):
+        for i in range(len(records) - 1):
             records[i] = list(records[i])
-            if records[i][0] == records[i+1][0]:
+            if records[i][0] == records[i + 1][0]:
                 if flag is True:
                     flag = False
                     records[i][1] = 100.0
                     r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                     data.append(r_dict.copy())
                 else:
-                    records[i][1] = records[i-1][1]+(records[i-1][1]*records[i][1]*0.01)
+                    records[i][1] = records[i - 1][1] + (records[i - 1][1] * records[i][1] * 0.01)
                     r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                     data.append(r_dict.copy())
             else:
