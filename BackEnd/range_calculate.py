@@ -8,6 +8,8 @@ import pymysql
 import math
 import numpy
 
+import app
+
 
 # 连接数据库
 def linkDatabase():
@@ -67,10 +69,10 @@ def calculateVolatility(start_date, end_date):
         db.close()
         cursor.close()
 
-        range_volatility = {"data": year_volatility_list}
-        with open(file='..\\static\\data\\range_volatility.json', mode='w', encoding='utf-8') as f:
-            t = json.dumps(range_volatility, ensure_ascii=False)
-            f.write(t)
+        # range_volatility = {"data": year_volatility_list}
+        # with open(file='..\\static\\data\\range_volatility.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(range_volatility, ensure_ascii=False)
+        #     f.write(t)
 
         return year_volatility_dict
     except Exception as e:
@@ -120,10 +122,10 @@ def calculateMaxDrawdown(start_date, end_date):
                 maxDrawdown_dict['maxDrawdown'] = round((nat_list[j] - nat_list[i]) / (nat_list[j]) * 100, 2)
                 maxDrawdown_list.append(maxDrawdown_dict.copy())
 
-        range_maxDrawdown = {"data": maxDrawdown_list}
-        with open(file='..\\static\\data\\range_maxDrawdown.json', mode='w', encoding='utf-8') as f:
-            t = json.dumps(range_maxDrawdown, ensure_ascii=False)
-            f.write(t)
+        # range_maxDrawdown = {"data": maxDrawdown_list}
+        # with open(file='..\\static\\data\\range_maxDrawdown.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(range_maxDrawdown, ensure_ascii=False)
+        #     f.write(t)
 
         db.close()
         cursor.close()
@@ -152,10 +154,10 @@ def calculateSharpRate(start_date, end_date):
             sharpe_dict['sharpe_rate'] = round(sharpe, 2)
             sharpe_list.append(sharpe_dict.copy())
 
-        range_sharpe = {"data": sharpe_list}
-        with open(file='..\\static\\data\\range_sharpe.json', mode='w', encoding='utf-8') as f:
-            t = json.dumps(range_sharpe, ensure_ascii=False)
-            f.write(t)
+        # range_sharpe = {"data": sharpe_list}
+        # with open(file='..\\static\\data\\range_sharpe.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(range_sharpe, ensure_ascii=False)
+        #     f.write(t)
 
         db.close()
         cursor.close()
@@ -220,10 +222,10 @@ def calculateAnnualizeRate(start_date, end_date):
             ann_dict['ann_rate'] = ann_rate[i]
             ann_list.append(ann_dict.copy())
 
-        range_ann = {"data": ann_list}
-        with open(file='..\\static\\data\\range_ann.json', mode='w', encoding='utf-8') as f:
-            t = json.dumps(range_ann, ensure_ascii=False)
-            f.write(t)
+        # range_ann = {"data": ann_list}
+        # with open(file='..\\static\\data\\range_ann.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(range_ann, ensure_ascii=False)
+        #     f.write(t)
 
         db.close()
         cursor.close()
@@ -281,10 +283,10 @@ def calculateRangeRise(start_date, end_date):
                     range_rise_dict['rise'] = round((end_records[j][1] - start_records[i][1]) / start_records[i][1] * 100, 2)
                     range_rise_list.append(range_rise_dict.copy())
 
-        range_rise = {"data": range_rise_list}
-        with open(file='..\\static\\data\\range_rise.json', mode='w', encoding='utf-8') as f:
-            t = json.dumps(range_rise, ensure_ascii=False)
-            f.write(t)
+        # range_rise = {"data": range_rise_list}
+        # with open(file='..\\static\\data\\range_rise.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(range_rise, ensure_ascii=False)
+        #     f.write(t)
 
         db.close()
         cursor.close()
@@ -297,9 +299,76 @@ def calculateRangeRise(start_date, end_date):
         return None
 
 
+# 将计算结果整合起来哦
+def accumulateRangeCalculation(start_date, end_date):
+    db = linkDatabase()
+    cursor = db.cursor()
+    try:
+        sql = '''
+        select number, name, manager_name, followers, reposition_level, average_holding_time
+        from portfolio
+        '''
+        cursor.execute(sql)
+        name_tuple = cursor.fetchall()
+        print(name_tuple)
+        range_vol_list = calculateVolatility(start_date, end_date)
+        range_md_list = calculateMaxDrawdown(start_date, end_date)
+        range_rise_list = calculateRangeRise(start_date, end_date)
+        range_ann_list = calculateAnnualizeRate(start_date, end_date)
+        range_sharpe_list = calculateSharpRate(start_date, end_date)
+        number_list = []
+        cal_list = []
+        cal_dict = {}
+        for each_dict in range_sharpe_list:
+            number_list.append(each_dict.get('number'))
+        for number in number_list:
+            cal_dict['v_id'] = number
+            for name in name_tuple:
+                if name[0] == number:
+                    cal_dict['group_id'] = name[1]
+                    cal_dict['manager_name'] = name[2]
+                    cal_dict['fans_num'] = name[3]
+                    cal_dict['reposition_level'] = name[4]
+                    cal_dict['average_holding_time'] = name[5]
+                    break
+            for vol in range_vol_list:
+                if vol.get('number') == number:
+                    cal_dict['annualized_volatility'] = vol.get('year_volatility')
+                    break
+            for md in range_md_list:
+                if md.get('number') == number:
+                    cal_dict['max_retracement'] = md.get('maxDrawdown')
+                    break
+            for rise in range_rise_list:
+                if rise.get('number') == number:
+                    cal_dict['gains'] = rise.get('rise')
+                    break
+            for ann in range_ann_list:
+                if ann.get('number') == number:
+                    cal_dict['rate_per_ann'] = ann.get('ann_rate')
+            for sharpe in range_sharpe_list:
+                if sharpe.get('number') == number:
+                    cal_dict['sharpe_ratio'] = sharpe.get('sharpe_rate')
+            cal_list.append(cal_dict.copy())
+        new_table = {'code': 0, 'msg': "", 'data': cal_list}
+
+        app.newTable = json.dumps(new_table, ensure_ascii=False)
+
+        db.close()
+        cursor.close()
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
 if __name__ == '__main__':
-    print(calculateVolatility('2017-01-01', '2022-07-02'))
-    print(calculateMaxDrawdown('2017-01-01', '2022-07-02'))
-    print(calculateRangeRise('2017-01-01', '2022-07-02'))
-    print(calculateAnnualizeRate('2017-01-01', '2022-07-02'))
-    print(calculateSharpRate('2017-01-01', '2022-07-02'))
+    # print(calculateVolatility('2017-01-01', '2022-07-02'))
+    # print(calculateMaxDrawdown('2017-01-01', '2022-07-02'))
+    # print(calculateRangeRise('2017-01-01', '2022-07-02'))
+    # print(calculateAnnualizeRate('2017-01-01', '2022-07-02'))
+    # print(calculateSharpRate('2017-01-01', '2022-07-02'))
+    accumulateRangeCalculation('2017-1-1', '2022-7-2')

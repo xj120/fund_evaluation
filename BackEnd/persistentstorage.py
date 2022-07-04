@@ -3,6 +3,7 @@ import json
 import time
 
 import BackEnd.crawler
+import app
 
 import pymysql
 
@@ -342,6 +343,9 @@ def getRecordJson():
                     r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                     data.append(r_dict.copy())
             else:
+                records[i][1] = records[i - 1][1] + (records[i - 1][1] * records[i][1] * 0.01)
+                r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                data.append(r_dict.copy())
                 continue
         line["data"] = data
         with open(file='..\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
@@ -358,6 +362,60 @@ def getRecordJson():
         return False
 
 
+
+# 写区间折线图
+def getRangeRecord(start_date, end_date):
+    range_line = {}
+    data = []
+    db = linkDatabase()
+    cursor = db.cursor()
+    sql = '''
+    select name, daily_rise_drop, date
+    from portfolio,history_record
+    where portfolio.number = history_record.number and date < %s and date > %s
+    '''
+    try:
+        param = (end_date, start_date)
+        cursor.execute(sql, param)
+        db.commit()
+        records = cursor.fetchall()
+        records = list(records)
+        flag = True
+        for i in range(len(records)-1):
+            records[i] = list(records[i])
+            if records[i][0] == records[i+1][0]:
+                if flag is True:
+                    flag = False
+                    records[i][1] = 100.0
+                    r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                    data.append(r_dict.copy())
+                else:
+                    records[i][1] = records[i-1][1]+(records[i-1][1]*records[i][1]*0.01)
+                    r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                    data.append(r_dict.copy())
+            else:
+                records[i][1] = records[i - 1][1] + (records[i - 1][1] * records[i][1] * 0.01)
+                r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                data.append(r_dict.copy())
+                flag = True
+                continue
+        range_line["data"] = data
+        # with open(file='..\\static\\data\\range_line.json', mode='w', encoding='utf-8') as f:
+        #     t = json.dumps(line, ensure_ascii=False)
+        #     f.write(t)
+        cursor.close()
+        db.close()
+        app.newLine = json.dumps(range_line, ensure_ascii=False)
+        return True
+    except Exception as e:
+        print(e)
+        db.rollback()
+        cursor.close()
+        db.close()
+        return False
+
+
 if __name__ == '__main__':
     # getTableJson()
-    getRecordJson()
+    # getRecordJson()
+    getRangeRecord('2019-1-1', '2019-1-7')

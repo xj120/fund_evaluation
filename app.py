@@ -7,6 +7,7 @@ import BackEnd.persistentstorage as persistentstorage
 import BackEnd.crawler as crawler
 import BackEnd.reposition_level as reposition_level
 import BackEnd.holdingtime as holdingtime
+import BackEnd.range_calculate as range_calculate
 from BackEnd import Calculation
 
 app = Flask(__name__)
@@ -98,6 +99,8 @@ def test(s_year, s_month, s_day, e_year, e_month, e_day):
     start = s_year + '-' + s_month + '-' + s_day
     end = e_year + '-' + e_month + '-' + e_day
     # +++++++++++
+    range_calculate.accumulateRangeCalculation(start, end)
+    persistentstorage.getRangeRecord(start, end)
     reply = {'success': 'true'}
     return json.dumps(reply)
 
