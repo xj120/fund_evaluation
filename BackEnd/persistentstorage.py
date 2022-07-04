@@ -346,7 +346,7 @@ def getRecordJson():
                 data.append(r_dict.copy())
                 continue
         line["data"] = data
-        with open(file='..\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
+        with open(file='.\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
             f.write(t)
         cursor.close()
