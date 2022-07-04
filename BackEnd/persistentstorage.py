@@ -9,12 +9,12 @@ import pymysql
 # 连接数据库
 def linkDatabase():
     try:
-        pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+        pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                         charset='utf8')
     except:
         return None
     else:
-        db = pymysql.connect(host='localhost', user='root', password='5102525jxZK', db='portfolio_evaluation',
+        db = pymysql.connect(host='localhost', user='root', password='a8700998', db='portfolio_evaluation',
                              charset='utf8')
         # print(type(db).__name__)
         return db
