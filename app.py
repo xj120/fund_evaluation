@@ -95,6 +95,8 @@ def delete():
 @app.route('/testAjax/s_year=<s_year>&s_month=<s_month>&s_day=<s_day>&e_year=<e_year>&e_month=<e_month>&e_day=<e_day>',
            methods=["GET"])
 def test(s_year, s_month, s_day, e_year, e_month, e_day):
+    start = s_year + '-' + s_month + '-' + s_day
+    end = e_year + '-' + e_month + '-' + e_day
     # +++++++++++
     reply = {'success': 'true'}
     return json.dumps(reply)
