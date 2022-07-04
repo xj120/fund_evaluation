@@ -66,7 +66,10 @@ function redrawTable() {
 
 
 function initLine() {
+    document.getElementById('lines').innerHTML = "";
+    document.getElementById("lines").removeAttribute("_echarts_instance_");
     const myChart = echarts.init(document.getElementById("lines"));
+    myChart.showLoading();
     let option = {
         title: {
             text: '收益曲线',
@@ -125,7 +128,6 @@ function initLine() {
         series: []
     }
     let data1 = [0, 0];
-    myChart.showLoading();
     $.ajax({
         type: 'GET',
         url: '/redrawLine',
