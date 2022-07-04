@@ -314,7 +314,7 @@ def getTableJson():
         return False
 
 
-# 编写投资组合历史记录的JSON文件给前端
+# TODO 编写投资组合历史记录的JSON文件给前端
 def getRecordJson():
     line = {}
     data = []
@@ -329,13 +329,22 @@ def getRecordJson():
         cursor.execute(sql)
         db.commit()
         records = cursor.fetchall()
-        for record in records:
-            if record[1] is None:
-                record[1] = 0.0
-            r_dict = {"name": record[0], "daily_rise_drop": record[1], "date": str(record[2])}
-            data.append(r_dict)
+        records = list(records)
+        for i in range(len(records)-1):
+            records[i] = list(records[i])
+            if records[i][0] == records[i+1][0]:
+                if records[i][1] is None:
+                    records[i][1] = 100.0
+                    r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                    data.append(r_dict.copy())
+                else:
+                    records[i][1] = records[i-1][1]+(records[i-1][1]*records[i][1]*0.01)
+                    r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
+                    data.append(r_dict.copy())
+            else:
+                continue
         line["data"] = data
-        with open(file='.\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
+        with open(file='..\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
             f.write(t)
         cursor.close()
@@ -350,5 +359,5 @@ def getRecordJson():
 
 
 if __name__ == '__main__':
-    getTableJson()
+    # getTableJson()
     getRecordJson()
