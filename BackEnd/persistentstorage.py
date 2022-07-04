@@ -330,6 +330,8 @@ def getRecordJson():
         db.commit()
         records = cursor.fetchall()
         for record in records:
+            if record[1] is None:
+                record[1] = 0.0
             r_dict = {"name": record[0], "daily_rise_drop": record[1], "date": str(record[2])}
             data.append(r_dict)
         line["data"] = data

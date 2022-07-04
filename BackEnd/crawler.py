@@ -15,7 +15,7 @@ import BackEnd.persistentstorage as persistentstorage
 # 且慢基金的请求头
 qm_header = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36',
-    'x-sign': '1656572036559A1A18240CDEA9BAFBA3E67D1B171C0FC'
+    'x-sign': '1656721324926B5A965FCD2EA478B0410842ADED908CD'
 }
 
 
