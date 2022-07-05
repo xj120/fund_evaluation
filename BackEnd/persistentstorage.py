@@ -345,6 +345,10 @@ def getRecordJson():
                 r_dict = {"name": records[i][0], "daily_rise_drop": records[i][1], "date": str(records[i][2])}
                 data.append(r_dict.copy())
                 continue
+
+        for d in data:
+            d['daily_rise_drop'] = round(d.get('daily_rise_drop')-100, 4)
+
         line["data"] = data
         with open(file='.\\static\\data\\line.json', mode='w', encoding='utf-8') as f:
             t = json.dumps(line, ensure_ascii=False)
@@ -396,6 +400,10 @@ def getRangeRecord(start_date, end_date):
                 data.append(r_dict.copy())
                 flag = True
                 continue
+
+        for d in data:
+            d['daily_rise_drop'] = round(d.get('daily_rise_drop')-100, 4)
+
         range_line["data"] = data
         # with open(file='..\\static\\data\\range_line.json', mode='w', encoding='utf-8') as f:
         #     t = json.dumps(line, ensure_ascii=False)
